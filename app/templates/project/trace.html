@@ -1,0 +1,47 @@
+{% extends "project/_layout.html" %}
+{% from "_macros.html" import cert_state %}
+{% block content %}
+<section class="card">
+    <div class="card-head">
+        <h2 class="card-title">Full-chain traceability <span class="hint">packaging unit → component → material → supplier → trace code → certificates</span></h2>
+    </div>
+    <div class="table-wrap">
+    <table class="data scan" style="min-width: 1240px">
+        <colgroup><col style="width:150px"><col style="width:120px"><col><col style="width:190px"><col style="width:140px">{% for k in cert_cols %}<col style="width:112px">{% endfor %}</colgroup>
+        <thead><tr><th>Unit</th><th>Component</th><th>Material</th><th>Supplier</th><th>Trace code</th>
+            {% for k in cert_cols %}<th title="{{ CERT_TYPES[k] }}">{{ CERT_SHORT[k] }}</th>{% endfor %}</tr></thead>
+        <tbody>
+        {% for r in rows %}
+        <tr>
+            <td><span class="chip-id">{{ r.u.code }}</span> <span class="xs">{{ r.u.name }}</span></td>
+            <td><span class="chip-id">{{ r.c.code }}</span></td>
+            <td>{{ r.c.material or '—' }} <span class="xs muted">{{ r.c.mass_g | num }} g</span></td>
+            <td class="xs">{% if r.m %}<a href="/suppliers/{{ r.m.supplier_id }}">{{ r.m.supplier.name }}</a>{% else %}<span class="muted">{{ r.c.remarks or 'not in library' }}</span>{% endif %}</td>
+            <td class="mono xs">{{ r.m.trace_code if r.m else '—' }}</td>
+            {% for k in cert_cols %}
+            <td>{% set x = r.certs.get(k) %}{% if x %}<span title="{{ x.cert.number }} · {{ x.cert.value }} · until {{ x.cert.expires | day }}">{{ cert_state(x.state, x.days) }}</span>{% else %}<span class="cert-cell none">—</span>{% endif %}</td>
+            {% endfor %}
+        </tr>
+        {% else %}
+        <tr><td colspan="11"><div class="empty-state"><b>No components.</b>Build the BOM first.</div></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <p class="xs muted" style="margin:8px 0 0">A certificate expiring, a new report or a material change on any supplier row is traced down this chain to the
+        items and documents it supports — see <a href="/changes">Change impact</a>.</p>
+</section>
+
+<section class="card">
+    <h2 class="card-title">Changes that touched this project</h2>
+    {% if related %}
+    <table class="data">
+        <thead><tr><th>Change</th><th>What</th><th>Status</th><th class="num">Raised</th></tr></thead>
+        <tbody>{% for ev in related %}
+        <tr data-href="/changes/{{ ev.id }}" class="row-link"><td><span class="chip-id">{{ ev.code }}</span></td><td>{{ ev.title }}</td>
+            <td><span class="badge {{ {'open': 'badge-warn', 'applied': 'badge-ok', 'dismissed': 'badge-muted'}[ev.status] }}">{{ ev.status }}</span></td>
+            <td class="num xs">{{ ev.created_at | date }}</td></tr>{% endfor %}</tbody>
+    </table>
+    {% else %}<div class="empty-state"><b>None so far.</b></div>{% endif %}
+</section>
+{% endblock %}

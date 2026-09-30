@@ -1,0 +1,364 @@
+/**
+ * @fileOverview
+ *
+ * This JSONP specifies which surveys should be loaded depending on the current URL.
+ *
+ * The JSONP structure is the following:
+ *
+ * *   pop_up_settings_file
+ * >   URL to the popup settings file, described in *data/custom_invitation_settings.js*
+ *
+ *     *   white_list
+ *     >   Array of regular expressions as strings
+ *
+ *     *   black_list
+ *     >   Array of regular expressions as strings
+ *
+ *
+ * The expressions in the black list are stronger than the expressions in the white list.
+ *
+ */
+
+SurveyInvitation.load_survey_url_rules_callback({
+	"surveys": [
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/ai-survey/invitation_settings.js": {
+				"white_list": [
+					"https://ec\.europa\.eu/test_cem/rombpat/surveys/popup1\.html",
+					"https://commission\.europa\.eu/index_..",
+					"https://commission\.europa\.eu/about_..",
+					"https://commission\.europa\.eu/about/role_..",
+					"https://commission\.europa\.eu/strategy-and-policy_..",
+					"https://commission\.europa\.eu/strategy-and-policy/[^/]*",
+					"https://commission\.europa\.eu/law_..",
+					"https://commission\.europa\.eu/law/[^/]*",
+					"https://commission\.europa\.eu/law/law-topic/data-protection/international-dimension-data-protection/standard-contractual-clauses-scc_..",
+					"https://commission\.europa\.eu/law/law-topic/data-protection/international-dimension-data-protection/adequacy-decisions_..",
+					"https://commission\.europa\.eu/about/role/budget-and-funding_..",
+					"https://commission\.europa\.eu/about/role/budget-and-funding/[^/]*",
+					"https://commission\.europa\.eu/about/role/international-relations_..",
+					"https://commission\.europa\.eu/about/role/international-relations/[^/]*",
+					"https://commission\.europa\.eu/about/service-standards-and-principles_..",
+					"https://commission\.europa\.eu/about/service-standards-and-principles/[^/]*",
+					"https://commission\.europa\.eu/about/contact_..",
+					"https://commission\.europa\.eu/priorities-2024-2029_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/competitiveness_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/security-and-defence_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/european-social-fairness_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/quality-life_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/democracy-and-our-values_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/global-europe_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/eu-budget-and-reform_..",
+					"https://commission\.europa\.eu/news-and-media_..",
+					"https://commission\.europa\.eu/get-involved/jobs-european-commission_..",
+					"https://commission\.europa\.eu/funding-tenders_..",
+					"https://commission\.europa\.eu/get-involved/events_..",
+					"https://commission\.europa\.eu/get-involved/visit-european-commission_..",
+					"https://commission\.europa\.eu/get-involved/visit-european-commission/[^/]*",
+					"https://commission\.europa\.eu/get-involved/social-media-connect-european-commission_..",
+					"https://commission\.europa\.eu/strategy-and-policy/eu-budget/long-term-eu-budget/eu-budget-2028-2034_..",
+					"https://commission\.europa\.eu/funding-tenders/procedures-guidelines-tenders/information-contractors-and-beneficiaries/exchange-rate-inforeuro_..",
+					"https://commission\.europa\.eu/topics/eu-competitiveness_..",
+					"https://commission\.europa\.eu/topics/eu-competitiveness/.*",
+					"https://commission\.europa\.eu/strategy-and-policy/priorities-2019-2024/european-green-deal_..",
+					"https://commission\.europa\.eu/topics/eu-competitiveness/draghi-report_..",
+					"https://commission\.europa\.eu/publications_.."				
+				],
+				"black_list": [
+					
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/eu-updates/invitation_settings.js": {
+				"white_list": [
+					"https://commission\.europa\.eu/index_..",
+					"https://commission\.europa\.eu/about/role.*",
+					"https://commission\.europa\.eu/about/service-standards-and-principles.*",
+					"https://commission\.europa\.eu/about/contact_..",
+					"https://commission\.europa\.eu/priorities-2024-2029_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/competitiveness_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/security-and-defence_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/european-social-fairness_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/quality-life_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/democracy-and-our-values_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/global-europe_..",
+					"https://commission\.europa\.eu/priorities-2024-2029/eu-budget-and-reform_..",
+					"https://commission\.europa\.eu/news-and-media_..",
+					"https://commission\.europa\.eu/news-and-media/news_..",
+					"https://commission\.europa\.eu/news-and-media/visual-stories_..",
+					"https://commission\.europa\.eu/get-involved_..",
+					"https://commission\.europa\.eu/get-involved/jobs-european-commission_..",
+					"https://commission\.europa\.eu/get-involved/events_..",
+					"https://commission\.europa\.eu/get-involved/visit-european-commission_..",
+					"https://commission\.europa\.eu/get-involved/social-media-connect-european-commission_..",
+					"https://commission\.europa\.eu/topics/eu-competitiveness_..",
+					"https://commission\.europa\.eu/strategy-and-policy/priorities-2019-2024/european-green-deal_..",
+					"https://commission\.europa\.eu/topics/eu-competitiveness/draghi-report_..",
+					"https://commission\.europa\.eu/publications_..",
+					"https://commission\.europa\.eu/funding-tenders/procedures-guidelines-tenders/information-contractors-and-beneficiaries/exchange-rate-inforeuro_.."
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/ec_online_survey/01/invitation_settings.js": {
+				"white_list": [
+					"https?://commission\.europa\.eu/.*",
+					"https?://comm-ewcms-commission\.acc\.fpfis\.tech\.ec\.europa\.eu/strategy-and-policy_en",
+					"https?://comm-ewpp-ext-learning-corner\.acc\.fpfis\.tech\.ec\.europa\.eu/.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/eu_online_survey/01/invitation_settings.js": {
+				"white_list": [
+					"https?://european\-union\.europa\.eu/.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/uat-eu/01/invitation_settings.js": {
+				"white_list": [
+					"https://comm-ewcms-uat-eu\.acc\.fpfis\.tech\.ec\.europa\.eu/.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/europeday/01/invitation_settings.js": {
+				"white_list": [
+					"https://europeday\.europa\.eu/.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/economy-finance/01/invitation_settings.js": {
+				"white_list": [
+					"https://economy-finance\.ec\.europa\.eu/economic-forecast-and-surveys/economic-forecasts/spring-2023-economic-forecast-improved-outlook-amid-persistent-challenges_en"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/kohesio/01/invitation_settings.js": {
+				"white_list": [
+				    "https://kohesio\.ec\.europa\.eu.*",
+					"https://kohesio\.test\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/health/invitation_settings.js": {
+				"white_list": [
+					"https://health\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+      		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/agriculture/invitation_settings.js": {
+				"white_list": [
+					"https://agriculture\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/cem/mode_2/invitation_settings.js": {
+				"white_list": [
+					// "https://ec\.europa\.eu/test_cem/rombpat/surveys/popup2\.html",
+					"https://comm-ewcms-uat-ec\.dhs\.tech\.ec\.europa\.eu/support/test-inc02973764_en",
+					"https://ec\.europa\.eu/test_cem/test_neha/Surveys/popup_nonEWPP\.html",
+					"https://ec\.europa\.eu/test_cem/test_neha/Surveys/popup_EWPP\.html" 
+				],
+				"black_list": [
+
+				]
+			}
+		}, 
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/eacea/invitation_settings.js": {
+				"white_list": [
+					"https://www\.eacea\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/taxation_and_customs_union/invitation_settings.js": {
+				"white_list": [
+					"https://taxation-customs\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+ 
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/home/invitation_settings.js": {
+				
+				"white_list": [
+					"https://home-affairs\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		
+		},	
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/eu_for_children/invitation_settings.js": {
+				
+				"white_list": [
+					"https://eu-for-children\.europa\.eu/childrens-voices",
+					"https://eu-for-children\.europa\.eu/participate",
+					"https://eu-for-children\.europa\.eu/democracy-voting-survey",
+					"https://eu-for-children\.europa\.eu/feeling-safe",
+					"https://eu-for-children\.europa\.eu/together-online",
+					"https://eu-for-children\.europa\.eu/co-creation-team",
+					"https://eu-for-children\.europa\.eu/activities-news",
+					"https://eu-for-children\.europa\.eu/activities-news/photos-videos-2023",
+					"https://eu-for-children\.europa\.eu/about/members",
+					"https://comm-ewcms-uat-ec\.dhs\.tech\.ec\.europa\.eu/support/test-pdf-ola_en"
+				],
+				"black_list": [
+
+				]
+			}
+		},	
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/open-science-cloud/invitation_settings.js": {
+				
+				"white_list": [
+					"https://open-science-cloud\.ec\.europa\.eu/.*"
+				],
+				"black_list": [
+					"https://open-science-cloud\.ec\.europa\.eu/dashboard"
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/joint-research-centre/invitation_settings.js": {
+				
+				"white_list": [
+					"https://joint-research-centre\.ec\.europa\.eu/index_en",
+					"https://joint-research-centre\.ec\.europa\.eu/digcompedu_en",
+					"https://joint-research-centre\.ec\.europa\.eu/working-us/jobs-jrc_en"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/ted/invitation_settings.js": {
+				"white_list": [
+					"https://ted\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/civil-protection-humanitarian-aid/invitation_settings.js": {
+				"white_list": [
+					"https://civil-protection-humanitarian-aid\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/finance/invitation_settings.js": {
+				"white_list": [
+					"https://finance\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/translation-ais/invitation_settings.js": {
+				"white_list": [
+					"https://translation\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/environment/06/invitation_settings.js": {
+				"white_list": [
+                  "https://environment\.ec\.europa\.eu.*" 
+					
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/eur-lex/02/invitation_settings.js": {
+				"white_list": [
+                  "https://eur-lex\.europa\.eu/.*", 
+				//	"https://ec\.europa\.eu/test_cem/rombpat/surveys/popup1\.html"
+				],
+				"black_list": [
+					
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/olaf/invitation_settings.js": {
+				"white_list": [
+					"https://ec\.europa\.eu/test_cem/rombpat/surveys/popup2\.html",
+					"https://anti-fraud\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+					
+				]
+			}
+		},
+	    {
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/learning-corner/invitation_settings.js": {
+				"white_list": [
+				"https://learning-corner.learning\.europa\.eu.*"
+				],
+				"black_list": [
+					
+				]
+			}
+		}
+							
+	]
+});

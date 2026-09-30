@@ -1,0 +1,219 @@
+{% extends "project/_layout.html" %}
+{% from "_macros.html" import status, verdict, octagon %}
+{% block crumb %}<span class="breadcrumb-sep">›</span><a href="/projects/{{ project.id }}/collect?unit={{ s.unit_id or 'project' }}">{{ s.unit.code if s.unit else 'Project-level' }}</a><span class="breadcrumb-sep">›</span><strong>{{ s.item_id }}</strong>{% endblock %}
+{% block content %}
+<div class="layout-2col">
+<div class="layout-main">
+    <section class="card">
+        <div class="item-head">
+            <div style="min-width:0">
+                <span class="eyebrow">Category {{ cat.id }} · {{ cat.name }} · {{ s.unit.code ~ ' ' ~ s.unit.name if s.unit else 'Project-level' }}</span>
+                <h1><span class="chip-id" style="font-size:13px;vertical-align:3px">{{ s.item_id }}</span> {{ it.name }}</h1>
+                <div class="muted small">{{ it.name_zh }} · {{ it.requirement }}</div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">{{ status(s.status) }} {{ verdict(s.ai_verdict) if s.status == 'ai_reviewed' }}</div>
+        </div>
+
+        <div style="margin-top:12px">
+        {% if s.status == 'rejected' %}
+        <div class="banner banner-error"><b>Sent back by {{ s.reviewed_by }}:</b>&nbsp;{{ s.review_comment }}</div>
+        {% endif %}
+        {% if s.reopened_reason and s.status not in ('approved', 'na') %}
+        <div class="banner banner-warn"><b>Re-opened:</b>&nbsp;{{ s.reopened_reason }}</div>
+        {% endif %}
+        {% if s.status == 'na' %}
+        <div class="banner banner-info"><b>Not applicable.</b>&nbsp;{{ s.na_reason }}{% if s.na_auto %} <span class="xs">(set by the applicability matrix — change the project profile if this is wrong)</span>{% endif %}</div>
+        {% elif s.na_requested and s.status in ('submitted', 'ai_reviewed') %}
+        <div class="banner banner-info"><b>N/A requested:</b>&nbsp;{{ s.na_reason }}</div>
+        {% endif %}
+        {% if s.status == 'approved' %}
+        <div class="banner banner-ok"><b>Approved</b>&nbsp;by {{ s.reviewed_by }} · {{ s.reviewed_at | date }}{% if s.review_comment %} — {{ s.review_comment }}{% endif %}</div>
+        {% endif %}
+        {% if art_status != 'Applicable' and s.status != 'na' %}
+        <div class="banner banner-warn">Article status: <b>&nbsp;{{ art_status }}</b>. {{ art_basis }}</div>
+        {% endif %}
+        </div>
+
+        <div class="why">
+            <dl>
+                <dt>Legal basis</dt><dd>{{ it.legal }}</dd>
+                <dt>Why it is needed</dt><dd>{{ it.logic }}</dd>
+                <dt>Feeds</dt><dd>{{ it.td }}{% if it.scope == 'project' %} · collected once per project{% endif %}</dd>
+                <dt>Typical form</dt><dd>{{ it.form_zh }} · evidence type <span class="chip-id">{{ it.evidence_code }}</span> {{ EVIDENCE_TYPES[it.evidence_code] }}</dd>
+            </dl>
+        </div>
+        {% if it.example %}<p class="example" style="margin:10px 0 0"><b>What good looks like:</b> {{ it.example }}</p>{% endif %}
+    </section>
+
+    {% if it.system %}
+    <section class="card">
+        <h2 class="card-title">Assembled by the platform</h2>
+        <p class="small">{{ it.system }}</p>
+        {% if s.item_id == 'C02-06' %}
+        <table class="data">
+            <thead><tr><th>Component</th><th>Material</th><th class="num">Mass g</th><th>Supplier</th></tr></thead>
+            <tbody>{% for c in comps %}<tr><td><span class="chip-id">{{ c.code }}</span></td><td>{{ c.material or '—' }}</td><td class="num">{{ c.mass_g | num }}</td><td class="xs">{{ c.supplier.name if c.supplier else '—' }}</td></tr>
+            {% else %}<tr><td colspan="4" class="muted">No components yet.</td></tr>{% endfor %}</tbody>
+        </table>
+        <a class="btn btn-sm" style="margin-top:10px" href="/projects/{{ project.id }}/packaging?unit={{ s.unit_id }}">Edit the BOM →</a>
+        {% elif s.item_id == 'C16-68' %}
+        <table class="data"><tbody>{% for r in matrix %}<tr><td>{{ r.article }}</td><td><span class="badge {{ r.badge }}">{{ r.status }}</span></td><td class="xs">{{ r.basis }}</td></tr>{% endfor %}</tbody></table>
+        {% elif s.item_id == 'C14-55' %}
+        <a class="btn btn-sm" href="/projects/{{ project.id }}/evidence">Open the evidence register ({{ project.evidence | length }} files) →</a>
+        {% endif %}
+    </section>
+    {% else %}
+    <section class="card">
+        <div class="card-head">
+            <h2 class="card-title">Your entry</h2>
+            {% if locked %}<span class="badge badge-muted">locked after approval</span>{% endif %}
+        </div>
+        <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/save" id="itemForm">
+            <fieldset {{ 'disabled' if locked }} style="border:0;padding:0;margin:0">
+            {% for f in it.fields %}
+            <label class="field" style="margin-bottom:10px"><span class="field-label">{{ f.label }}</span>
+                {% if f.type == 'ta' %}<textarea name="f_{{ f.k }}">{{ s.data.get(f.k, '') }}</textarea>
+                {% elif f.type == 'sel' %}<select name="f_{{ f.k }}"><option value="">— select —</option>
+                    {% for o in f.options %}<option {{ 'selected' if s.data.get(f.k) == o }}>{{ o }}</option>{% endfor %}</select>
+                {% else %}<input name="f_{{ f.k }}" value="{{ s.data.get(f.k, '') }}" {{ 'readonly' if s.item_id.startswith('C01-') }}>{% endif %}
+                {% if s.item_id.startswith('C01-') %}<span class="field-help">From the packaging register — edit it on the <a href="/projects/{{ project.id }}/packaging?unit={{ s.unit_id }}&edit={{ s.unit_id }}#unit-form">Packaging &amp; BOM</a> tab.</span>{% endif %}
+            </label>
+            {% endfor %}
+            {% if it.table %}
+            <input type="hidden" name="t_rows" value="{{ table | length }}">
+            <div class="table-wrap"><table class="data tbl-edit">
+                <thead><tr>{% for c in it.table %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+                <tbody id="tblBody">{% for row in table %}{% set r = loop.index0 %}<tr>{% for c in it.table %}<td><input name="t_{{ r }}_{{ loop.index0 }}" value="{{ row[loop.index0] if row | length > loop.index0 else '' }}"></td>{% endfor %}</tr>{% endfor %}</tbody>
+            </table></div>
+            <button type="button" class="btn btn-sm" style="margin-top:6px" data-add-row="tblBody" data-cols="{{ it.table | length }}">+ Row</button>
+            {% endif %}
+            {% if not it.fields and not it.table %}
+            <p class="small muted" style="margin:0">This item is evidenced by files — upload them below, then submit.</p>
+            {% endif %}
+            </fieldset>
+            {% if not locked %}
+            <input type="hidden" name="next_id" value="{{ next_open.id if next_open else '' }}">
+            <div class="form-actions">
+                <button class="btn btn-primary" name="action" value="submit">Submit for review</button>
+                {% if next_open %}<button class="btn" name="action" value="submit" onclick="this.form.then.value='next'">Submit &amp; next open item →</button>{% endif %}
+                <input type="hidden" name="then" value="">
+                <button class="btn btn-ghost" name="action" value="save">Save draft</button>
+            </div>
+            {% endif %}
+        </form>
+        {% if not locked and s.status != 'na' %}
+        <details class="fold" style="margin-top:12px">
+            <summary>Not applicable to this packaging?</summary>
+            <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/na" class="fold-body">
+                <label class="field"><span class="field-label">Reason (quoted in TD §5 / §19)</span>
+                    <textarea name="reason" required minlength="10" placeholder="e.g. Art 7 applies to the plastic part of packaging only; this unit contains no plastic.">{{ s.na_reason }}</textarea></label>
+                <div class="form-actions"><button class="btn btn-sm">{{ 'Mark N/A' if is_expert else 'Request N/A' }}</button></div>
+            </form>
+        </details>
+        {% endif %}
+    </section>
+    {% endif %}
+
+    <section class="card">
+        <div class="card-head">
+            <h2 class="card-title">Evidence <span class="hint">{{ evidence | length }} file{{ 's' if evidence | length != 1 }} · IDs follow PU-xxx-Cxxx-TYPE-nnn</span></h2>
+        </div>
+        {% if evidence %}
+        <ul class="file-list">
+            {% for e in evidence %}
+            <li><span class="file-ico">{{ (e.filename or 'DOC').rsplit('.', 1)[-1][:4] | upper }}</span>
+                <span class="file-meta"><b><a href="/evidence/{{ e.id }}/download">{{ e.title }}</a></b>
+                    <small><span class="chip-id">{{ e.code }}</span> · {{ EVIDENCE_TYPES.get(e.type_code, e.type_code) }}{{ ' · ' ~ e.file_no if e.file_no }}{{ ' · ' ~ e.issuer if e.issuer }} · {{ e.issued_date | day }} · {{ e.size | size }}</small></span>
+                {% if e.conformity and e.conformity.lower().startswith('non') %}<span class="badge badge-high">non-conform</span>{% endif %}
+                {% if not locked %}<form method="post" action="/evidence/{{ e.id }}/delete" data-confirm="Remove {{ e.code }}?"><input type="hidden" name="back" value="/projects/{{ project.id }}/items/{{ s.id }}"><button class="linkbtn danger xs">remove</button></form>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if not locked %}
+        <form method="post" action="/projects/{{ project.id }}/evidence" enctype="multipart/form-data" style="margin-top:10px">
+            <input type="hidden" name="sub_id" value="{{ s.id }}">
+            <input type="hidden" name="back" value="/projects/{{ project.id }}/items/{{ s.id }}">
+            <label class="upload" style="display:block;cursor:pointer">
+                <input type="file" name="file" hidden>
+                <span class="small"><b data-file-label>Drop a file here or click to choose</b> <span class="muted">· PDF, image, Office, DWG · max 25 MB</span></span>
+            </label>
+            <div class="form-row" style="margin-top:10px">
+                <label class="field" style="grid-column: span 2"><span class="field-label">Title</span><input name="title" placeholder="e.g. Heavy-metal test report"></label>
+                <label class="field"><span class="field-label">Type</span><select name="type_code">{% for k, v in EVIDENCE_TYPES.items() %}<option value="{{ k }}" {{ 'selected' if k == it.evidence_code }}>{{ k }} · {{ v }}</option>{% endfor %}</select></label>
+                <label class="field"><span class="field-label">Component</span><select name="component_id"><option value="">whole unit</option>{% for c in comps %}<option value="{{ c.id }}">{{ c.code }} {{ c.material }}</option>{% endfor %}</select></label>
+            </div>
+            <div class="form-row">
+                <label class="field"><span class="field-label">Document / report no.</span><input name="file_no"></label>
+                <label class="field"><span class="field-label">Issued by</span><input name="issuer"></label>
+                <label class="field"><span class="field-label">Issue date</span><input type="date" name="issued_date"></label>
+                <label class="field"><span class="field-label">Conformity</span><select name="conformity"><option>Conform</option><option>Non-conform</option><option>Not stated</option></select></label>
+            </div>
+            <button class="btn btn-sm">Upload to the vault</button>
+        </form>
+        {% endif %}
+    </section>
+</div>
+
+<aside class="layout-rail">
+    <div class="rail-card">
+        <header class="rail-card-head ai-card-title">{{ octagon(18) }}<span class="rail-card-eyebrow">AI pre-review</span></header>
+        {% if s.ai_checks %}
+        <div style="margin-bottom:6px">{{ verdict(s.ai_verdict) }} <span class="xs muted">· {{ s.ai_at | date }}</span></div>
+        <ul class="ai-checks">
+            {% for c in s.ai_checks %}
+            <li><span class="ai-mark {{ 'ok' if c.ok == true else 'no' if c.ok == false else 'maybe' }}">{{ '✓' if c.ok == true else '!' if c.ok == false else '?' }}</span>
+                <span>{{ c.desc }}{% if c.msg %}<span class="ai-msg">{{ c.msg }}</span>{% endif %}{% if c.ref %}<span class="ai-ref">{{ c.ref }}</span>{% endif %}</span></li>
+            {% endfor %}
+        </ul>
+        {% elif s.status == 'submitted' %}
+        <p class="small muted" style="margin:0 0 8px">Submitted {{ s.submitted_at | ago }} by {{ s.submitted_by }} — waiting for the AI pre-review.</p>
+        {% else %}
+        <p class="small muted" style="margin:0">Runs when the item is submitted: completeness, limit values, consistency with the
+            project profile and BOM, evidence age and supplier certificates — each check cites its source.</p>
+        {% endif %}
+        {% if s.status in ('submitted', 'ai_reviewed') %}
+        <button class="btn btn-sm" id="aiRun" style="margin-top:8px" data-ai-post="/projects/{{ project.id }}/items/{{ s.id }}/ai"
+                data-ai-stages="Reading the submission…|Checking against PPWR (EU) 2025/40…|Tracing supplier certificates…|Writing the pre-review…">{{ 'Re-run' if s.ai_checks else 'Run' }} AI pre-review</button>
+        {% endif %}
+        <p class="xs muted" style="margin:8px 0 0">Advisory only — the TÜV SÜD expert decides.</p>
+    </div>
+
+    {% if is_expert %}
+    <div class="rail-card">
+        <header class="rail-card-head"><span class="rail-card-eyebrow">Expert decision</span></header>
+        {% if s.status in ('submitted', 'ai_reviewed', 'pending', 'rejected') and not it.system %}
+        <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/decide" class="decision">
+            <label class="field"><span class="field-label">Comment {{ '(required to reject)' }}</span><textarea name="comment" placeholder="What the client should fix, or a note for the file"></textarea></label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn btn-success btn-sm" name="decision" value="approve">{{ 'Confirm N/A' if s.na_requested else 'Approve' }}</button>
+                <button class="btn btn-danger btn-sm" name="decision" value="reject">Reject</button>
+                <button class="btn btn-sm" name="decision" value="na">Mark N/A</button>
+            </div>
+            <label class="xs muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" name="go_next" value="1" checked> then open the next item waiting in this project</label>
+        </form>
+        {% else %}
+        <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/reopen" class="decision">
+            <p class="small muted" style="margin:0">{{ STATUS_LABEL[s.status] }}{{ ' by ' ~ s.reviewed_by if s.reviewed_by }}.</p>
+            <input class="input" name="reason" value="Re-opened for correction">
+            <button class="btn btn-sm">Re-open item</button>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="rail-card">
+        <header class="rail-card-head"><span class="rail-card-eyebrow">History</span></header>
+        <ul class="timeline">
+            {% for h in history %}<li><b>{{ h.action }}</b> · {{ h.actor }}<br><span class="muted">{{ h.at | date }}</span>{% if h.comment %}<br><span class="muted">{{ h.comment }}</span>{% endif %}</li>
+            {% else %}<li>No activity yet.</li>{% endfor %}
+        </ul>
+    </div>
+
+    <div class="rail-card" style="display:flex;justify-content:space-between;gap:8px">
+        {% if prev %}<a class="btn btn-sm" href="/projects/{{ project.id }}/items/{{ prev.id }}">← {{ prev.item_id }}</a>{% else %}<span></span>{% endif %}
+        {% if next %}<a class="btn btn-sm" href="/projects/{{ project.id }}/items/{{ next.id }}">{{ next.item_id }} →</a>{% endif %}
+    </div>
+</aside>
+</div>
+{% endblock %}

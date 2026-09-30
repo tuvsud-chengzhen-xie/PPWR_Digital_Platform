@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block page %}
+<main class="login-wrap">
+    <section class="login-hero">
+        <span class="eyebrow">Regulation (EU) 2025/40 · applies from 12 Aug 2026</span>
+        <h1>PPWR Technical Documentation &amp; EU DoC — collected, reviewed and generated in one place.</h1>
+        <p>Clients register their packaging and BOM, upload evidence against the 69 items of the PPWR checklist,
+           and follow each item through AI pre-review and TÜV SÜD expert review. Approved data generates the
+           Annex VII technical documentation and the Annex VIII declaration of conformity — and any supplier
+           change shows exactly which documents it touches.</p>
+        <ul class="login-points">
+            {% for t in ['16 categories · 69 evidence items, mapped to the TD V1.5 structure',
+                         'Two-stage review: AI pre-review against the PPWR knowledge base → expert decision',
+                         'Auto-generated TD & DoC (Word), versioned; one-click authority dossier',
+                         'Supplier library with certificate expiry watch and change-impact tracing'] %}
+            <li><svg width="16" height="16" viewBox="0 0 120 120" fill="none"><polygon points="40,6 80,6 114,40 114,80 80,114 40,114 6,80 6,40" stroke="#0066cc" stroke-width="12"/></svg>{{ t }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    <section class="card">
+        <h2 class="card-title">Sign in</h2>
+        {% if error %}<div class="banner banner-error">{{ error }}</div>{% endif %}
+        <form method="post" action="/login">
+            <label class="field" style="margin-bottom: 10px"><span class="field-label">User name</span>
+                <input name="username" id="username" autocomplete="username" required autofocus></label>
+            <label class="field" style="margin-bottom: 14px"><span class="field-label">Password</span>
+                <input name="password" id="password" type="password" autocomplete="current-password" required></label>
+            <button class="btn btn-primary" type="submit" style="width: 100%; justify-content: center">Sign in</button>
+        </form>
+        <hr style="border: 0; border-top: 1px solid var(--neutral-75); margin: 18px 0 12px">
+        <div class="eyebrow" style="margin-bottom: 8px">Pilot demo accounts (password “demo”)</div>
+        <div class="demo-accounts">
+            {% for a in accounts %}
+            <button type="button" class="btn" onclick="document.getElementById('username').value='{{ a.username }}';document.getElementById('password').value='{{ a.password }}';this.closest('.card').querySelector('form').submit()">
+                <span><b>{{ a.username }}</b> · {{ a.display_name }}</span>
+                <span class="badge {{ 'badge-info' if a.role == 'expert' else 'badge-muted' }}">{{ a.role }}</span>
+            </button>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

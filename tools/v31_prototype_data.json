@@ -1,0 +1,2279 @@
+{
+ "CATS": [
+  {
+   "id": 1,
+   "name": "包装基本信息",
+   "en": "Packaging Identification",
+   "logic": "PPWR 要求每件投放市场的包装可唯一识别与追溯（Art 3(1) 定义、Art 12(2) 标识追溯、Annex VII 技术文档）。技术文档首先要锁定「被评估的包装对象」——UPI、产品-SKU 对应、供应商与产地、质量尺寸、照片/Artwork。没有这层基线，后续可回收性、最小化、标签等条款评估都失去载体。",
+   "td": "TD §1–§3 / T00、T02"
+  },
+  {
+   "id": 2,
+   "name": "包装结构与BOM",
+   "en": "Structure & BOM",
+   "logic": "Art 6 可回收性按「材料组成」评估（Annex IV 准则：主要组件、质量占比、组件相容性）；Art 10 最小化需要「重量/体积基线」才能论证最低必要。完整 BOM（组件→材料→结构→质量→尺寸→供应商→证据ID）是所有定量评估的基础。",
+   "td": "TD §3 / T03"
+  },
+  {
+   "id": 3,
+   "name": "设计与制造",
+   "en": "Design & Manufacturing",
+   "logic": "Art 6(1) 要求包装「按设计可回收」，Art 10(1) 要求证明重量/体积为满足功能的必要最小值。设计图纸、刀模图、Artwork、制造规格、控制计划是这两项评估的客观证据，同时为制造一致性（TD §15）提供基准。",
+   "td": "TD §4 / T04"
+  },
+  {
+   "id": 4,
+   "name": "Article 5 物质要求",
+   "en": "Substances of Concern",
+   "logic": "Art 5(4)：自 2026-08-12 起，包装及组件中 Pb+Cd+Hg+Cr(VI) 四项总和 ≤100 mg/kg。Art 5(5)：自 2026-08-12 起，食品接触包装中 PFAS 受限（≤25 ppb 总氟 / ≤250 ppb 聚合PFAS / ≤50 ppm，以总氟法测定）。本产品为印刷色卡（非食品接触）→ 重金属适用、PFAS 记录 N/A 判断。",
+   "td": "TD §6 / T05"
+  },
+  {
+   "id": 5,
+   "name": "Article 6 可回收性",
+   "en": "Recyclability",
+   "logic": "Art 6(1)：自 2026-08-12 起所有包装须设计为可回收（按 Annex IV 准则评估）；2030 年起须达 A/B 级、2035 年起须达 A 级（由实施法案规定）。单材质纸基包装按 EN 13430 材料回收路线评估：材料识别、主要组件质量占比、收集/分选、回收工艺相容性、辅助件（油墨/胶黏剂/涂层/标签）相容性。",
+   "td": "TD §7 / T06"
+  },
+  {
+   "id": 6,
+   "name": "Article 7 再生料",
+   "en": "Recycled Content",
+   "logic": "Art 7 + Annex II 仅针对「塑料包装」设定最低再生含量目标（2030：PET 瓶 30% 等 / 其他塑料 35%；2040：65%）。本产品为纸板 PAP 20、0% 再生含量、无塑料组件 → 记录 N/A 及理由；若未来引入塑料组件则适用。",
+   "td": "TD §8 / T07"
+  },
+  {
+   "id": 7,
+   "name": "Article 8 生物基",
+   "en": "Biobased Feedstock",
+   "logic": "Art 8 针对塑料包装中生物基原料对成员国 2030 年 25% 目标的贡献。纸板非塑料 → N/A；如拟作生物基声明，须按 ISO 16620-5 等验证生物基含量。",
+   "td": "TD §9 / T08"
+  },
+  {
+   "id": 8,
+   "name": "Article 9 可堆肥性",
+   "en": "Compostability",
+   "logic": "Art 9 仅适用于特定包装（茶包、咖啡胶囊、果蔬贴纸等，2028-08-12 起须满足 EN 13432 工业堆肥）。本产品不属于该类 → N/A，记录判断依据。",
+   "td": "TD §10 / T09"
+  },
+  {
+   "id": 9,
+   "name": "Article 10 最小化",
+   "en": "Minimisation",
+   "logic": "Art 10(1)：自 2030-01-01 起，包装重量/体积须为满足功能的最低必要值，须对照 Annex IV 八项性能准则逐项论证（产品保护、制造工艺、物流、功能性、信息、卫生、安全、法律要求）。Art 24 空隙率要求（2030 起，运输/销售/组合包装 ≤50%）需评估适用性。现有设计可作过渡期记录。证据：最小化计算、跌落/压缩/运输测试、设计说明。",
+   "td": "TD §11 / T10"
+  },
+  {
+   "id": 10,
+   "name": "Article 11 可重复使用",
+   "en": "Reusability",
+   "logic": "Art 11 认定可重复使用包装并设定 2030 目标（运输包装等）。一次性销售包装 → N/A，记录理由。若适用须评估：重复使用设计、循环次数/寿命、清空再装填、性能安全、维修、回收返回与清洗系统。",
+   "td": "TD §12 / T11"
+  },
+  {
+   "id": 11,
+   "name": "Article 12 标识追溯",
+   "en": "Labelling & Traceability",
+   "logic": "Art 12 要求包装标注材料成分、处置/分选信息、尺寸体积、可重复使用标识、DRS 标识等；具体条款由实施法案细化（预期 2028-08-12 起适用）。当前阶段：收集最终 Artwork，记录各信息项的位置与载体（QR/编码），确保 Artwork 变更前做法规复核。",
+   "td": "TD §13 / T12"
+  },
+  {
+   "id": 12,
+   "name": "风险与变更管理",
+   "en": "Risk & Change Control",
+   "logic": "Annex VII 要求技术文档包含「不符合性风险分析」。变更（材料/供应商/配方/油墨/胶黏剂/质量厚度/工艺/Artwork/法规）可能使已批准结论失效，须在放行前做影响评估并在必要时重做评估。",
+   "td": "TD §14–§15 / T13、T14"
+  },
+  {
+   "id": 13,
+   "name": "制造控制",
+   "en": "Manufacturing Control",
+   "logic": "技术文档结论必须与「实际生产」一致（Art 15(2) 生产一致性义务）。来料检验、首件与日常 QC、最终放行记录，是证明量产包装符合批准设计的证据链。",
+   "td": "TD §15 / T14"
+  },
+  {
+   "id": 14,
+   "name": "标准与证据管理",
+   "en": "Standards & Evidence",
+   "logic": "每个评估结论须落到「标准/技术规范 + 客观证据」。适用标准清单（版本/日期/条款）与 Evidence Register（证据ID、来源、适用条款）是 TD 与 DoC 之间的桥梁（Art 39 / Annex VII / VIII）。",
+   "td": "TD §16–§17 / T15、T16"
+  },
+  {
+   "id": 15,
+   "name": "供应商资料",
+   "en": "Supplier Evidence",
+   "logic": "大部分客观证据（材料组成、重金属、PFAS、可回收性、变更通知）来自供应链。供应商声明/报告构成 TD 证据链，且须可追溯到供应商的变更控制承诺。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": 16,
+   "name": "DoC 及审批",
+   "en": "DoC & Approval",
+   "logic": "Art 39 + Annex VIII 要求 EU DoC。TD 完成后须经 Prepared / Reviewed / Approved 三级审批，DoC 由制造商签署；每项符合性结论与证据交叉引用（证据ID）。",
+   "td": "TD §19–§21 + DoC / T18–T21"
+  }
+ ],
+ "ITEMS": [
+  {
+   "id": "C01-01",
+   "cat": 1,
+   "name": "包装唯一识别信息（UPI）",
+   "req": "Unique Packaging Identifier、包装名称/描述、包装类型",
+   "form": "包装识别信息表/内部编码",
+   "legal": "Art 3(1)、Art 12(2)；Annex VII",
+   "logic": "UPI 是包装在技术文档与 DoC 中的唯一索引，贯穿 TD §2、§20 与 DoC 包装识别栏。没有 UPI，后续所有结论无法定位到具体包装。",
+   "td": "TD §2 / T02",
+   "fields": [
+    {
+     "k": "upi",
+     "l": "UPI / 包装唯一标识",
+     "t": "text"
+    },
+    {
+     "k": "pkgName",
+     "l": "包装名称 / 描述",
+     "t": "text"
+    },
+    {
+     "k": "pkgType",
+     "l": "包装类型（销售/组合/运输/电商…）",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C01-02",
+   "cat": 1,
+   "name": "产品 / SKU 对应关系",
+   "req": "Packaged product(s)、SKU/model range",
+   "form": "产品-SKU-包装对应表",
+   "legal": "Annex VII（技术文档识别）",
+   "logic": "明确「这款包装装什么产品、覆盖哪些 SKU」，是 TD §2 与 DoC 的产品范围声明基础。",
+   "td": "TD §2 / T02",
+   "fields": [
+    {
+     "k": "sku",
+     "l": "产品 / SKU / 型号范围",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C01-03",
+   "cat": 1,
+   "name": "包装供应商及生产地点信息",
+   "req": "Packaging supplier(s)、manufacturing site(s)、country of manufacture",
+   "form": "供应商信息资料",
+   "legal": "Annex VII；Art 15(2) 生产一致性",
+   "logic": "供应商与产地信息用于追溯证据链来源（供应商声明、测试报告签发方），也用于风险分析（供应商变更风险）。",
+   "td": "TD §2 / T02",
+   "fields": [
+    {
+     "k": "sup",
+     "l": "包装供应商",
+     "t": "text"
+    },
+    {
+     "k": "site",
+     "l": "生产地点（工厂）",
+     "t": "text"
+    },
+    {
+     "k": "country",
+     "l": "生产国",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C01-04",
+   "cat": 1,
+   "name": "包装质量及尺寸信息",
+   "req": "Packaging mass、dimensions",
+   "form": "规格书/测量记录",
+   "legal": "Art 10 最小化；Art 24 空隙率；Annex IV",
+   "logic": "质量(g)与尺寸(mm)是最小化评估的定量基线，也是空隙率计算（Art 24）与 BOM 质量核对的输入。",
+   "td": "TD §2 / T02",
+   "fields": [
+    {
+     "k": "mass",
+     "l": "包装总质量（g）",
+     "t": "text"
+    },
+    {
+     "k": "dims",
+     "l": "尺寸（mm）",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C01-05",
+   "cat": 1,
+   "name": "包装照片及最终 Artwork",
+   "req": "Photographs / artwork reference",
+   "form": "实物照片、最终Artwork",
+   "legal": "Annex VII（识别与核对）",
+   "logic": "实物照片与最终 Artwork 用于核对包装外观、标签信息位置，是 §13 标签评估与变更控制的参照基准。",
+   "td": "TD §2 / T02",
+   "fields": [
+    {
+     "k": "ref",
+     "l": "照片 / Artwork 参考编号",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C02-06",
+   "cat": 2,
+   "name": "完整包装 BOM",
+   "req": "组件、材料/结构、质量(g)、尺寸(mm)、供应商/来源",
+   "form": "Packaging BOM",
+   "legal": "Art 6(1)(2)、Annex IV 准则；Art 10",
+   "logic": "BOM 是可回收性（组件质量占比、相容性）与最小化（重量基线）的核心定量输入，逐行对应 TD §3 表格。",
+   "td": "TD §3 / T03",
+   "table": {
+    "cols": [
+     "组件",
+     "材料 / 结构",
+     "质量 (g)",
+     "尺寸 (mm)",
+     "供应商 / 来源"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ]
+   }
+  },
+  {
+   "id": "C02-07",
+   "cat": 2,
+   "name": "各组件材料规格书 / TDS",
+   "req": "Material specification / technical data sheet",
+   "form": "供应商TDS/规格书",
+   "legal": "Art 6；Art 5(4) 证据链",
+   "logic": "TDS 证明各组件的材料身份与基本性能，支撑材料识别与可回收性判定，也是供应商证据链（§18）的组成部分。",
+   "td": "TD §3 / T03"
+  },
+  {
+   "id": "C02-08",
+   "cat": 2,
+   "name": "完整材料组成资料",
+   "req": "Full material composition",
+   "form": "供应商材料组成声明",
+   "legal": "Art 5(4)；Annex IV 准则2",
+   "logic": "完整材料组成（含添加剂、涂层）用于重金属限值评估的物质清单基础，避免漏检隐藏组分。",
+   "td": "TD §3 / T03"
+  },
+  {
+   "id": "C02-09",
+   "cat": 2,
+   "name": "油墨 / 胶黏剂 / 涂层资料",
+   "req": "Inks / adhesives / coatings declarations",
+   "form": "供应商声明/规格书",
+   "legal": "Art 6(3) 组件相容性；Art 5(4)",
+   "logic": "油墨与胶黏剂可能含重金属或影响纸基回收（脱墨性、胶黏剂污染），是可回收性评估与 §6 物质评估的关键组件资料。",
+   "td": "TD §3、§6 / T03、T05"
+  },
+  {
+   "id": "C03-10",
+   "cat": 3,
+   "name": "包装设计图纸",
+   "req": "Packaging drawing",
+   "form": "正式图纸及版本",
+   "legal": "Art 6(1)；Art 10(1)",
+   "logic": "正式设计图纸锁定包装结构，是可回收设计评估与最小化论证的客观载体。",
+   "td": "TD §4 / T04",
+   "fields": [
+    {
+     "k": "docno",
+     "l": "图纸编号 / 版本",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C03-11",
+   "cat": 3,
+   "name": "结构 / 刀模图",
+   "req": "Die-cut / structural drawing",
+   "form": "结构图/刀模图",
+   "legal": "Art 6(1)；Art 10(1)",
+   "logic": "刀模图确认纸板展开结构与成型方式，用于判断回收工艺相容性与结构减量空间。",
+   "td": "TD §4 / T04",
+   "fields": [
+    {
+     "k": "docno",
+     "l": "图纸编号 / 版本",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C03-12",
+   "cat": 3,
+   "name": "Artwork / 标签设计",
+   "req": "Artwork / label design",
+   "form": "最终批准Artwork",
+   "legal": "Art 12（标签）；Art 6(3)（标签可分离性）",
+   "logic": "最终批准版 Artwork 是 §13 标签信息核对与 §15 Artwork 变更控制的基准版本。",
+   "td": "TD §4、§13 / T04、T12",
+   "fields": [
+    {
+     "k": "docno",
+     "l": "Artwork 编号 / 版本",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C03-13",
+   "cat": 3,
+   "name": "制造规格书",
+   "req": "Manufacturing specification",
+   "form": "制造规格文件",
+   "legal": "Art 15(2) 生产一致性",
+   "logic": "制造规格书定义量产条件（克重、厚度、公差），是制造控制（§15）与一致性核查的依据。",
+   "td": "TD §4 / T04",
+   "fields": [
+    {
+     "k": "docno",
+     "l": "规格书编号 / 版本",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C03-14",
+   "cat": 3,
+   "name": "生产工艺 / 控制计划",
+   "req": "Production process / control plan",
+   "form": "工艺文件/控制计划",
+   "legal": "Art 15(2)；Annex VII",
+   "logic": "控制计划说明关键工艺参数与质量控制点，支撑量产一致性论证。",
+   "td": "TD §4 / T04",
+   "fields": [
+    {
+     "k": "docno",
+     "l": "文件编号 / 版本",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C03-15",
+   "cat": 3,
+   "name": "包装设计理由及技术依据",
+   "req": "Article 6 / Article 10 设计与技术理由",
+   "form": "设计说明、计算、验证资料",
+   "legal": "Art 6(1)、Art 10(1)；Annex IV",
+   "logic": "设计理由段是 §4 与 §11 的核心叙述：为什么采用该结构/材料/质量，为什么这是满足功能的最低必要设计。",
+   "td": "TD §4、§11 / T04、T10",
+   "fields": [
+    {
+     "k": "rationale",
+     "l": "设计理由与技术依据（叙述）",
+     "t": "ta"
+    }
+   ]
+  },
+  {
+   "id": "C04-16",
+   "cat": 4,
+   "name": "重金属符合性证据",
+   "req": "Pb、Cd、Hg、Cr(VI) 总量 100 mg/kg 限值",
+   "form": "检测报告和/或供应商声明、规格书",
+   "legal": "Art 5(4)：自 2026-08-12 起 ≤100 mg/kg（四项总和）",
+   "logic": "必测项。建议以 ICP-OES/MS 检测报告为主、供应商声明为辅；检测对象须覆盖包装及所有组件（含油墨）。结果为 TD §6 表格核心数据。",
+   "td": "TD §6 / T05",
+   "fields": [
+    {
+     "k": "res",
+     "l": "检测结果（四项总和 mg/kg）",
+     "t": "text"
+    },
+    {
+     "k": "method",
+     "l": "检测方法（如 ICP-OES / ICP-MS）",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C04-17",
+   "cat": 4,
+   "name": "PFAS 声明 / 检测（如适用）",
+   "req": "食品接触包装适用时的 Article 5(5) 要求",
+   "form": "PFAS声明/检测报告及方法说明",
+   "legal": "Art 5(5)：仅食品接触包装适用（25/250 ppb / 50 ppm）",
+   "logic": "本产品为印刷色卡、非食品接触 → 记录 N/A 判断依据即可；如客户用于食品接触场景，则须提供总氟法检测报告。",
+   "td": "TD §6 / T05",
+   "fields": [
+    {
+     "k": "app",
+     "l": "是否适用（食品接触）",
+     "t": "sel",
+     "o": [
+      "不适用 N/A",
+      "适用",
+      "待确认"
+     ]
+    },
+    {
+     "k": "note",
+     "l": "判断依据 / 检测情况",
+     "t": "ta"
+    }
+   ]
+  },
+  {
+   "id": "C04-18",
+   "cat": 4,
+   "name": "食品接触声明（如适用）",
+   "req": "食品接触包装相关符合性资料",
+   "form": "Food-contact Declaration",
+   "legal": "Art 5(5) 适用性判断；如涉及食品接触另需 EC 1935/2004",
+   "logic": "用于确认产品是否落入食品接触范围，从而决定 PFAS 条款适用与否。非食品接触产品记录 N/A。",
+   "td": "TD §6 / T05",
+   "fields": [
+    {
+     "k": "app",
+     "l": "是否食品接触包装",
+     "t": "sel",
+     "o": [
+      "否（非食品接触）",
+      "是",
+      "待确认"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "C05-19",
+   "cat": 5,
+   "name": "可回收性评估资料",
+   "req": "材料识别、主要组件及质量占比、收集/分选、回收工艺兼容性",
+   "form": "Recyclability assessment",
+   "legal": "Art 6(1)、Annex IV 准则；过渡期方法（EN 13430）",
+   "logic": "纸基单材质包装的可回收性评估主线：材料识别（PAP 20）→ 主要组件质量占比 → 收集分选（纸/纸板回收流）→ 工艺兼容性。结论填入 TD §7。",
+   "td": "TD §7 / T06",
+   "fields": [
+    {
+     "k": "concl",
+     "l": "可回收性评估结论（叙述）",
+     "t": "ta"
+    }
+   ]
+  },
+  {
+   "id": "C05-20",
+   "cat": 5,
+   "name": "组件相容性资料",
+   "req": "封口、标签、油墨、胶黏剂、涂层等",
+   "form": "测试/评估/供应商资料",
+   "legal": "Art 6(3)（分离组件 / 集成组件规则）",
+   "logic": "胶订/贴标/覆膜/特殊油墨都可能影响纸基回收。需证明各辅助件与回收工艺相容（如可脱墨、可分离），或按集成组件规则评估。",
+   "td": "TD §7 / T06"
+  },
+  {
+   "id": "C05-21",
+   "cat": 5,
+   "name": "当前适用方法 / 标准依据",
+   "req": "实际采用的过渡期方法和标准",
+   "form": "标准/技术评估依据",
+   "legal": "Art 6(4) 实施法案前适用的过渡期方法",
+   "logic": "在可回收性分级（A/B/C）实施法案生效前，记录实际采用的方法（如 EN 13430 + 国家/行业标准），避免过早套用未来分级。",
+   "td": "TD §7 / T06",
+   "fields": [
+    {
+     "k": "method",
+     "l": "实际采用的方法 / 标准",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C06-22",
+   "cat": 6,
+   "name": "塑料包装再生料含量资料（如适用）",
+   "req": "总质量、PCR质量、计算基础、适用要求/豁免",
+   "form": "PCR证明、供应商声明、计算资料",
+   "legal": "Art 7 + Annex II（仅塑料包装）",
+   "logic": "本产品无塑料组件 → N/A。若包装含塑料件，须按 Annex II 计算最低再生含量并附 PCR 证明。",
+   "td": "TD §8 / T07",
+   "fields": [
+    {
+     "k": "app",
+     "l": "是否适用（含塑料组件）",
+     "t": "sel",
+     "o": [
+      "不适用 N/A（纯纸基）",
+      "适用",
+      "待确认"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "C06-23",
+   "cat": 6,
+   "name": "再生料验证证据（如适用）",
+   "req": "符合条件的再生输入及验证",
+   "form": "供应商证明/验证资料",
+   "legal": "Art 7(3) 验证规则",
+   "logic": "如适用：证明再生输入符合 Art 7(3) 的验证与豁免规则。纯纸基产品记录 N/A。",
+   "td": "TD §8 / T07"
+  },
+  {
+   "id": "C07-24",
+   "cat": 7,
+   "name": "生物基原料资料（如适用）",
+   "req": "材料/配方、生物基原料占比",
+   "form": "测试报告/供应商声明",
+   "legal": "Art 8（塑料包装生物基贡献）",
+   "logic": "纸板非塑料 → N/A。如做生物基声明，需按 ISO 16620-5 验证生物基碳占比。",
+   "td": "TD §9 / T08",
+   "fields": [
+    {
+     "k": "app",
+     "l": "是否适用",
+     "t": "sel",
+     "o": [
+      "不适用 N/A",
+      "适用",
+      "待确认"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "C07-25",
+   "cat": 7,
+   "name": "相关标签 / 处置信息（如适用）",
+   "req": "Labelling / disposal information",
+   "form": "Artwork/标签资料",
+   "legal": "Art 8(3) 标签要求（如声明生物基）",
+   "logic": "如作出生物基声明，标签信息须支持该声明并纳入 §13 核对。",
+   "td": "TD §9、§13 / T08、T12"
+  },
+  {
+   "id": "C08-26",
+   "cat": 8,
+   "name": "可堆肥性适用性判断（如适用）",
+   "req": "是否属于需满足堆肥性要求的包装",
+   "form": "适用性判断记录",
+   "legal": "Art 9：茶包、咖啡胶囊、果蔬贴纸等（2028-08-12 起）",
+   "logic": "判断产品是否落入 Art 9 特定包装类别。印刷色卡不属于 → N/A，记录判断。",
+   "td": "TD §10 / T09",
+   "fields": [
+    {
+     "k": "app",
+     "l": "是否属于 Art 9 特定包装",
+     "t": "sel",
+     "o": [
+      "否（不适用）",
+      "是",
+      "待确认"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "C08-27",
+   "cat": 8,
+   "name": "堆肥性测试 / 声明（如适用）",
+   "req": "材料、工业/家庭堆肥路线",
+   "form": "测试报告/供应商声明",
+   "legal": "EN 13432（工业堆肥）",
+   "logic": "如适用：提供 EN 13432 检测报告或供应商声明，说明堆肥路线。",
+   "td": "TD §10 / T09"
+  },
+  {
+   "id": "C08-28",
+   "cat": 8,
+   "name": "堆肥相关标签 / 处置信息（如适用）",
+   "req": "Labelling / disposal information",
+   "form": "Artwork/标签资料",
+   "legal": "Art 9(2) 标签要求",
+   "logic": "如适用：可堆肥标识须出现在包装上并纳入 §13 核对。",
+   "td": "TD §10、§13 / T09、T12"
+  },
+  {
+   "id": "C09-29",
+   "cat": 9,
+   "name": "包装最小化评估",
+   "req": "证明包装满足最低必要重量/体积",
+   "form": "Minimisation Assessment",
+   "legal": "Art 10(1)（2030 起）；Annex IV 八项准则",
+   "logic": "最小化评估的总结论文件：汇总八项准则论证，说明当前重量/体积已是满足功能的最低必要值。过渡期可作现状记录。",
+   "td": "TD §11 / T10",
+   "fields": [
+    {
+     "k": "concl",
+     "l": "最小化评估结论（叙述）",
+     "t": "ta"
+    }
+   ]
+  },
+  {
+   "id": "C09-30",
+   "cat": 9,
+   "name": "产品保护证据",
+   "req": "产品保护所需包装设计依据",
+   "form": "跌落/压缩/振动/运输测试、计算等",
+   "legal": "Annex IV 准则1：产品保护",
+   "logic": "证明包装厚度/结构为保护色卡所必需（如跌落、压缩强度测试），是\"不能进一步减量\"的核心证据。",
+   "td": "TD §11 / T10"
+  },
+  {
+   "id": "C09-31",
+   "cat": 9,
+   "name": "制造过程证据",
+   "req": "制造过程对进一步减量的限制",
+   "form": "工艺验证/技术说明",
+   "legal": "Annex IV 准则2：制造工艺",
+   "logic": "说明印刷/模切/裱合等工艺对克重与尺寸的最低要求。",
+   "td": "TD §11 / T10"
+  },
+  {
+   "id": "C09-32",
+   "cat": 9,
+   "name": "物流 / 运输证据",
+   "req": "物流、运输、堆码等必要性",
+   "form": "运输测试/计算/模拟",
+   "legal": "Annex IV 准则3：物流运输",
+   "logic": "堆码强度、运输抗压等证明包装尺寸质量受物流条件约束。",
+   "td": "TD §11 / T10"
+  },
+  {
+   "id": "C09-33",
+   "cat": 9,
+   "name": "包装功能性证据",
+   "req": "开启、封闭、使用等功能必要性",
+   "form": "功能验证/测试",
+   "legal": "Annex IV 准则4：包装功能性",
+   "logic": "开启/闭合/展示等功能对结构的要求（如色卡翻盖、挂孔）。",
+   "td": "TD §11 / T10"
+  },
+  {
+   "id": "C09-34",
+   "cat": 9,
+   "name": "信息 / 卫生 / 安全证据",
+   "req": "相关信息、卫生和安全要求对设计的影响",
+   "form": "法规要求/测试/设计说明",
+   "legal": "Annex IV 准则5/6/7：信息、卫生、安全",
+   "logic": "标签承载面积、印刷信息量对尺寸的影响；如涉卫生/安全法规须记录。",
+   "td": "TD §11 / T10"
+  },
+  {
+   "id": "C09-35",
+   "cat": 9,
+   "name": "空隙评估（如适用）",
+   "req": "Article 24 适用范围、日期及方法",
+   "form": "尺寸数据、空隙计算及依据",
+   "legal": "Art 24：2030 起运输/销售/组合包装空隙率 ≤50%",
+   "logic": "记录 Art 24 对本品是否适用、适用日期与方法（实施法案）。过渡期不提前套用定量阈值。",
+   "td": "TD §11（§4）",
+   "fields": [
+    {
+     "k": "note",
+     "l": "空隙率评估记录",
+     "t": "ta"
+    }
+   ]
+  },
+  {
+   "id": "C09-36",
+   "cat": 9,
+   "name": "双层壁 / 假底等例外证据（如适用）",
+   "req": "Article 10(2) 例外及相关条件",
+   "form": "设计资料及证明",
+   "legal": "Art 10(2)：2025-02-11 前既有设计权/商标/地理标志",
+   "logic": "若包装含双层壁/假底/非必要层，须证明其落入 Art 10(2) 例外条件（2025-02-11 前的设计权等）。",
+   "td": "TD §4、§11",
+   "fields": [
+    {
+     "k": "app",
+     "l": "是否存在双层壁/假底等",
+     "t": "sel",
+     "o": [
+      "无（不涉及）",
+      "存在，适用例外",
+      "存在，需评估"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "C10-37",
+   "cat": 10,
+   "name": "可重复使用性评估（如适用）",
+   "req": "重复使用设计、循环次数/寿命、清空/再装填",
+   "form": "Reuse Assessment",
+   "legal": "Art 11（认定与 2030 目标）",
+   "logic": "一次性销售包装 → N/A。若客户拟声明可重复使用，须满足 Art 11 全套条件。",
+   "td": "TD §12 / T11",
+   "fields": [
+    {
+     "k": "app",
+     "l": "是否一次性包装",
+     "t": "sel",
+     "o": [
+      "一次性（不适用）",
+      "可重复使用",
+      "待确认"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "C10-38",
+   "cat": 10,
+   "name": "重复使用性能 / 安全证据（如适用）",
+   "req": "重复使用后的性能、安全、维修维护",
+   "form": "测试/验证资料",
+   "legal": "Art 11(1)(c)(d)",
+   "logic": "如适用：证明重复使用后性能安全、可维修维护。",
+   "td": "TD §12 / T11"
+  },
+  {
+   "id": "C10-39",
+   "cat": 10,
+   "name": "回收 / 返回 / 清洗系统资料（如适用）",
+   "req": "Collection/return、cleaning/washing",
+   "form": "系统说明/供应商资料",
+   "legal": "Art 11(1)(e)(f)",
+   "logic": "如适用：说明回收返回系统与清洗环节。",
+   "td": "TD §12 / T11"
+  },
+  {
+   "id": "C11-40",
+   "cat": 11,
+   "name": "制造商 / 经济运营者信息 Artwork",
+   "req": "信息及其在包装上的位置",
+   "form": "最终Artwork/标签证明",
+   "legal": "Art 12(1)：材料成分与处置信息；Annex VII",
+   "logic": "收集最终 Artwork，核对制造商/经济运营者信息及在包装上的具体位置，为 §13 表格输入。",
+   "td": "TD §13 / T12",
+   "fields": [
+    {
+     "k": "loc",
+     "l": "信息位置（包装面/组件）",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C11-41",
+   "cat": 11,
+   "name": "包装识别 / 追溯信息",
+   "req": "Packaging identification / traceability information",
+   "form": "Artwork、编码方案",
+   "legal": "Art 12(1)(b)（追溯）",
+   "logic": "UPI/批次编码等追溯信息的载体与方案。",
+   "td": "TD §13 / T12"
+  },
+  {
+   "id": "C11-42",
+   "cat": 11,
+   "name": "材料 / 处置 / 分选信息",
+   "req": "Material/disposal/sorting information",
+   "form": "Artwork/标签证明",
+   "legal": "Art 12(1)(a)：材料成分（纸板 PAP 20）与处置信息",
+   "logic": "回收符号/材料代码（如 PAP 20）在包装上的呈现与位置。",
+   "td": "TD §13 / T12"
+  },
+  {
+   "id": "C11-43",
+   "cat": 11,
+   "name": "数据载体 / QR（如适用）",
+   "req": "Data carrier / QR 及对应信息",
+   "form": "Artwork、二维码内容/系统说明",
+   "legal": "Art 12(2)：数据载体承载信息（实施法案细化）",
+   "logic": "如包装印 QR/编码，记录其内容与跳转信息，确保与包装身份绑定。",
+   "td": "TD §13 / T12"
+  },
+  {
+   "id": "C11-44",
+   "cat": 11,
+   "name": "重复使用 / DRS 标识（如适用）",
+   "req": "Reuse / DRS marking",
+   "form": "Artwork及适用性依据",
+   "legal": "Art 12(1)(c)(d)：可重复使用标识、押金退还（DRS）标识",
+   "logic": "一次性包装不涉及；如适用须记录标识及依据。",
+   "td": "TD §13 / T12"
+  },
+  {
+   "id": "C11-45",
+   "cat": 11,
+   "name": "成员国特定信息（如适用）",
+   "req": "Member State-specific information",
+   "form": "对应成员国标签/信息资料",
+   "legal": "Art 12(5)：成员国信息要求",
+   "logic": "如产品销售涉及特定成员国标签要求，记录相应资料。",
+   "td": "TD §13 / T12"
+  },
+  {
+   "id": "C12-46",
+   "cat": 12,
+   "name": "PPWR 风险分析",
+   "req": "风险原因、概率、严重性、风险等级、控制/缓解措施",
+   "form": "Risk Assessment",
+   "legal": "Annex VII：不符合性风险分析",
+   "logic": "风险分析表（重金属不符、可回收性受影响、最小化失效等）及控制措施，是 TD §14 的核心内容。",
+   "td": "TD §14 / T13"
+  },
+  {
+   "id": "C12-47",
+   "cat": 12,
+   "name": "供应商变更控制资料",
+   "req": "材料/工艺变化通知机制",
+   "form": "Supplier change-control记录/承诺",
+   "legal": "Art 15(2)；TD §15 变更触发",
+   "logic": "供应商须承诺材料/工艺变化前通知，作为变更影响评估的触发机制。",
+   "td": "TD §15 / T14"
+  },
+  {
+   "id": "C12-48",
+   "cat": 12,
+   "name": "材料 / 配方变更评估",
+   "req": "变更对 PPWR 符合性的影响",
+   "form": "Change impact assessment",
+   "legal": "TD §15：变更影响评估",
+   "logic": "材料/配方变更须评估对 Art 5/6/10 结论的影响，必要时重做检测。",
+   "td": "TD §15 / T14"
+  },
+  {
+   "id": "C12-49",
+   "cat": 12,
+   "name": "重量 / 厚度 / 尺寸变更记录",
+   "req": "规格变化后的确认",
+   "form": "检验/变更记录",
+   "legal": "TD §15；Art 10 结论维持",
+   "logic": "质量/厚度变化直接影响最小化结论，须记录并复核。",
+   "td": "TD §15 / T14"
+  },
+  {
+   "id": "C12-50",
+   "cat": 12,
+   "name": "Artwork 变更控制记录",
+   "req": "变更前法规审核",
+   "form": "Artwork revision record",
+   "legal": "TD §15；Art 12 标签",
+   "logic": "Artwork 每次修订须先做法规复核（标签信息、回收标识），防止宣传/标识失实。",
+   "td": "TD §15 / T14"
+  },
+  {
+   "id": "C13-51",
+   "cat": 13,
+   "name": "来料检验记录",
+   "req": "供应商规格、重量、尺寸检查",
+   "form": "IQC/来料检验记录",
+   "legal": "Art 15(2) 生产一致性",
+   "logic": "来料检验（规格/克重/尺寸）确保供应商交付符合 BOM 与规格书。",
+   "td": "TD §15 / T14"
+  },
+  {
+   "id": "C13-52",
+   "cat": 13,
+   "name": "生产一致性控制记录",
+   "req": "首件及日常 QC",
+   "form": "生产QC记录",
+   "legal": "Art 15(2)",
+   "logic": "首件确认 + 日常 QC 证明量产过程持续符合批准设计。",
+   "td": "TD §15 / T14"
+  },
+  {
+   "id": "C13-53",
+   "cat": 13,
+   "name": "最终放行记录",
+   "req": "QC 接受后放行",
+   "form": "Final release record",
+   "legal": "Art 15(2)",
+   "logic": "仅 QC 合格的批次放行，放行记录是产品投放市场前的最后证据。",
+   "td": "TD §15 / T14"
+  },
+  {
+   "id": "C14-54",
+   "cat": 14,
+   "name": "适用标准 / 技术规范清单",
+   "req": "标准、版本/日期、条款、对应要求、证据",
+   "form": "标准清单",
+   "legal": "Art 39 / Annex VII（标准清单）",
+   "logic": "登记所有评估所用的标准/规范（EN 13427–13432、ISO 16620-5、检测方法等）及版本条款，供 TD §16 引用。",
+   "td": "TD §16 / T15",
+   "table": {
+    "cols": [
+     "标准 / 规范",
+     "版本 / 日期",
+     "条款",
+     "对应要求",
+     "证据"
+    ],
+    "rows": [
+     [
+      "EN 13430:2004",
+      "2004",
+      "材料回收",
+      "Art 6 过渡评估",
+      ""
+     ],
+     [
+      "EN 13428:2004",
+      "2004",
+      "最小化准则",
+      "Art 10",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ]
+   }
+  },
+  {
+   "id": "C14-55",
+   "cat": 14,
+   "name": "Evidence Register",
+   "req": "Evidence ID、文件名、类型、版本/日期、供应商/签发方、适用要求、附件位置",
+   "form": "Evidence Register",
+   "legal": "Annex VII / VIII：证据与结论交叉引用",
+   "logic": "全部已批准素材自动汇总为证据登记表（EV-xx），并可在生成草稿时自动填入 TD §17。",
+   "td": "TD §17 / T16",
+   "table": {
+    "cols": [
+     "Evidence ID",
+     "文件名",
+     "类型",
+     "版本/日期",
+     "供应商/签发方",
+     "适用要求"
+    ],
+    "rows": []
+   }
+  },
+  {
+   "id": "C15-56",
+   "cat": 15,
+   "name": "供应商 PPWR 符合性声明",
+   "req": "Supplier PPWR compliance statement",
+   "form": "供应商签署声明",
+   "legal": "供应链合规证据链",
+   "logic": "供应商对 PPWR 相关要求的符合性承诺，作为证据链的总声明。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C15-57",
+   "cat": 15,
+   "name": "供应商材料规格 / TDS",
+   "req": "Material specification / TDS",
+   "form": "供应商文件",
+   "legal": "Art 6；Art 5(4)",
+   "logic": "与 C02-07 对应：供应商签发的规格文件。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C15-58",
+   "cat": 15,
+   "name": "供应商完整材料组成",
+   "req": "Full material composition",
+   "form": "供应商声明",
+   "legal": "Art 5(4)；Annex IV 准则2",
+   "logic": "与 C02-08 对应：供应商签发的材料组成声明。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C15-59",
+   "cat": 15,
+   "name": "供应商重金属声明 / 报告",
+   "req": "Heavy-metal declaration and/or test report",
+   "form": "供应商声明/检测报告",
+   "legal": "Art 5(4)（≤100 mg/kg）",
+   "logic": "与 C04-16 对应：供应商侧的重金属证据（第三方报告优先）。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C15-60",
+   "cat": 15,
+   "name": "供应商 PFAS 声明 / 报告（如适用）",
+   "req": "PFAS declaration / test report",
+   "form": "供应商声明/检测报告",
+   "legal": "Art 5(5)",
+   "logic": "与 C04-17 对应：非食品接触场景记录 N/A 声明。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C15-61",
+   "cat": 15,
+   "name": "供应商食品接触声明（如适用）",
+   "req": "Food-contact declaration",
+   "form": "供应商DoC/声明",
+   "legal": "Art 5(5) 适用性；EC 1935/2004",
+   "logic": "与 C04-18 对应：确认食品接触属性。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C15-62",
+   "cat": 15,
+   "name": "供应商再生料证据（如适用）",
+   "req": "Recycled-content evidence",
+   "form": "供应商证明/验证资料",
+   "legal": "Art 7（如适用）",
+   "logic": "与 C06-22/23 对应：纯纸基产品记录 N/A。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C15-63",
+   "cat": 15,
+   "name": "供应商可回收性 / 材料资料",
+   "req": "Recyclability / material evidence",
+   "form": "供应商评估/技术资料",
+   "legal": "Art 6",
+   "logic": "与 C05-19/20 对应：供应商提供的可回收性技术资料。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C15-64",
+   "cat": 15,
+   "name": "油墨 / 胶黏剂 / 涂层声明",
+   "req": "Inks / adhesives / coatings declarations",
+   "form": "供应商声明",
+   "legal": "Art 6(3)；Art 5(4)",
+   "logic": "与 C02-09 对应：油墨（可脱墨性）、胶黏剂、涂层的供应商声明。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C15-65",
+   "cat": 15,
+   "name": "制造过程 / 变更控制通知",
+   "req": "Manufacturing process / change-control notification",
+   "form": "供应商程序/承诺",
+   "legal": "Art 15(2)；TD §15",
+   "logic": "与 C12-47 对应：供应商对工艺/材料变更的通知承诺。",
+   "td": "TD §18 / T17"
+  },
+  {
+   "id": "C16-66",
+   "cat": 16,
+   "name": "EU DoC 所需资料",
+   "req": "DoC编号、包装识别、TD编号/版本、日期、签署人",
+   "form": "DoC资料/签署信息",
+   "legal": "Art 39 + Annex VIII（EU DoC）",
+   "logic": "DoC 签发信息：编号、包装识别（UPI）、对应 TD 编号/版本、签发日期与签署人。",
+   "td": "TD §20 + DoC",
+   "fields": [
+    {
+     "k": "docNo",
+     "l": "DoC 编号",
+     "t": "text"
+    },
+    {
+     "k": "tdNo",
+     "l": "TD 编号 / 版本",
+     "t": "text"
+    },
+    {
+     "k": "sign",
+     "l": "签署人（姓名 / 职务）",
+     "t": "text"
+    },
+    {
+     "k": "date",
+     "l": "签发日期",
+     "t": "text"
+    }
+   ]
+  },
+  {
+   "id": "C16-67",
+   "cat": 16,
+   "name": "TD 与证据交叉引用",
+   "req": "每项结论对应 Evidence ID 及客观证据",
+   "form": "Evidence Register/交叉引用",
+   "legal": "Annex VII/VIII：结论↔证据",
+   "logic": "每个符合性结论须可回溯到证据（EV-xx），本系统在生成草稿时自动建立交叉引用。",
+   "td": "TD §17、§19"
+  },
+  {
+   "id": "C16-68",
+   "cat": 16,
+   "name": "N/A / 过渡期项目依据",
+   "req": "法律依据和理由",
+   "form": "Applicability Matrix/法规依据",
+   "legal": "Annex VII：N/A 记录理由",
+   "logic": "每个 N/A 条款须写明法律依据与理由（如 Art 7 仅适用塑料包装），系统在合规矩阵中自动汇总。",
+   "td": "TD §5 / T19"
+  },
+  {
+   "id": "C16-69",
+   "cat": 16,
+   "name": "技术文件审批资料",
+   "req": "Prepared / Reviewed / Approved 人员、签字、日期",
+   "form": "审批记录",
+   "legal": "TD §21 审批；DoC 签发前提",
+   "logic": "TD 完成并经三级审批后方可签发 DoC。记录审批人、签字与日期。",
+   "td": "TD §21",
+   "fields": [
+    {
+     "k": "prep",
+     "l": "Prepared by（姓名/日期）",
+     "t": "text"
+    },
+    {
+     "k": "rev",
+     "l": "Reviewed by（姓名/日期）",
+     "t": "text"
+    },
+    {
+     "k": "appr",
+     "l": "Approved by（姓名/日期）",
+     "t": "text"
+    }
+   ]
+  }
+ ],
+ "ITEM_EN": {
+  "C01-01": {
+   "n": "Unique Packaging Identification (UPI)",
+   "r": "UPI, packaging name/description, packaging type",
+   "lg": "The UPI is the single index of the packaging throughout the TD (§2, §20) and the DoC identification block. Without it no conclusion can be anchored to a specific packaging."
+  },
+  "C01-02": {
+   "n": "Product / SKU Mapping",
+   "r": "Packaged product(s), SKU / model range",
+   "lg": "Defines which product and SKUs this packaging covers — the scope statement for TD §2 and the DoC."
+  },
+  "C01-03": {
+   "n": "Packaging Supplier & Manufacturing Site",
+   "r": "Supplier(s), manufacturing site(s), country",
+   "lg": "Origin of the evidence chain (declarations, test reports) and input to supplier-change risk analysis."
+  },
+  "C01-04": {
+   "n": "Packaging Mass & Dimensions",
+   "r": "Packaging mass (g), dimensions (mm)",
+   "lg": "Quantitative baseline for Art 10 minimisation and Art 24 void-space calculation, and cross-check for BOM masses."
+  },
+  "C01-05": {
+   "n": "Photographs & Final Artwork",
+   "r": "Photographs / artwork reference",
+   "lg": "Visual reference for appearance, label positions, §13 labelling checks and artwork change control."
+  },
+  "C02-06": {
+   "n": "Complete Packaging BOM",
+   "r": "Components, materials/structure, mass, dimensions, supplier/source",
+   "lg": "Core quantitative input for recyclability (component mass shares, compatibility) and minimisation; maps line-by-line to TD §3."
+  },
+  "C02-07": {
+   "n": "Component Material Specifications / TDS",
+   "r": "Material specification / technical data sheet",
+   "lg": "Confirms material identity and key properties of each component; part of the supplier evidence chain (§18)."
+  },
+  "C02-08": {
+   "n": "Full Material Composition",
+   "r": "Full composition incl. additives and coatings",
+   "lg": "Substance inventory basis for the Art 5(4) heavy-metal assessment — avoids missing hidden constituents."
+  },
+  "C02-09": {
+   "n": "Inks / Adhesives / Coatings Data",
+   "r": "Ink / adhesive / coating declarations",
+   "lg": "Inks and adhesives may carry heavy metals or impair paper recycling (de-inkability, stickies) — key component data for §6 and Art 6(3)."
+  },
+  "C03-10": {
+   "n": "Packaging Design Drawings",
+   "r": "Controlled packaging drawing",
+   "lg": "Locks the structural design — the objective basis for recyclability and minimisation assessments."
+  },
+  "C03-11": {
+   "n": "Die-cut / Structural Drawing",
+   "r": "Die-cut / structural drawing",
+   "lg": "Confirms blank geometry and forming method; used to judge recycling-process compatibility and reduction potential."
+  },
+  "C03-12": {
+   "n": "Artwork / Label Design",
+   "r": "Approved final artwork",
+   "lg": "Baseline version for §13 label verification and §15 artwork change control."
+  },
+  "C03-13": {
+   "n": "Manufacturing Specification",
+   "r": "Manufacturing specification",
+   "lg": "Defines mass-production conditions (grammage, thickness, tolerances) for §15 manufacturing control."
+  },
+  "C03-14": {
+   "n": "Process / Control Plan",
+   "r": "Production process / control plan",
+   "lg": "Key process parameters and QC points supporting the mass-production consistency argument."
+  },
+  "C03-15": {
+   "n": "Design Rationale & Technical Basis",
+   "r": "Art 6 / Art 10 design justification",
+   "lg": "Narrative core of §4 and §11: why this structure/material/mass, and why it is the minimum necessary design."
+  },
+  "C04-16": {
+   "n": "Heavy-metal Compliance Evidence",
+   "r": "Pb+Cd+Hg+Cr(VI) total ≤ 100 mg/kg",
+   "lg": "Mandatory. ICP-OES/MS test report preferred, supplier declaration as supplement; must cover all components incl. inks. Feeds TD §6."
+  },
+  "C04-17": {
+   "n": "PFAS Declaration / Testing (if applicable)",
+   "r": "Art 5(5) requirements for food-contact packaging",
+   "lg": "Non food-contact → record the N/A rationale; food-contact scenarios require total-fluorine method testing."
+  },
+  "C04-18": {
+   "n": "Food-contact Declaration (if applicable)",
+   "r": "Food-contact related compliance data",
+   "lg": "Confirms whether the product falls under food-contact scope, which determines Art 5(5) applicability."
+  },
+  "C05-19": {
+   "n": "Recyclability Assessment",
+   "r": "Material ID, main components & mass shares, collection/sorting, process compatibility",
+   "lg": "Assessment line for paper-based mono-material: PAP 20 → component shares → paper/board recycling stream → process compatibility. Conclusion feeds TD §7."
+  },
+  "C05-20": {
+   "n": "Component Compatibility Data",
+   "r": "Closures, labels, inks, adhesives, coatings",
+   "lg": "Ancillary components must be shown compatible (de-inkable, separable) with the recycling route, or assessed as integrated components per Art 6(3)."
+  },
+  "C05-21": {
+   "n": "Applicable Method / Standards Basis",
+   "r": "Transitional method actually applied",
+   "lg": "Record the transitional method applied (e.g. EN 13430 + industry practice) until the harmonised grading implementing act applies."
+  },
+  "C06-22": {
+   "n": "Recycled Content Data (if applicable)",
+   "r": "Total mass, PCR mass, calculation basis, requirements/exemptions",
+   "lg": "N/A for pure paper-based packaging — Annex II minimum recycled content applies to plastic packaging only."
+  },
+  "C06-23": {
+   "n": "Recycled Content Verification (if applicable)",
+   "r": "Verified recycled input and evidence",
+   "lg": "If applicable: demonstrate that recycled inputs meet the Art 7(3) verification rules."
+  },
+  "C07-24": {
+   "n": "Biobased Feedstock Data (if applicable)",
+   "r": "Material/formulation, biobased share",
+   "lg": "Paper board is not plastic → N/A. Any biobased claim requires ISO 16620-5 verification."
+  },
+  "C07-25": {
+   "n": "Related Labelling / Disposal Info (if applicable)",
+   "r": "Labelling / disposal information",
+   "lg": "If a biobased claim is made, on-pack information must support it and be checked in §13."
+  },
+  "C08-26": {
+   "n": "Compostability Applicability (if applicable)",
+   "r": "Whether the packaging falls under Art 9 scope",
+   "lg": "Art 9 applies to tea bags, coffee capsules, fruit stickers etc. from 2028-08-12; this colour-card product is out of scope → N/A."
+  },
+  "C08-27": {
+   "n": "Compostability Testing / Declaration (if applicable)",
+   "r": "Material, industrial / home composting route",
+   "lg": "If applicable: EN 13432 test report or supplier declaration stating the composting route."
+  },
+  "C08-28": {
+   "n": "Compostability Labelling (if applicable)",
+   "r": "Labelling / disposal information",
+   "lg": "If applicable, the compostability mark must appear on-pack and be verified in §13."
+  },
+  "C09-29": {
+   "n": "Packaging Minimisation Assessment",
+   "r": "Proof of minimum necessary mass/volume",
+   "lg": "Summary conclusion consolidating the eight Annex IV performance criteria; transitional record before 2030. Feeds TD §11."
+  },
+  "C09-30": {
+   "n": "Product Protection Evidence",
+   "r": "Design basis for product protection",
+   "lg": "Drop/compression/vibration/transport tests proving thickness and structure are necessary — the core \"cannot reduce further\" evidence."
+  },
+  "C09-31": {
+   "n": "Manufacturing Process Evidence",
+   "r": "Process limits on further reduction",
+   "lg": "Minimum grammage/dimension requirements imposed by printing, die-cutting and laminating processes."
+  },
+  "C09-32": {
+   "n": "Logistics / Transport Evidence",
+   "r": "Logistics, transport and stacking necessity",
+   "lg": "Stacking strength and transport constraints that determine size and mass."
+  },
+  "C09-33": {
+   "n": "Packaging Functionality Evidence",
+   "r": "Opening, closing and use functions",
+   "lg": "Functional requirements on structure (e.g. hang-hole, display, resealability)."
+  },
+  "C09-34": {
+   "n": "Information / Hygiene / Safety Evidence",
+   "r": "Influence of information, hygiene and safety requirements",
+   "lg": "Label area and printed information volume affect dimensions; record any hygiene/safety regulations."
+  },
+  "C09-35": {
+   "n": "Void-space Assessment (if applicable)",
+   "r": "Art 24 scope, dates and method",
+   "lg": "Record whether Art 24 (≤50% void ratio from 2030) applies and the applicable date/method; no premature quantitative thresholds."
+  },
+  "C09-36": {
+   "n": "Double-wall / False-bottom Exemption (if applicable)",
+   "r": "Art 10(2) exemption conditions",
+   "lg": "If the packaging contains double walls/false bottoms/unnecessary layers, demonstrate they fall under the Art 10(2) exemption (design rights before 2025-02-11)."
+  },
+  "C10-37": {
+   "n": "Reusability Assessment (if applicable)",
+   "r": "Reuse design, cycles/lifetime, emptying/refilling",
+   "lg": "Single-use sales packaging → N/A. Any reuse declaration must satisfy the full Art 11 conditions."
+  },
+  "C10-38": {
+   "n": "Reuse Performance / Safety Evidence (if applicable)",
+   "r": "Performance, safety and maintenance after reuse",
+   "lg": "If applicable: prove performance and safety after repeated use, incl. maintainability (Art 11(1)(c)(d))."
+  },
+  "C10-39": {
+   "n": "Return / Cleaning System Data (if applicable)",
+   "r": "Collection/return, cleaning/washing system",
+   "lg": "If applicable: describe the return system and cleaning stage (Art 11(1)(e)(f))."
+  },
+  "C11-40": {
+   "n": "Manufacturer / EO Information on Artwork",
+   "r": "Information and its location on-pack",
+   "lg": "Collect the final artwork and verify the manufacturer/economic-operator information and its position — input for §13."
+  },
+  "C11-41": {
+   "n": "Packaging Identification / Traceability Info",
+   "r": "Identification / traceability information",
+   "lg": "Carrier and scheme of UPI / batch codes per Art 12(1)(b)."
+  },
+  "C11-42": {
+   "n": "Material / Disposal / Sorting Info",
+   "r": "Material / disposal / sorting information",
+   "lg": "How material codes (e.g. PAP 20) and disposal information appear on-pack (Art 12(1)(a))."
+  },
+  "C11-43": {
+   "n": "Data Carrier / QR (if applicable)",
+   "r": "Data carrier / QR and linked content",
+   "lg": "If a QR/code is printed, record its content and destination, bound to the packaging identity (Art 12(2))."
+  },
+  "C11-44": {
+   "n": "Reuse / DRS Marking (if applicable)",
+   "r": "Reuse / DRS marking",
+   "lg": "Not applicable for single-use packaging; record the marking and basis if applicable."
+  },
+  "C11-45": {
+   "n": "Member State-specific Info (if applicable)",
+   "r": "Member State-specific information",
+   "lg": "Record national labelling requirements for the markets where the product is sold (Art 12(5))."
+  },
+  "C12-46": {
+   "n": "PPWR Risk Analysis",
+   "r": "Cause, probability, severity, risk level, controls",
+   "lg": "Non-conformity risk table (heavy metals, recyclability, minimisation failure) with control measures — core of TD §14."
+  },
+  "C12-47": {
+   "n": "Supplier Change-control Data",
+   "r": "Material/process change notification mechanism",
+   "lg": "Suppliers must commit to notify before any material/process change — the trigger mechanism for change impact assessment."
+  },
+  "C12-48": {
+   "n": "Material / Formulation Change Assessment",
+   "r": "Impact of changes on PPWR compliance",
+   "lg": "Changes must be assessed against Art 5/6/10 conclusions; re-test where necessary."
+  },
+  "C12-49": {
+   "n": "Mass / Thickness / Dimension Change Records",
+   "r": "Confirmation after specification changes",
+   "lg": "Mass/thickness changes directly affect the minimisation conclusion; must be recorded and re-verified."
+  },
+  "C12-50": {
+   "n": "Artwork Change-control Records",
+   "r": "Pre-change regulatory review",
+   "lg": "Every artwork revision requires a prior regulatory review (label information, recycling symbols) to prevent misleading claims."
+  },
+  "C13-51": {
+   "n": "Incoming Inspection Records",
+   "r": "Supplier spec, mass and dimension checks",
+   "lg": "Incoming QC ensures deliveries match the BOM and specifications (Art 15(2))."
+  },
+  "C13-52": {
+   "n": "Production Consistency Records",
+   "r": "First-article and routine QC",
+   "lg": "First-article approval plus routine QC prove that mass production continuously matches the approved design."
+  },
+  "C13-53": {
+   "n": "Final Release Records",
+   "r": "Release after QC acceptance",
+   "lg": "Only QC-passed batches are released; the release record is the last evidence before placing on the market."
+  },
+  "C14-54": {
+   "n": "Applicable Standards / Specifications List",
+   "r": "Standard, version/date, clause, requirement, evidence",
+   "lg": "Register of all standards used (EN 13427–13432, ISO 16620-5, test methods) with versions and clauses — feeds TD §16."
+  },
+  "C14-55": {
+   "n": "Evidence Register",
+   "r": "Evidence ID, file name, type, version/date, issuer, requirement, location",
+   "lg": "All approved items are auto-aggregated as EV-xx and auto-filled into TD §17 during draft generation."
+  },
+  "C15-56": {
+   "n": "Supplier PPWR Compliance Statement",
+   "r": "Supplier compliance statement",
+   "lg": "The supplier's overall commitment to PPWR requirements — the umbrella declaration of the evidence chain."
+  },
+  "C15-57": {
+   "n": "Supplier Material Spec / TDS",
+   "r": "Material specification / TDS",
+   "lg": "Supplier-issued counterpart of C02-07."
+  },
+  "C15-58": {
+   "n": "Supplier Full Material Composition",
+   "r": "Full material composition",
+   "lg": "Supplier-issued counterpart of C02-08."
+  },
+  "C15-59": {
+   "n": "Supplier Heavy-metal Declaration / Report",
+   "r": "Heavy-metal declaration and/or test report",
+   "lg": "Supplier-side counterpart of C04-16; third-party reports preferred."
+  },
+  "C15-60": {
+   "n": "Supplier PFAS Declaration / Report (if applicable)",
+   "r": "PFAS declaration / test report",
+   "lg": "Counterpart of C04-17; N/A statement for non food-contact products."
+  },
+  "C15-61": {
+   "n": "Supplier Food-contact Declaration (if applicable)",
+   "r": "Food-contact declaration",
+   "lg": "Counterpart of C04-18 — confirms the food-contact attribute."
+  },
+  "C15-62": {
+   "n": "Supplier Recycled-content Evidence (if applicable)",
+   "r": "Recycled-content evidence",
+   "lg": "Counterpart of C06-22/23; N/A record for pure paper-based products."
+  },
+  "C15-63": {
+   "n": "Supplier Recyclability / Material Data",
+   "r": "Recyclability / material evidence",
+   "lg": "Counterpart of C05-19/20 — supplier-provided recyclability technical data."
+  },
+  "C15-64": {
+   "n": "Ink / Adhesive / Coating Declarations",
+   "r": "Inks / adhesives / coatings declarations",
+   "lg": "Counterpart of C02-09 — declarations on de-inkability, adhesives and coatings."
+  },
+  "C15-65": {
+   "n": "Manufacturing / Change-control Notification",
+   "r": "Process / change-control notification",
+   "lg": "Counterpart of C12-47 — the supplier's commitment to notify process/material changes."
+  },
+  "C16-66": {
+   "n": "EU DoC Data",
+   "r": "DoC No., packaging ID, TD No./version, date, signatory",
+   "lg": "DoC issuance information: number, packaging identification (UPI), corresponding TD, issue date and signatory (Art 39 + Annex VIII)."
+  },
+  "C16-67": {
+   "n": "TD ↔ Evidence Cross-references",
+   "r": "Each conclusion mapped to Evidence IDs",
+   "lg": "Every conformity conclusion must trace back to evidence (EV-xx); the system builds these cross-references automatically during generation."
+  },
+  "C16-68": {
+   "n": "N/A / Transitional Item Rationale",
+   "r": "Legal basis and reasoning",
+   "lg": "Each N/A clause must state its legal basis and reasoning (e.g. Art 7 applies to plastic packaging only); auto-aggregated in the compliance matrix."
+  },
+  "C16-69": {
+   "n": "Technical File Approval Records",
+   "r": "Prepared / Reviewed / Approved, signatures, dates",
+   "lg": "The DoC may only be signed after the three-level approval of the TD is complete."
+  }
+ },
+ "CAT_EN_LOGIC": {
+  "1": "PPWR requires each packaging placed on the market to be uniquely identifiable and traceable (Art 3(1), Art 12(2), Annex VII). The TD must first lock the assessed object — UPI, product-SKU mapping, supplier & origin, mass/dimensions, artwork.",
+  "2": "Art 6 recyclability is assessed on material composition (Annex IV criteria: main components, mass shares, compatibility); Art 10 minimisation needs a mass/volume baseline. The complete BOM is the quantitative backbone of all assessments.",
+  "3": "Art 6(1) design-for-recycling and Art 10(1) minimum-necessity require objective design and manufacturing evidence, which also anchors manufacturing consistency (TD §15).",
+  "4": "Art 5(4): from 2026-08-12, Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg in packaging and components. Art 5(5): PFAS restricted in food-contact packaging from 2026-08-12. This product (colour card, non food-contact): heavy metals applicable, PFAS N/A.",
+  "5": "Art 6(1): from 2026-08-12 all packaging must be recyclable by design (Annex IV); performance grades A/B from 2030 and A from 2035. Paper-based mono-material is assessed via the EN 13430 material-recycling route.",
+  "6": "Art 7 + Annex II set minimum recycled content for plastic packaging only (2030/2040 targets). This product is paper-based (PAP 20, 0% PCR) → N/A record; applicable if plastic components are introduced.",
+  "7": "Art 8 concerns biobased feedstock in plastic packaging toward the 2030 target. Paper board is not plastic → N/A; any biobased claim requires ISO 16620-5 verification.",
+  "8": "Art 9 applies to specific packaging (tea bags, coffee capsules, fruit stickers etc.) from 2028-08-12 — EN 13432 industrial composting. This product is out of scope → N/A with rationale.",
+  "9": "Art 10(1): from 2030-01-01 mass/volume must be the minimum necessary, justified against the eight Annex IV performance criteria; Art 24 void ratio ≤50% from 2030. Current design may be recorded as a transitional position.",
+  "10": "Art 11 recognises reusable packaging and sets 2030 targets. Single-use sales packaging → N/A with rationale; the full Art 11 condition set applies if reuse is claimed.",
+  "11": "Art 12 requires material composition, sorting/disposal information, dimensions, reuse marks and DRS marks; details await the implementing act (expected 2028-08-12). Collect the final artwork and record information locations meanwhile.",
+  "12": "Annex VII requires a risk analysis of non-conformity. Changes (material, supplier, formulation, inks, adhesives, mass/thickness, process, artwork, regulations) may invalidate approved conclusions — impact assessment before release.",
+  "13": "TD conclusions must match actual production (Art 15(2)). Incoming inspection, first-article and routine QC, and final release records form the consistency evidence chain.",
+  "14": "Every conclusion must rest on standards plus objective evidence. The applicable-standards list and the Evidence Register (EV-xx) bridge the TD and the DoC (Art 39 / Annex VII / VIII).",
+  "15": "Most objective evidence (composition, heavy metals, PFAS, recyclability, change notification) originates in the supply chain. Supplier declarations must be traceable to the supplier's change control.",
+  "16": "Art 39 + Annex VIII require the EU DoC. After the TD is complete, the three-level approval (Prepared/Reviewed/Approved) precedes the DoC signature; every conclusion is cross-referenced to evidence IDs."
+ },
+ "TD_SECTIONS": [
+  {
+   "no": "T00",
+   "nm": "封面信息表",
+   "items": [
+    "C01-01",
+    "C01-02",
+    "C01-03",
+    "C16-66"
+   ]
+  },
+  {
+   "no": "T01",
+   "nm": "Document Control 文档控制",
+   "items": [
+    "C16-66",
+    "C16-69"
+   ]
+  },
+  {
+   "no": "1",
+   "nm": "Purpose, Scope and Regulatory Basis",
+   "items": [
+    "C14-54",
+    "C16-68"
+   ]
+  },
+  {
+   "no": "2",
+   "nm": "Packaging Identification and Intended Use 包装识别",
+   "items": [
+    "C01-01",
+    "C01-02",
+    "C01-03",
+    "C01-04",
+    "C01-05"
+   ]
+  },
+  {
+   "no": "3",
+   "nm": "Packaging Structure and BOM 结构清单",
+   "items": [
+    "C02-06",
+    "C02-07",
+    "C02-08",
+    "C02-09"
+   ]
+  },
+  {
+   "no": "4",
+   "nm": "Design and Manufacturing Documentation 设计制造",
+   "items": [
+    "C03-10",
+    "C03-11",
+    "C03-12",
+    "C03-13",
+    "C03-14",
+    "C03-15",
+    "C09-35",
+    "C09-36"
+   ]
+  },
+  {
+   "no": "5",
+   "nm": "PPWR Applicability and Compliance Matrix 适用性矩阵",
+   "items": [
+    "C16-68"
+   ]
+  },
+  {
+   "no": "6",
+   "nm": "Article 5 – Substances of Concern 物质要求",
+   "items": [
+    "C04-16",
+    "C04-17",
+    "C04-18",
+    "C15-59",
+    "C15-60",
+    "C15-61"
+   ]
+  },
+  {
+   "no": "7",
+   "nm": "Article 6 – Recyclability / Design for Recycling 可回收性",
+   "items": [
+    "C05-19",
+    "C05-20",
+    "C05-21",
+    "C15-63",
+    "C15-64"
+   ]
+  },
+  {
+   "no": "8",
+   "nm": "Article 7 – Recycled Content 再生料",
+   "items": [
+    "C06-22",
+    "C06-23",
+    "C15-62"
+   ]
+  },
+  {
+   "no": "9",
+   "nm": "Article 8 – Biobased Feedstock 生物基",
+   "items": [
+    "C07-24",
+    "C07-25"
+   ]
+  },
+  {
+   "no": "10",
+   "nm": "Article 9 – Compostability 可堆肥性",
+   "items": [
+    "C08-26",
+    "C08-27",
+    "C08-28"
+   ]
+  },
+  {
+   "no": "11",
+   "nm": "Article 10 – Packaging Minimisation 最小化",
+   "items": [
+    "C09-29",
+    "C09-30",
+    "C09-31",
+    "C09-32",
+    "C09-33",
+    "C09-34",
+    "C09-35",
+    "C09-36"
+   ]
+  },
+  {
+   "no": "12",
+   "nm": "Article 11 – Reusability 可重复使用",
+   "items": [
+    "C10-37",
+    "C10-38",
+    "C10-39"
+   ]
+  },
+  {
+   "no": "13",
+   "nm": "Article 12 – Labelling 标识追溯",
+   "items": [
+    "C11-40",
+    "C11-41",
+    "C11-42",
+    "C11-43",
+    "C11-44",
+    "C11-45",
+    "C03-12"
+   ]
+  },
+  {
+   "no": "14",
+   "nm": "Risk Analysis and Assessment of Non-Conformity 风险分析",
+   "items": [
+    "C12-46",
+    "C12-47",
+    "C12-48",
+    "C12-49",
+    "C12-50"
+   ]
+  },
+  {
+   "no": "15",
+   "nm": "Manufacturing Control and Change Management 制造控制",
+   "items": [
+    "C13-51",
+    "C13-52",
+    "C13-53",
+    "C12-47",
+    "C12-48",
+    "C12-49",
+    "C12-50"
+   ]
+  },
+  {
+   "no": "16",
+   "nm": "Standards and Technical Specifications 标准清单",
+   "items": [
+    "C14-54"
+   ]
+  },
+  {
+   "no": "17",
+   "nm": "Evidence Register 证据登记册",
+   "items": [
+    "C14-55",
+    "C16-67"
+   ]
+  },
+  {
+   "no": "18",
+   "nm": "Supplier Evidence Checklist 供应商证据",
+   "items": [
+    "C15-56",
+    "C15-57",
+    "C15-58",
+    "C15-59",
+    "C15-60",
+    "C15-61",
+    "C15-62",
+    "C15-63",
+    "C15-64",
+    "C15-65"
+   ]
+  },
+  {
+   "no": "19",
+   "nm": "Conformity Assessment Conclusion 符合性结论",
+   "items": [
+    "C16-68",
+    "C16-67"
+   ]
+  },
+  {
+   "no": "20",
+   "nm": "EU DoC Cross-Reference DoC 交叉引用",
+   "items": [
+    "C16-66"
+   ]
+  },
+  {
+   "no": "21",
+   "nm": "Approval 审批",
+   "items": [
+    "C16-69"
+   ]
+  },
+  {
+   "no": "A",
+   "nm": "Appendix A – Evidence File Structure 证据文件夹",
+   "items": []
+  },
+  {
+   "no": "B",
+   "nm": "Appendix B – PPWR Legal Reference 法规引用",
+   "items": [
+    "C14-54"
+   ]
+  }
+ ],
+ "DOC_STRUCT": [
+  {
+   "sec": "DoC 文件控制",
+   "rows": [
+    [
+     "DoC Number",
+     "来自 C16-66"
+    ],
+    [
+     "Version / Revision",
+     "01"
+    ],
+    [
+     "Date of Issue",
+     "来自 C16-66"
+    ],
+    [
+     "Packaging Unique ID",
+     "来自 C01-01"
+    ]
+   ]
+  },
+  {
+   "sec": "Manufacturer 制造商",
+   "rows": [
+    [
+     "Company Name",
+     "项目信息"
+    ],
+    [
+     "Registered Address",
+     "项目信息"
+    ],
+    [
+     "Contact Person / Dept.",
+     "项目信息"
+    ],
+    [
+     "Email / Phone",
+     "项目信息"
+    ]
+   ]
+  },
+  {
+   "sec": "EU Authorized Representative（如适用）",
+   "rows": [
+    [
+     "Company Name",
+     "项目信息"
+    ],
+    [
+     "Address (EU)",
+     "项目信息"
+    ]
+   ]
+  },
+  {
+   "sec": "Packaging Identification 包装识别",
+   "rows": [
+    [
+     "Unique Packaging ID",
+     "C01-01"
+    ],
+    [
+     "Packaging Description",
+     "C01-01"
+    ],
+    [
+     "Packaging Type/Level",
+     "C01-01"
+    ],
+    [
+     "Single-use or Reusable",
+     "C10-37"
+    ],
+    [
+     "Primary Material(s)",
+     "C02-06"
+    ]
+   ]
+  },
+  {
+   "sec": "Packaging Composition 包装组成",
+   "rows": [
+    [
+     "组件/材料/质量/再生含量",
+     "C02-06 BOM + C06-22"
+    ]
+   ]
+  },
+  {
+   "sec": "Regulatory Basis 法规符合性",
+   "rows": [
+    [
+     "Art 5–12 适用性",
+     "C16-68 + 合规矩阵"
+    ]
+   ]
+  },
+  {
+   "sec": "Standards Applied 标准",
+   "rows": [
+    [
+     "EN 13427–13432 等",
+     "C14-54"
+    ]
+   ]
+  },
+  {
+   "sec": "Technical Documentation Reference",
+   "rows": [
+    [
+     "Document Reference",
+     "C16-66"
+    ],
+    [
+     "Retention Period",
+     "5年（一次性）/10年（可重复使用）"
+    ]
+   ]
+  },
+  {
+   "sec": "Declaration and Signature",
+   "rows": [
+    [
+     "Signatory / Position / Place / Date",
+     "C16-66"
+    ]
+   ]
+  }
+ ],
+ "ANNEX_FOLDERS": [
+  [
+   "00_Document_Control",
+   "文档控制",
+   "C16-66/C16-69"
+  ],
+  [
+   "01_Packaging_Identification",
+   "包装识别",
+   "C01-01~05"
+  ],
+  [
+   "02_BOM_and_Material_Specifications",
+   "BOM与材料规格",
+   "C02-06~09"
+  ],
+  [
+   "03_Design_and_Manufacturing",
+   "设计与制造",
+   "C03-10~15"
+  ],
+  [
+   "04_Applicability_Matrix",
+   "适用性矩阵",
+   "C16-68"
+  ],
+  [
+   "05_Article_5_Substances",
+   "物质要求",
+   "C04-16~18"
+  ],
+  [
+   "06_Article_6_Recyclability",
+   "可回收性",
+   "C05-19~21"
+  ],
+  [
+   "07_Article_7_Recycled_Content",
+   "再生料",
+   "C06-22~23"
+  ],
+  [
+   "08_Article_8_Biobased",
+   "生物基",
+   "C07-24~25"
+  ],
+  [
+   "09_Article_9_Compostability",
+   "可堆肥性",
+   "C08-26~28"
+  ],
+  [
+   "10_Article_10_Minimisation",
+   "最小化",
+   "C09-29~36"
+  ],
+  [
+   "11_Article_11_Reusability",
+   "可重复使用",
+   "C10-37~39"
+  ],
+  [
+   "12_Article_12_Labelling",
+   "标识追溯",
+   "C11-40~45"
+  ],
+  [
+   "13_Risk_Assessment",
+   "风险分析",
+   "C12-46"
+  ],
+  [
+   "14_Manufacturing_and_Change",
+   "制造与变更",
+   "C12-47~50 + C13-51~53"
+  ],
+  [
+   "15_Standards",
+   "标准清单",
+   "C14-54"
+  ],
+  [
+   "16_Test_Reports",
+   "测试报告",
+   "检测类证据"
+  ],
+  [
+   "17_Supplier_Evidence",
+   "供应商证据",
+   "C15-56~65"
+  ],
+  [
+   "18_Evidence_Register",
+   "证据登记册",
+   "C14-55"
+  ],
+  [
+   "19_EU_DoC",
+   "EU DoC",
+   "C16-66"
+  ]
+ ],
+ "MATRIX_DEFAULT": [
+  {
+   "key": "a5",
+   "art": "Article 5 – Substances of concern",
+   "app": "Yes",
+   "date": "12 Aug 2026",
+   "basis": "Art 5(4)：Pb+Cd+Hg+Cr(VI) ≤100 mg/kg",
+   "req": "重金属检测/声明（C04-16）"
+  },
+  {
+   "key": "a5pfas",
+   "art": "Article 5 – PFAS",
+   "app": "N/A",
+   "date": "12 Aug 2026",
+   "basis": "Art 5(5)：仅食品接触包装适用；本产品非食品接触",
+   "req": "N/A 判断记录（C04-17/18）"
+  },
+  {
+   "key": "a6",
+   "art": "Article 6 – Recyclability (design for recycling)",
+   "app": "Yes",
+   "date": "12 Aug 2026",
+   "basis": "Art 6(1)：按 Annex IV 准则设计可回收；过渡期方法 EN 13430",
+   "req": "可回收性评估（C05-19~21）"
+  },
+  {
+   "key": "a6g",
+   "art": "Article 6 – Recyclability (performance grades)",
+   "app": "Transitional",
+   "date": "2030 / delegated act",
+   "basis": "2030 起 A/B 级、2035 起 A 级（实施法案）",
+   "req": "过渡期记录，暂不提前套用分级"
+  },
+  {
+   "key": "a7",
+   "art": "Article 7 – Minimum recycled content",
+   "app": "N/A",
+   "date": "2030 / implementing act",
+   "basis": "Annex II 仅适用塑料包装；本产品纯纸基",
+   "req": "N/A 理由记录（C06-22）"
+  },
+  {
+   "key": "a8",
+   "art": "Article 8 – Biobased feedstock",
+   "app": "N/A",
+   "date": "Future review",
+   "basis": "仅塑料包装的生物基贡献",
+   "req": "N/A 理由记录（C07-24）"
+  },
+  {
+   "key": "a9",
+   "art": "Article 9 – Compostability",
+   "app": "N/A",
+   "date": "2028 / specific packaging",
+   "basis": "Art 9 仅适用茶包/咖啡胶囊等特定包装",
+   "req": "N/A 理由记录（C08-26）"
+  },
+  {
+   "key": "a10",
+   "art": "Article 10 – Packaging minimisation",
+   "app": "Transitional",
+   "date": "2030",
+   "basis": "Art 10(1)：最低必要重量/体积；Annex IV 八项准则；Art 24 空隙率",
+   "req": "最小化评估（C09-29~36）"
+  },
+  {
+   "key": "a11",
+   "art": "Article 11 – Reusability",
+   "app": "N/A",
+   "date": "12 Aug 2026",
+   "basis": "一次性销售包装，不落入重复使用要求",
+   "req": "N/A 理由记录（C10-37）"
+  },
+  {
+   "key": "a12",
+   "art": "Article 12 – Labelling",
+   "app": "Transitional",
+   "date": "2028 / implementing act",
+   "basis": "Art 12 标识要求待实施法案；先收集 Artwork 与位置",
+   "req": "标签核对（C11-40~45）"
+  }
+ ],
+ "MODES": {
+  "A": {
+   "code": "A",
+   "name": "单个包装类型独立出具技术文件（文件包模式）",
+   "en": "Per-package TD (Document Package Mode)",
+   "tdRule": "每个包装类型各一份 TD + 一份 DoC，多份 TD 汇成「文件包」交最终包装使用者（产品生产商）",
+   "idRule": "每包装独立 TD 编号 + 独立 UPI/包装ID（PKG-xx）",
+   "submit": "资料按「包装」分别收集、分别走 AI 初审 + 人工复审",
+   "gen": "生成时为每个包装生成 TD/DoC，另附文件包总览（封面/目录/交叉索引）"
+  },
+  "B": {
+   "code": "B",
+   "name": "产品生产商即包装制造商 · 综合一份技术文件",
+   "en": "Consolidated TD (Producer = Packaging Manufacturer)",
+   "tdRule": "某款产品的全部包装类型综合为一份 TD + 一份 DoC",
+   "idRule": "全项目共用一份 TD 编号；各包装仍各有 PKG-xx 与 UPI（TD §2 统一列示）",
+   "submit": "资料按「包装」分别收集（BOM/检测/供应商证据按包装），共享适用性矩阵与风险分析",
+   "gen": "生成一份综合 TD（§2 列全部包装，条款评估按包装分组）+ 一份覆盖全包装的 DoC"
+  }
+ },
+ "PKG_TYPES": [
+  "销售包装 Sales",
+  "组合包装 Grouped",
+  "运输包装 Transport",
+  "电商包装 E-commerce",
+  "其他 Other"
+ ],
+ "SUPPLIER_DOC_TYPES": [
+  {
+   "k": "hm",
+   "l": "重金属检测报告（Pb+Cd+Hg+Cr(VI) ≤100 mg/kg）"
+  },
+  {
+   "k": "pf",
+   "l": "PFAS 声明 / 检测报告（食品接触适用）"
+  },
+  {
+   "k": "rc",
+   "l": "可回收性声明 / 评估报告"
+  },
+  {
+   "k": "doc",
+   "l": "供应商符合性声明 / DoC"
+  },
+  {
+   "k": "td",
+   "l": "技术规格书 / TDS"
+  },
+  {
+   "k": "comp",
+   "l": "材料组成声明"
+  },
+  {
+   "k": "iso",
+   "l": "ISO 9001 / ISO 14001 等体系证书"
+  },
+  {
+   "k": "fsc",
+   "l": "FSC / PEFC 森林认证（如适用）"
+  },
+  {
+   "k": "oth",
+   "l": "其他证书 / 报告"
+  }
+ ],
+ "PKG_FIELDS": [
+  {
+   "k": "name",
+   "l": "包装名称 / 描述",
+   "ph": "如：印刷色卡纸卡"
+  },
+  {
+   "k": "type",
+   "l": "包装类型",
+   "t": "sel",
+   "o": [
+    "销售包装 Sales",
+    "组合包装 Grouped",
+    "运输包装 Transport",
+    "电商包装 E-commerce",
+    "其他 Other"
+   ]
+  },
+  {
+   "k": "upi",
+   "l": "UPI / 包装唯一标识",
+   "ph": "如：PKG-A-0001"
+  },
+  {
+   "k": "skus",
+   "l": "产品 / SKU 对应",
+   "ph": "SKU-A / SKU-B"
+  },
+  {
+   "k": "mass",
+   "l": "质量 (g)",
+   "ph": "14"
+  },
+  {
+   "k": "dims",
+   "l": "尺寸 (mm)",
+   "ph": "210 × 297 × 0.3"
+  },
+  {
+   "k": "sup",
+   "l": "包装供应商",
+   "ph": "供应商名称"
+  },
+  {
+   "k": "site",
+   "l": "生产地点（工厂）",
+   "ph": "工厂 / 城市"
+  },
+  {
+   "k": "country",
+   "l": "生产国",
+   "ph": "China"
+  },
+  {
+   "k": "ref",
+   "l": "照片 / Artwork 参考",
+   "ph": "ART-2026-001 R1"
+  }
+ ],
+ "AI_RULES": {
+  "C01-01": "[object Object],[object Object],[object Object]",
+  "C01-02": "[object Object]",
+  "C01-03": "[object Object]",
+  "C01-04": "[object Object],[object Object]",
+  "C02-06": "[object Object],[object Object]",
+  "C04-16": "[object Object],[object Object],[object Object]",
+  "C04-17": "[object Object]",
+  "C04-18": "[object Object]",
+  "C05-19": "[object Object],[object Object]",
+  "C05-20": "[object Object]",
+  "C05-21": "[object Object]",
+  "C06-22": "[object Object]",
+  "C07-24": "[object Object]",
+  "C08-26": "[object Object]",
+  "C09-29": "[object Object]",
+  "C09-30": "[object Object]",
+  "C09-35": "[object Object]",
+  "C10-37": "[object Object]",
+  "C11-40": "[object Object]",
+  "C14-54": "[object Object]",
+  "C14-55": "[object Object]",
+  "C16-66": "[object Object],[object Object],[object Object]",
+  "C16-68": "[object Object]",
+  "C16-69": "[object Object]"
+ },
+ "SAMPLES": {
+  "C01-01": "<p><b>示例：包装识别信息表</b>（对应 TD §2 / DoC 包装识别栏）</p>\n<table class=\"ex-tbl\"><tr><th>字段</th><th>填写示例</th></tr>\n<tr><td>UPI / 包装唯一标识</td><td>PKG-DEMO-0001</td></tr>\n<tr><td>包装名称 / 描述</td><td>印刷色卡包装（纸板 PAP 20）</td></tr>\n<tr><td>包装类型</td><td>销售包装 Sales（一次性）</td></tr></table>\n<div class=\"ex-note\">UPI 建议与产品 SKU 系统关联；同一包装在 TD、DoC、证据登记册中的 UPI 必须完全一致。</div>",
+  "C01-02": "<p><b>示例：产品-SKU 对应表</b></p>\n<table class=\"ex-tbl\"><tr><th>产品</th><th>SKU / 型号</th><th>包装</th></tr>\n<tr><td>印刷色卡系列</td><td>SKU-A / SKU-B / SKU-C</td><td>PKG-DEMO-0001</td></tr></table>",
+  "C01-03": "<p><b>示例：供应商信息</b></p>\n<table class=\"ex-tbl\"><tr><th>字段</th><th>示例</th></tr>\n<tr><td>包装供应商</td><td>示例纸品包装有限公司</td></tr>\n<tr><td>生产地点（工厂）</td><td>东莞一厂</td></tr>\n<tr><td>生产国</td><td>China</td></tr></table>",
+  "C01-04": "<p><b>示例：质量与尺寸记录</b></p>\n<table class=\"ex-tbl\"><tr><th>字段</th><th>示例</th></tr>\n<tr><td>包装总质量</td><td>14 g（实测 10 个样品平均值）</td></tr>\n<tr><td>尺寸</td><td>210 × 297 × 0.3 mm</td></tr></table>\n<div class=\"ex-note\">质量是 Art 10 最小化的定量基线；建议附测量记录/规格书。</div>",
+  "C02-06": "<p><b>示例：Packaging BOM（两组件包装）</b></p>\n<table class=\"ex-tbl\"><tr><th>组件</th><th>材料 / 结构</th><th>质量(g)</th><th>尺寸(mm)</th><th>供应商 / 来源</th></tr>\n<tr><td>Color card 色卡</td><td>PAP 20 纸板（300 g/m²）</td><td>14</td><td>210×297×0.3</td><td>示例纸品供应商</td></tr>\n<tr><td>印刷油墨</td><td>水性油墨（表面印刷）</td><td>&lt;1</td><td>—</td><td>示例油墨供应商</td></tr></table>\n<div class=\"ex-note\">BOM 是 Art 6 可回收性（组件质量占比）与 Art 10 最小化（重量基线）的核心定量输入，组件务必逐行列全。</div>",
+  "C02-07": "<p><b>示例：材料规格书（TDS）要点</b></p>\n<pre>品名：单面涂布灰底白板纸（C2S / 或纸板 PAP 20）\n克重：300 g/m²（公差 ±3%）\n厚度：0.30 mm\n挺度 / 耐破：按 EN ISO 标准\n环保声明：不含卤化物漂白 / 符合重金属限值</pre>",
+  "C03-10": "<p><b>示例：设计图纸清单</b></p>\n<table class=\"ex-tbl\"><tr><th>图纸</th><th>编号 / 版本</th><th>日期</th></tr>\n<tr><td>包装设计图纸</td><td>DW-2026-010 R2</td><td>2026-06-15</td></tr>\n<tr><td>结构 / 刀模图</td><td>DC-2026-010 R2</td><td>2026-06-15</td></tr></table>",
+  "C04-16": "<p><b>示例：重金属检测结论（Art 5(4)）</b></p>\n<table class=\"ex-tbl\"><tr><th>项目</th><th>要求</th><th>示例结果</th></tr>\n<tr><td>Pb 铅</td><td>—</td><td>&lt; 20 mg/kg</td></tr>\n<tr><td>Cd 镉</td><td>—</td><td>&lt; 10 mg/kg</td></tr>\n<tr><td>Hg 汞</td><td>—</td><td>&lt; 10 mg/kg</td></tr>\n<tr><td>Cr(VI) 六价铬</td><td>—</td><td>&lt; 10 mg/kg</td></tr>\n<tr><td><b>四项总和</b></td><td><b>≤ 100 mg/kg</b></td><td><b>&lt; 50 mg/kg ✓</b></td></tr></table>\n<div class=\"ex-note\">以第三方报告（ICP-OES/ICP-MS）为准；检测对象须覆盖包装及所有组件（含油墨、胶黏剂）。</div>",
+  "C04-17": "<p><b>示例：PFAS 适用性记录（非食品接触）</b></p>\n<pre>适用性判断：不适用 N/A\n依据：Art 5(5) 仅针对食品接触包装；本产品为印刷色卡（非食品接触）。\n备注：如未来用于食品接触场景，须按总氟法提供 ≤25 ppb（总氟）/ ≤250 ppb（聚合PFAS）/ ≤50 ppm 检测报告。</pre>",
+  "C05-19": "<p><b>示例：可回收性评估结论（过渡期方法 EN 13430）</b></p>\n<pre>材料识别：单材质纸基（PAP 20），主要组件为色卡纸板（质量占比 &gt;95%）。\n收集分选：进入欧盟纸 / 纸板回收流（paper & board stream）。\n工艺兼容性：水性油墨可脱墨；无覆膜、无塑料封口；胶黏剂为回收相容类型。\n结论：按设计可回收（recyclable by design）——过渡期评估，待实施法案分级后复核。</pre>",
+  "C05-20": "<p><b>示例：组件相容性声明（油墨 / 胶黏剂 / 标签）</b></p>\n<pre>油墨：水性油墨，符合脱墨性要求（INGEDE 方法 11 类试验通过）。\n胶黏剂：淀粉基 / 可再制浆胶，不影响纸基回收。\n标签 / 涂层：无覆膜；若采用不干胶标签须可分离或可再制浆。\n结论：各辅助件与纸基回收工艺相容（Art 6(3) 组件规则）。</pre>",
+  "C09-29": "<p><b>示例：最小化评估结论（Art 10(1) + Annex IV 八项准则）</b></p>\n<pre>当前包装质量 14 g，为满足功能的最低必要值：\n1) 产品保护：色卡平整度与运输堆码强度（跌落/压缩测试通过）；\n2) 制造工艺：300 g/m² 为印刷与模切稳定运行的最低克重；\n3) 物流：满足堆码抗压与货架展示；\n4) 包装功能性：翻盖 / 挂孔 / 开启关闭结构；\n5) 信息承载：标签与印刷信息所需面积；\n6-7) 卫生 / 安全：非食品接触，不构成额外要求；\n8) 法律要求：标签法规所需面积已计入。\n结论：任何进一步减量将影响产品保护或印刷质量，符合 Art 10 最小化（过渡期记录）。</pre>",
+  "C09-30": "<p><b>示例：产品保护证据记录</b></p>\n<table class=\"ex-tbl\"><tr><th>测试</th><th>方法</th><th>结果</th></tr>\n<tr><td>跌落测试</td><td>ISTA 2A（0.8 m）</td><td>通过，无破损</td></tr>\n<tr><td>堆码抗压</td><td>EN ISO 12048</td><td>≥ 80 kg 通过</td></tr></table>",
+  "C12-46": "<p><b>示例：PPWR 风险分析表（TD §14）</b></p>\n<table class=\"ex-tbl\"><tr><th>风险</th><th>原因</th><th>概率</th><th>严重性</th><th>等级</th><th>控制 / 缓解</th></tr>\n<tr><td>重金属不符</td><td>油墨/纸板污染</td><td>低</td><td>高</td><td>中</td><td>供应商声明 + 定期检测</td></tr>\n<tr><td>可回收性受影响</td><td>油墨/胶黏剂变更</td><td>低</td><td>中</td><td>中</td><td>变更控制 + 供应商通知</td></tr>\n<tr><td>最小化失效</td><td>克重/厚度增加</td><td>低</td><td>中</td><td>低</td><td>规格变更复核</td></tr></table>",
+  "C14-54": "<p><b>示例：适用标准清单（TD §16）</b></p>\n<table class=\"ex-tbl\"><tr><th>标准 / 规范</th><th>版本</th><th>用途</th></tr>\n<tr><td>EN 13430:2004</td><td>2004</td><td>材料回收（Art 6 过渡期评估）</td></tr>\n<tr><td>EN 13428:2004</td><td>2004</td><td>最小化准则（Art 10）</td></tr>\n<tr><td>EN 13432:2000</td><td>2000</td><td>可堆肥（如适用）</td></tr>\n<tr><td>ISO 16620-5</td><td>现行</td><td>生物基碳含量（如适用）</td></tr></table>",
+  "C15-56": "<p><b>示例：供应商 PPWR 符合性声明（要点）</b></p>\n<pre>致：【产品制造商名称】\n兹声明，我司供应的【材料/组件名称】符合 Regulation (EU) 2025/40 相关要求：\n- 重金属（Pb+Cd+Hg+Cr(VI)）四项总和 ≤ 100 mg/kg（Art 5(4)）；\n- 产品成分与送样一致；材料/工艺变更前 30 日书面通知；\n- 配合提供材料组成、TDS 及检测报告。\n供应商（盖章）：________   签字：________   日期：________</pre>",
+  "C16-66": "<p><b>示例：EU DoC 信息</b></p>\n<table class=\"ex-tbl\"><tr><th>字段</th><th>示例</th></tr>\n<tr><td>DoC 编号</td><td>XXX-XXX-XXX</td></tr>\n<tr><td>TD 编号 / 版本</td><td>PPWR_Technical_Files V1.0</td></tr>\n<tr><td>签署人</td><td>张三 / 合规负责人</td></tr>\n<tr><td>签发日期</td><td>2026-08-24</td></tr></table>",
+  "C16-69": "<p><b>示例：技术文件审批记录（TD §21）</b></p>\n<table class=\"ex-tbl\"><tr><th>角色</th><th>示例</th></tr>\n<tr><td>Prepared by</td><td>张三 / 2026-08-24</td></tr>\n<tr><td>Reviewed by</td><td>李四 / 2026-08-24</td></tr>\n<tr><td>Approved by</td><td>王五 / 2026-08-24</td></tr></table>\n<div class=\"ex-note\">TD 完成并经三级审批后方可签署 EU DoC（情形 B 由产品生产商即包装制造商签署）。</div>"
+ },
+ "SAMPLES_CAT": {
+  "1": "<p><b>通用示例：包装识别资料包</b>——建议包含包装识别信息表、产品-SKU 对应表、供应商信息、质量尺寸记录、实物照片与最终 Artwork，文件命名如 <span class=\"kbd\">01_Packaging_ID_PKG-xx_R1.pdf</span>。</p>",
+  "2": "<p><b>通用示例：结构资料包</b>——BOM 表 + 各组件 TDS + 材料组成声明 + 油墨/胶黏剂/涂层规格书；每份文件标注组件名与版本。</p>",
+  "3": "<p><b>通用示例：设计制造资料包</b>——图纸清单（编号/版本/日期）+ Artwork 批准版 + 制造规格书 + 控制计划；设计理由以叙述段说明。</p>",
+  "4": "<p><b>通用示例：物质要求证据包</b>——重金属检测报告或供应商声明（四项总和 ≤100 mg/kg）+ PFAS 适用性判断记录 + 食品接触声明。</p>",
+  "5": "<p><b>通用示例：可回收性证据包</b>——可回收性评估（材料识别→质量占比→收集分选→工艺兼容）+ 组件相容性资料 + 采用方法/标准说明。</p>",
+  "6": "<p><b>通用示例：再生料记录</b>——纯纸基产品记录 N/A 及理由；含塑料组件时附 PCR 质量占比计算与供应商证明。</p>",
+  "7": "<p><b>通用示例：生物基记录</b>——纸基产品记录 N/A；如作生物基声明附 ISO 16620-5 生物基碳测试。</p>",
+  "8": "<p><b>通用示例：可堆肥记录</b>——判断是否属 Art 9 特定包装；如适用附 EN 13432 测试报告与堆肥标识。</p>",
+  "9": "<p><b>通用示例：最小化证据包</b>——最小化评估结论 + 产品保护/制造/物流/功能/信息等逐准则证据（测试、计算、设计说明）+ 空隙率记录。</p>",
+  "10": "<p><b>通用示例：可重复使用记录</b>——一次性包装记录 N/A；如声明可重复使用须附循环次数、清洗、返回系统等证据。</p>",
+  "11": "<p><b>通用示例：标签追溯资料包</b>——最终 Artwork 各信息项位置标注 + 材料/处置/分选信息 + QR/数据载体说明。</p>",
+  "12": "<p><b>通用示例：风险与变更资料包</b>——风险分析表 + 供应商变更通知承诺 + 材料/配方变更影响评估记录。</p>",
+  "13": "<p><b>通用示例：制造控制记录</b>——来料检验（IQC）、首件/日常 QC、最终放行记录三件套，按批次归档。</p>",
+  "14": "<p><b>通用示例：标准与证据管理</b>——标准清单（EN 13427–13432 等）+ Evidence Register（EV-xx 与结论交叉引用）。</p>",
+  "15": "<p><b>通用示例：供应商证据包</b>——供应商 PPWR 声明 + TDS + 材料组成 + 重金属/PFAS 声明 + 油墨胶黏剂声明 + 变更通知承诺。</p>",
+  "16": "<p><b>通用示例：DoC 与审批包</b>——DoC 信息 + TD/证据交叉引用 + N/A 依据 + Prepared/Reviewed/Approved 审批记录。</p>"
+ }
+}

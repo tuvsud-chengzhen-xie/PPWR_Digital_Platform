@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status %}
+{% block title %}My actions{% endblock %}
+{% block page %}
+<main class="page is-narrow">
+    <div class="page-head">
+        <h1>My actions</h1>
+        <form class="filterbar" method="get"><select name="project" onchange="this.form.submit()"><option value="">All projects</option>
+            {% for p in projects %}<option value="{{ p.id }}" {{ 'selected' if scope_id == p.id }}>{{ p.code }} · {{ p.title }}</option>{% endfor %}</select></form>
+    </div>
+    <section class="card">
+        <h2 class="card-title">Sent back for rework <span class="hint">{{ rework | length }} · fix and re-submit</span></h2>
+        {% if rework %}
+        <ul class="todo">{% for s in rework %}
+            <li><a href="/projects/{{ s.project_id }}/items/{{ s.id }}"><span class="dot dot-red"></span>
+                <span style="min-width:0"><span class="todo-title">{{ s.item_id }} · {{ catalogue.item(s.item_id).name }}</span>
+                <span class="todo-sub">{{ s.project.code }} · {{ s.unit.code if s.unit else 'project' }} — “{{ s.review_comment }}”</span></span><span class="go">→</span></a></li>
+        {% endfor %}</ul>
+        {% else %}<div class="empty-state"><b>Nothing sent back.</b>Your submissions are with the reviewer or approved.</div>{% endif %}
+    </section>
+    <section class="card">
+        <h2 class="card-title">Still to collect <span class="hint">{{ todo | length }}</span></h2>
+        {% if todo %}
+        <ul class="todo">{% for s in todo[:60] %}
+            <li><a href="/projects/{{ s.project_id }}/items/{{ s.id }}"><span class="chip-id">{{ s.item_id }}</span>
+                <span style="min-width:0"><span class="todo-title">{{ catalogue.item(s.item_id).name }}</span>
+                <span class="todo-sub">{{ s.project.code }} · {{ s.unit.code ~ ' ' ~ s.unit.name if s.unit else 'project-level' }} · {{ catalogue.item(s.item_id).td }}</span></span><span class="go">→</span></a></li>
+        {% endfor %}</ul>
+        {% if todo | length > 60 %}<p class="xs muted">…and {{ todo | length - 60 }} more — use the Data collection tab of each project.</p>{% endif %}
+        {% else %}<div class="empty-state"><b>Everything is collected.</b></div>{% endif %}
+    </section>
+</main>
+{% endblock %}

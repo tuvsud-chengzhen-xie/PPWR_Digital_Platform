@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% from "_macros.html" import stage, progress_cell, stack, legend %}
+{% block title %}Dashboard{% endblock %}
+{% block page %}
+<main class="page">
+    <div class="page-head">
+        <div>
+            <span class="eyebrow">{{ 'All clients' if is_expert else user.client.name }}</span>
+            <h1>{{ 'PPWR service desk' if is_expert else 'Your PPWR compliance workspace' }}</h1>
+        </div>
+        <div class="page-actions">
+            <a class="btn" href="/knowledge">PPWR key dates</a>
+            <a class="btn btn-primary" href="/projects/new">+ New TD / DoC project</a>
+        </div>
+    </div>
+
+    <div class="kpi-strip">
+        {% if is_expert %}
+        <a class="kpi-tile is-headline" style="--i:0" href="/review">
+            <span class="kpi-label">Waiting for review</span>
+            <span class="kpi-value" data-tick="{{ kpis.awaiting }}">{{ kpis.awaiting }}</span>
+            <span class="kpi-sub">items across {{ kpis.projects }} project{{ 's' if kpis.projects != 1 }}</span>
+        </a>
+        {% else %}
+        <a class="kpi-tile is-headline" style="--i:0" href="/projects">
+            <span class="kpi-label">Documentation readiness</span>
+            <span class="kpi-value"><span data-tick="{{ kpis.readiness }}">{{ kpis.readiness }}</span><span class="unit">%</span></span>
+            <span class="kpi-sub">{{ '{:,}'.format(kpis.done) }} of {{ '{:,}'.format(kpis.total_items) }} items closed</span>
+        </a>
+        {% endif %}
+        <a class="kpi-tile" style="--i:1" href="{{ '/projects' if is_expert else '/review' }}">
+            <span class="kpi-label">{{ 'Overall readiness' if is_expert else 'Items for you' }}</span>
+            <span class="kpi-value">{{ (kpis.readiness ~ '%') if is_expert else kpis.to_action }}</span>
+            <span class="kpi-sub">{{ ('{:,} of {:,} items closed'.format(kpis.done, kpis.total_items)) if is_expert else 'to collect or rework' }}</span>
+        </a>
+        <a class="kpi-tile" style="--i:2" href="/projects">
+            <span class="kpi-label">TD &amp; DoC documents</span>
+            <span class="kpi-value {{ 'is-alert' if kpis.outdated }}">{{ kpis.issued }} issued</span>
+            <span class="kpi-sub">{{ kpis.outdated }} need an update · {{ kpis.drafts }} draft{{ 's' if kpis.drafts != 1 }}</span>
+        </a>
+        <a class="kpi-tile" style="--i:3" href="/changes">
+            <span class="kpi-label">Supply-chain watch</span>
+            <span class="kpi-value {{ 'is-alert' if kpis.changes }}">{{ kpis.changes }} open change{{ 's' if kpis.changes != 1 }}</span>
+            <span class="kpi-sub">{{ kpis.expiring }} certificate{{ 's' if kpis.expiring != 1 }} expiring ≤ {{ EXPIRY_WINDOW }} days</span>
+        </a>
+    </div>
+
+    <section class="card">
+        <div class="card-head">
+            <h2 class="card-title">How the service flows <span class="hint">live counts</span></h2>
+        </div>
+        <div class="flow">
+            {% for name, count, note in flow %}
+            <div class="flow-step">
+                <span class="flow-index">{{ loop.index }}</span>
+                <span><span class="flow-name">{{ name }}</span><span class="flow-count">{{ count }}</span><span class="flow-note">{{ note }}</span></span>
+            </div>
+            {% if not loop.last %}<span class="flow-arrow">→</span>{% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <div class="grid-2">
+        <section class="card">
+            <h2 class="card-title">Things to do <span class="hint">most urgent first</span></h2>
+            {% if todo %}
+            <ul class="todo">
+                {% for t in todo %}
+                <li><a href="{{ t.href }}">
+                    <span class="dot dot-{{ t.level }}"></span>
+                    <span style="min-width:0"><span class="todo-title">{{ t.title }}</span><span class="todo-sub">{{ t.sub }}</span></span>
+                    <span class="go">→</span></a></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="empty-state"><b>Nothing waiting.</b>Every open item is with the other side, or done.</div>
+            {% endif %}
+        </section>
+        <section class="card">
+            <h2 class="card-title">Certificates entering the expiry window</h2>
+            {% if expiring %}
+            <table class="data">
+                <thead><tr><th>Supplier · material</th><th>Certificate</th><th class="num">Expires</th></tr></thead>
+                <tbody>
+                {% for c in expiring %}
+                {% set left = c.expires | days_until %}
+                <tr data-href="/suppliers/{{ c.material.supplier_id }}" class="row-link">
+                    <td><b>{{ c.material.supplier.name }}</b><br><span class="xs muted">{{ c.material.name }} · <span class="mono">{{ c.material.trace_code }}</span></span></td>
+                    <td>{{ CERT_SHORT[c.doc_type] }}<br><span class="xs muted mono">{{ c.number }}</span></td>
+                    <td class="num"><span class="badge {{ 'badge-high' if left < 0 else 'badge-warn' }}">{{ 'expired' if left < 0 else left ~ ' days' }}</span><br><span class="xs muted">{{ c.expires | day }}</span></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state"><b>All supplier certificates are valid.</b>Nothing expires in the next {{ EXPIRY_WINDOW }} days.</div>
+            {% endif %}
+        </section>
+    </div>
+
+    <section class="card">
+        <div class="card-head">
+            <h2 class="card-title">Projects</h2>
+            <a href="/projects" class="small">All projects →</a>
+        </div>
+        <div class="table-wrap">
+        <table class="data scan">
+            <colgroup><col style="width:120px"><col><col style="width:190px"><col style="width:90px"><col style="width:200px"><col style="width:150px"><col style="width:110px"></colgroup>
+            <thead><tr><th>Project</th><th>Packaging</th><th>Client</th><th>Scenario</th><th>Progress</th><th>Stage</th><th class="num">Target</th></tr></thead>
+            <tbody>
+            {% for r in rows %}
+            <tr data-href="/projects/{{ r.p.id }}" class="row-link">
+                <td><span class="chip-id">{{ r.p.code }}</span></td>
+                <td><b>{{ r.p.title }}</b> <span class="xs muted">· {{ r.p.units | length }} unit{{ 's' if r.p.units | length != 1 }}</span></td>
+                <td>{{ r.p.client.name }}</td>
+                <td>{{ 'A · per unit' if r.p.scenario == 'A' else 'B · consolidated' }}</td>
+                <td>{{ stack(r.prog) }}<span class="xs muted tabnum">{{ r.prog.pct }}% · {{ r.prog.done }}/{{ r.prog.total }}</span></td>
+                <td>{{ stage(r.stage) }}</td>
+                <td class="num">{{ r.p.target_date | day }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7"><div class="empty-state"><b>No projects yet.</b><a href="/projects/new">Start the first TD / DoC project →</a></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {{ legend() }}
+    </section>
+</main>
+{% endblock %}

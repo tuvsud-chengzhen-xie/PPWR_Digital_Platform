@@ -1,0 +1,64 @@
+{% extends "project/_layout.html" %}
+{% block content %}
+{% if uncovered %}
+<div class="banner banner-warn">BOM template rule — every component needs at least one evidence file or a linked supplier material.
+    Missing for: {% for c in uncovered %}<span class="chip-id">{{ c.code }}</span> {% endfor %}</div>
+{% endif %}
+<section class="card">
+    <div class="card-head">
+        <h2 class="card-title">Evidence register <span class="hint">TD §17 · {{ project.evidence | length }} files · {{ total_size | size }}</span></h2>
+        <div class="filterbar">
+            <form method="get" class="filterbar">
+                <select name="unit" onchange="this.form.submit()"><option value="">All units</option>
+                    {% for u in project.units %}<option value="{{ u.id }}" {{ 'selected' if unit_filter == u.id | string }}>{{ u.code }} {{ u.name }}</option>{% endfor %}
+                    <option value="project" {{ 'selected' if unit_filter == 'project' }}>Project-level</option></select>
+                <select name="type" onchange="this.form.submit()"><option value="">All types</option>
+                    {% for k, v in EVIDENCE_TYPES.items() %}<option value="{{ k }}" {{ 'selected' if type_filter == k }}>{{ k }} · {{ v }}</option>{% endfor %}</select>
+            </form>
+            <a class="btn btn-sm" href="/projects/{{ project.id }}/evidence.xlsx">Export Evidence List (.xlsx)</a>
+        </div>
+    </div>
+    <div class="table-wrap" style="max-height: 640px">
+    <table class="data scan">
+        <colgroup><col style="width:210px"><col><col style="width:80px"><col style="width:150px"><col style="width:160px"><col style="width:100px"><col style="width:110px"><col style="width:70px"></colgroup>
+        <thead><tr><th>Evidence ID</th><th>Title</th><th>Item</th><th>Document no.</th><th>Issued by</th><th class="num">Issued</th><th>Conformity</th><th class="num">Size</th></tr></thead>
+        <tbody>
+        {% for e in rows %}
+        <tr>
+            <td><a href="/evidence/{{ e.id }}/download" title="Download"><span class="chip-id">{{ e.code }}</span></a></td>
+            <td title="{{ e.filename }}"><b>{{ e.title }}</b> <span class="xs muted">{{ EVIDENCE_TYPES.get(e.type_code, e.type_code) }}</span></td>
+            <td>{% if e.item_id %}{% set sub = project.submissions | selectattr('item_id', 'equalto', e.item_id) | selectattr('unit_id', 'equalto', e.unit_id) | first %}{% if sub %}<a href="/projects/{{ project.id }}/items/{{ sub.id }}">{{ e.item_id }}</a>{% else %}{{ e.item_id }}{% endif %}{% else %}—{% endif %}</td>
+            <td class="xs mono">{{ e.file_no or '—' }}</td>
+            <td class="xs">{{ e.issuer or '—' }}</td>
+            <td class="num xs">{{ e.issued_date | day }}{% if e.id in stale %}<br><span class="badge badge-warn">&gt; 24 months</span>{% endif %}</td>
+            <td>{% if e.conformity and e.conformity.lower().startswith('non') %}<span class="badge badge-high">{{ e.conformity }}</span>{% else %}<span class="badge badge-ok">{{ e.conformity or 'Conform' }}</span>{% endif %}</td>
+            <td class="num xs">{{ e.size | size }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8"><div class="empty-state"><b>No evidence yet.</b>Upload files on each data-collection item, or below.</div></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<section class="card">
+    <h2 class="card-title">Add a file that is not tied to one item <span class="hint">e.g. a combined supplier declaration</span></h2>
+    <form method="post" action="/projects/{{ project.id }}/evidence" enctype="multipart/form-data">
+        <label class="upload" style="display:block;cursor:pointer"><input type="file" name="file" hidden>
+            <span class="small"><b data-file-label>Drop a file here or click to choose</b> <span class="muted">· max 25 MB</span></span></label>
+        <div class="form-row" style="margin-top:10px">
+            <label class="field" style="grid-column: span 2"><span class="field-label">Title</span><input name="title"></label>
+            <label class="field"><span class="field-label">Type</span><select name="type_code">{% for k, v in EVIDENCE_TYPES.items() %}<option value="{{ k }}">{{ k }} · {{ v }}</option>{% endfor %}</select></label>
+            <label class="field"><span class="field-label">Unit</span><select name="unit_id"><option value="">project-level</option>{% for u in project.units %}<option value="{{ u.id }}">{{ u.code }} {{ u.name }}</option>{% endfor %}</select></label>
+        </div>
+        <div class="form-row">
+            <label class="field"><span class="field-label">Component</span><select name="component_id"><option value="">—</option>{% for u in project.units %}{% for c in u.components %}<option value="{{ c.id }}">{{ c.code }} {{ c.material }}</option>{% endfor %}{% endfor %}</select></label>
+            <label class="field"><span class="field-label">Document no.</span><input name="file_no"></label>
+            <label class="field"><span class="field-label">Issued by</span><input name="issuer"></label>
+            <label class="field"><span class="field-label">Issue date</span><input type="date" name="issued_date"></label>
+        </div>
+        <button class="btn btn-sm">Upload to the vault</button>
+    </form>
+</section>
+{% endblock %}

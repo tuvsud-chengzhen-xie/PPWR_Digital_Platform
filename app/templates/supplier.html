@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% from "_macros.html" import cert_state %}
+{% block title %}{{ s.name }}{% endblock %}
+{% block page %}
+<main class="page is-2col">
+    <nav class="breadcrumb"><a href="/suppliers">Suppliers</a><span class="breadcrumb-sep">›</span><strong>{{ s.code }}</strong></nav>
+    <div class="page-head">
+        <div><span class="eyebrow">{{ s.code }} · {{ s.client.name }}</span><h1>{{ s.name }}</h1>
+            <span class="small muted">{{ s.address }}{{ ', ' if s.address and s.country }}{{ s.country }}{{ ' · ' ~ s.contact if s.contact }}</span></div>
+    </div>
+    <div class="layout-2col">
+        <div class="layout-main">
+            {% for row in mats %}
+            {% set m = row.m %}
+            <section class="card" id="m{{ m.id }}">
+                <div class="card-head">
+                    <h2 class="card-title"><span class="chip-id">{{ m.code }}</span> {{ m.name }}
+                        <span class="hint">trace code <span class="mono">{{ m.trace_code or '—' }}</span> · {{ m.material }} · {{ m.material_group }}</span></h2>
+                </div>
+                <table class="data">
+                    <thead><tr><th>Certificate</th><th>Number</th><th>Result</th><th>Issued by</th><th class="num">Valid until</th><th>State</th></tr></thead>
+                    <tbody>
+                    {% for x in row.certs %}
+                    <tr class="{{ 'is-muted' if x.c.status == 'superseded' }}">
+                        <td>{{ CERT_SHORT[x.c.doc_type] }}{% if x.c.status == 'superseded' %} <span class="badge badge-muted">superseded</span>{% endif %}</td>
+                        <td class="mono xs">{% if x.c.stored_path %}<a href="/certificates/{{ x.c.id }}/download">{{ x.c.number }}</a>{% else %}{{ x.c.number }}{% endif %}</td>
+                        <td class="xs">{{ x.c.value or '—' }}</td><td class="xs">{{ x.c.issuer }}</td>
+                        <td class="num xs">{{ x.c.expires | day }}</td>
+                        <td>{% if x.c.status == 'valid' %}{{ cert_state(x.state, x.c.expires | days_until) }}{% endif %}</td>
+                    </tr>
+                    {% else %}<tr><td colspan="6" class="muted">No certificates on file.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+                <p class="xs muted" style="margin:8px 0">Used by {{ row.uses | length }} component{{ 's' if row.uses | length != 1 }}:
+                    {% for u in row.uses %}<a href="/projects/{{ u.p.id }}/packaging?unit={{ u.u.id }}"><span class="chip-id">{{ u.p.code }} · {{ u.c.code }}</span></a> {% else %}not linked to any BOM yet{% endfor %}</p>
+                <div class="grid-2" style="gap:12px">
+                    <details class="fold"><summary>Add / renew a certificate</summary>
+                        <form method="post" action="/suppliers/{{ s.id }}/materials/{{ m.id }}/certificates" enctype="multipart/form-data" class="fold-body">
+                            <div class="form-row" style="grid-template-columns:1fr 1fr">
+                                <label class="field"><span class="field-label">Type</span><select name="doc_type">{% for k, v in CERT_TYPES.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></label>
+                                <label class="field"><span class="field-label">Number</span><input name="number" required></label>
+                                <label class="field"><span class="field-label">Issued by</span><input name="issuer"></label>
+                                <label class="field"><span class="field-label">Result / value</span><input name="value" placeholder="e.g. 38 mg/kg"></label>
+                                <label class="field"><span class="field-label">Issue date</span><input type="date" name="issued"></label>
+                                <label class="field"><span class="field-label">Valid until</span><input type="date" name="expires"></label>
+                            </div>
+                            <label class="upload" style="display:block;cursor:pointer;margin-bottom:8px"><input type="file" name="file" hidden>
+                                <span class="small"><b data-file-label>Attach the report (optional)</b></span></label>
+                            <button class="btn btn-primary btn-sm">Save certificate</button>
+                            {% if row.uses %}<span class="xs muted">The current certificate of this type is superseded and a change is raised for the {{ row.uses | length }} component(s) using it.</span>{% endif %}
+                        </form>
+                    </details>
+                    <details class="fold"><summary>Report a material / supplier change</summary>
+                        <form method="post" action="/suppliers/{{ s.id }}/materials/{{ m.id }}/change" class="fold-body">
+                            <label class="field" style="margin-bottom:8px"><span class="field-label">What changed</span><input name="title" required placeholder="e.g. Resin grade swap on the sealant layer"></label>
+                            <label class="field" style="margin-bottom:8px"><span class="field-label">Kind</span><select name="kind"><option value="material_change">Material / formulation change</option><option value="supplier_change">Production site / supplier change</option></select></label>
+                            <label class="field" style="margin-bottom:8px"><span class="field-label">Details</span><textarea name="description" placeholder="Supplier notice, effective date, what is affected"></textarea></label>
+                            <button class="btn btn-sm">Trace the impact</button>
+                        </form>
+                    </details>
+                </div>
+            </section>
+            {% else %}
+            <section class="card empty-state"><b>No materials yet.</b>Add what this supplier delivers on the right.</section>
+            {% endfor %}
+        </div>
+        <aside class="layout-rail">
+            <div class="rail-card">
+                <header class="rail-card-head"><span class="rail-card-eyebrow">Add a material ({{ next_spt }})</span></header>
+                <form method="post" action="/suppliers/{{ s.id }}/materials">
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Name</span><input name="name" required placeholder="e.g. Kraft liner 140 g/m²"></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Trace code (supplier's own)</span><input name="trace_code" placeholder="e.g. PAP20-300GSM-2024A"></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Material</span><input name="material"></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Group</span><select name="material_group"><option value="">auto-detect</option>{% for g in MATERIAL_GROUPS %}<option>{{ g }}</option>{% endfor %}</select></label>
+                    <button class="btn btn-primary btn-sm">Add material</button>
+                </form>
+            </div>
+            <div class="rail-card">
+                <header class="rail-card-head"><span class="rail-card-eyebrow">Changes from this supplier</span></header>
+                {% for ev in events %}
+                <a href="/changes/{{ ev.id }}" class="small" style="display:block;margin-bottom:8px;color:inherit;text-decoration:none"><span class="chip-id">{{ ev.code }}</span> {{ ev.title }}<br>
+                    <span class="badge {{ {'open': 'badge-warn', 'applied': 'badge-ok', 'dismissed': 'badge-muted'}[ev.status] }}">{{ ev.status }}</span> <span class="xs muted">{{ ev.created_at | ago }}</span></a>
+                {% else %}<p class="small muted" style="margin:0">None.</p>{% endfor %}
+            </div>
+        </aside>
+    </div>
+</main>
+{% endblock %}

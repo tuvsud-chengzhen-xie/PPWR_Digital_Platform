@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>PPWR 资料收集说明 — 生产商版</title>
+<style>
+  :root {
+    --brand:#1F6FEB; --brand-dark:#0B3D91; --warn:#D4880F; --danger:#D9363E; --ok:#389E0D;
+    --bg:#F7FAFF; --card:#FFFFFF; --border:#E0E8F5; --text:#222; --muted:#666;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0; background:var(--bg); color:var(--text);
+         font-family:"PingFang SC","Microsoft YaHei",-apple-system,Segoe UI,sans-serif; line-height:1.6; }
+  header { background:linear-gradient(135deg,#1F6FEB 0%,#0B3D91 100%); color:#fff;
+           padding:36px 32px; }
+  header h1 { margin:0 0 8px 0; font-size:26px; letter-spacing:0.5px; }
+  header p { margin:0; opacity:0.9; font-size:14px; }
+  main { max-width:1100px; margin:0 auto; padding:32px 24px 80px 24px; }
+  .quickstart { background:#FFF7E6; border-left:4px solid var(--warn);
+                padding:18px 22px; border-radius:6px; margin-bottom:28px; }
+  .quickstart strong { color:var(--warn); }
+  .section { background:var(--card); border:1px solid var(--border); border-radius:10px;
+             padding:24px 28px; margin-bottom:24px; box-shadow:0 2px 8px rgba(15,40,90,0.05); }
+  .section h2 { margin:0 0 16px 0; color:var(--brand-dark); border-bottom:2px solid var(--brand);
+                padding-bottom:10px; font-size:20px; }
+  .section h3 { color:var(--brand-dark); margin:20px 0 8px; font-size:16px; }
+  .row { display:flex; gap:16px; flex-wrap:wrap; }
+  .row > * { flex:1 1 320px; }
+  figure { margin:0; padding:14px; background:#fff; border:1px solid var(--border);
+           border-radius:8px; text-align:center; }
+  figure img { max-width:100%; height:auto; border-radius:6px; }
+  figcaption { margin-top:10px; font-size:13px; color:var(--muted); }
+  .file-card { background:#fff; border:1px solid var(--border); border-radius:10px;
+               padding:18px 22px; margin-bottom:14px; }
+  .file-card .name { font-weight:bold; color:var(--brand-dark); font-size:15px; margin-bottom:6px; }
+  .file-card .desc { font-size:13px; color:#444; margin-bottom:10px; }
+  .badge { display:inline-block; background:#E8F2FF; color:var(--brand-dark);
+           font-size:11px; padding:2px 8px; border-radius:10px; margin-right:6px; margin-top:2px; }
+  ol li { margin:6px 0; }
+  table.kv { width:100%; border-collapse:collapse; margin-top:10px; font-size:13px; }
+  table.kv th, table.kv td { border:1px solid var(--border); padding:8px 10px; text-align:left; vertical-align:top; }
+  table.kv th { background:#F0F6FF; color:var(--brand-dark); width:30%; }
+  .pill { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px;
+          background:#E8F2FF; color:var(--brand-dark); }
+  .warn-list { background:#FFF4E6; padding:14px 18px; border-radius:8px; }
+  .warn-list li { color:#7A4500; }
+  footer { text-align:center; color:var(--muted); font-size:12px; padding:20px 0 0 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>PPWR 资料收集指引（生产商版）</h1>
+  <p>本页面说明在 PPWR (EU) 2025/40 技术支持服务中，生产商需要提交哪些信息与文件。三份 Excel 模板已内置填写示例、图示参考与条款映射。</p>
+</header>
+
+<main>
+
+  <div class="quickstart">
+    <strong>⚡ 一句话导读：</strong>
+    填好 <b>PPWR_BOM V1.1</b>（"包装用了哪些材料"） + <b>PPWR_Evidence_List V1.1</b>（"每份证明文件在哪里"），
+    这两份的内容就能直接对照 <b>PPWR_Checklist V1.5</b>（"19 大类证据要齐"）逐一打勾。
+  </div>
+
+  <!-- 文件清单 -->
+  <section class="section">
+    <h2>📁 三份 Excel 模板（已含示例与说明）</h2>
+
+    <div class="file-card">
+      <div class="name">1️⃣ PPWR_Checklist V1.5 — 证据需求清单（19 大类）</div>
+      <div class="desc">"我需要提供哪些资料？" 一张表 19 大类逐项说明：要求内容、提交方式、图示参考、PPWR 条款、填写示例。</div>
+      <span class="badge">53 行</span><span class="badge">10 列</span><span class="badge">冻结表头</span>
+    </div>
+
+    <div class="file-card">
+      <div class="name">2️⃣ PPWR_BOM V1.1 — 包装材料清单</div>
+      <div class="desc">"我每个包装组件分别是什么？" 每个组件单独一行：组件号、类型、层级、描述、结构、材质、重量、尺寸、供应商、再生料比例、适用条款、关联证据。</div>
+      <span class="badge">2 个示例组件</span><span class="badge">含列说明</span><span class="badge">17 字段</span>
+    </div>
+
+    <div class="file-card">
+      <div class="name">3️⃣ PPWR_Evidence_List V1.1 — 证据文件清单</div>
+      <div class="desc">"每份证明文件在哪里？" 一份文件一行：编号、类型、日期、出具方、责任主体、是否符合、供应商、备注。</div>
+      <span class="badge">4 个示例证据</span><span class="badge">含列说明</span><span class="badge">图示索引</span>
+    </div>
+  </section>
+
+  <!-- 图示 -->
+  <section class="section">
+    <h2>🖼️ 五张关键图示（写在 Excel 的"图示参考"列）</h2>
+
+    <div class="row">
+      <figure>
+        <img src="./packaging_levels.png" alt="Packaging Levels">
+        <figcaption><b>图 1 · Packaging Levels</b><br>包装层级：Sales / Grouped / Transport</figcaption>
+      </figure>
+      <figure>
+        <img src="./evidence_id_structure.png" alt="Evidence ID Structure">
+        <figcaption><b>图 2 · Evidence ID Structure</b><br>证据编号命名规则 (PU-XXX-CXXX-EVI-XXX)</figcaption>
+      </figure>
+      <figure>
+        <img src="./packaging_photo_guide.png" alt="Packaging Photo Guide">
+        <figcaption><b>图 3 · Packaging Photo Guide</b><br>包装照片 6 个角度拍摄指引</figcaption>
+      </figure>
+    </div>
+
+    <div class="row">
+      <figure>
+        <img src="./td_doc_structure.png" alt="TD / DOC Structure">
+        <figcaption><b>图 4 · TD / DOC Structure</b><br>Annex II 技术文档 + Annex III DoC 要素对照</figcaption>
+      </figure>
+      <figure>
+        <img src="./articles_evidence_map.png" alt="Articles ↔ Evidence">
+        <figcaption><b>图 5 · Articles ↔ Evidence</b><br>PPWR Article 5–12 与证据类型对照</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 填写步骤 -->
+  <section class="section">
+    <h2>📝 生产商填写步骤（4 步）</h2>
+    <li> <b>第 1 步：</b> 打开 <code>PPWR_Checklist V1.5</code>，通读 19 大类，自检"我能否提供这些证据"。在 Readiness 列填 ✅ / ⚠️ / ❌。 </li>
+    <li> <b>第 2 步：</b> 打开 <code>PPWR_BOM V1.1</code>，按"每个包装组件单独一行"填写：参考表内两个示例（Carton + Polybag）。</li>
+    <li> <b>第 3 步：</b> 打开 <code>PPWR_Evidence_List V1.1</code>，每份文件单独一行，Evidence ID 格式严格遵循图 2。</li>
+    <li> <b>第 4 步：</b> 三份表互相对照：BOM 中每个 Component 至少 1 条 Evidence；Checklist 中每个 ✅ 项至少 1 条 Evidence；DoC 与 TD 结论一致。</li>
+  </section>
+
+  <!-- 注意事项 -->
+  <section class="section">
+    <h2>⚠️ 关键注意事项</h2>
+    <ul class="warn-list">
+      <li><b>UPI / Component ID 务必唯一</b>，同一产品不可两行同号；命名规则参考图 2。</li>
+      <li><b>检测报告须 ISO 17025 实验室</b>，出具日期 ≤ 24 个月。</li>
+      <li><b>PCR / Biobased 比例</b>仅在宣称时填写，否则留 "—"。</li>
+      <li><b>Artwork 终稿</b>必须与最终印刷版一致；变更须留版本记录。</li>
+      <li><b>DoC</b>须含 Annex III 全部要素（编号 / 制造商 / 适用条款 / 标准 / 签署）。</li>
+      <li><b>本资料库未检索到 PPWR 内部映射文档</b>，所有条款与证据对应基于 PPWR (EU) 2025/40 公约条文及行业通行做法整理，正式评估以权威公告版 (OJEU) 及各成员国实施法案为准。</li>
+    </ul>
+  </section>
+
+  <!-- 法规依据 -->
+  <section class="section">
+    <h2>📚 法规依据 (References)</h2>
+    <table class="kv">
+      <tr><th>主法规</th><td>Regulation (EU) 2025/40 — Packaging and Packaging Waste Regulation (PPWR)</td></tr>
+      <tr><th>TD 要求</th><td>Annex II — Technical Documentation</td></tr>
+      <tr><th>DoC 要求</th><td>Art. 45 + Annex III — EU Declaration of Conformity</td></tr>
+      <tr><th>核心条款</th><td>Art. 5 物质限制 · Art. 6 可回收性 · Art. 7 再生料含量 · Art. 8 生物基 · Art. 9 可堆肥 · Art. 10 最小化 · Art. 11 重复使用 · Art. 12 标识</td></tr>
+      <tr><th>术语定义</th><td>Art. 3 — Packaging / Sales packaging / Grouped packaging / Transport packaging / Packaging waste</td></tr>
+    </table>
+  </section>
+
+  <footer>
+    本说明由 PPWR 技术支持服务流程整理 · 用于指导生产商完整提交资料 · 资料库检索状态：未命中（按 PPWR 公约条文整理）
+  </footer>
+
+</main>
+</body>
+</html>

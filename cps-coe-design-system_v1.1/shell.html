@@ -1,0 +1,186 @@
+<!doctype html>
+<!--
+ ! TÜV SÜD CPS — App Shell Skeleton
+ ! ─────────────────────────────────────────────────────────────────
+ ! Drop-in HTML structure for any new CPS Center of Excellence app.
+ ! Open this file in a browser to preview the corporate identity
+ ! (topbar gradient, brand block with "by …" sub-line, layout
+ ! system, Savings chip, footer).
+ !
+ ! To use in a new project:
+ !   1. Place tokens.css + shell.css + shell.js under /ds/ (or any path).
+ !   2. **Copy `logo.png` from the design-system into your app's
+ !      `/static/` folder** (the topbar's `.brand-logo` expects it at
+ !      `/static/logo.png` — change the `<img src>` in your base
+ !      template if you serve it elsewhere). The shipped logo is the
+ !      official TÜV SÜD 44×44 transparent PNG; use it as-is so every
+ !      CPS app looks the same.
+ !   3. Copy this <body> structure into your base template, edit:
+ !        - <span class="brand-title">  your app name
+ !        - <span class="brand-sub">    "by … Center of Excellence"
+ !        - <nav class="topnav">        your nav items
+ !        - <main class="page …">       optional `is-2col` / `is-narrow`
+ !   4. Server-render the savings chip's data-value + display, or
+ !      remove the chip if your app doesn't track a cumulative metric.
+ -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>App name — by CPS Center of Excellence</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="tokens.css">
+    <link rel="stylesheet" href="shell.css">
+    <!-- App-specific styles last so they can override shell defaults. -->
+    <style>
+        /* Demo-only styling so this skeleton looks complete in a browser. */
+        body { font-family: var(--font-family); background: var(--neutral-25); margin: 0; }
+        .demo-card {
+            padding: var(--space-4);
+            background: var(--white);
+            border: var(--border-default);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--neutral-150);
+            background: var(--white); color: var(--neutral-900);
+            font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
+            text-decoration: none; cursor: pointer;
+        }
+        .btn-primary {
+            background: var(--tuv-blue-600); color: var(--white);
+            border-color: var(--tuv-blue-600); box-shadow: var(--shadow-blue-sm);
+        }
+        .btn-primary:hover { background: var(--tuv-blue-700); border-color: var(--tuv-blue-700); }
+        .btn-ghost { background: transparent; border-color: transparent; color: var(--neutral-700); }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+ ! TOPBAR — corporate identity header
+ ! ─────────────────────────────────────────────────────────────────── -->
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" href="/">
+            <img src="logo.png" alt="TÜV SÜD" class="brand-logo">
+            <div class="brand-text">
+                <span class="brand-title">App name</span>
+                <span class="brand-sub">by CPS Center of Excellence</span>
+            </div>
+        </a>
+        <nav class="topnav">
+            <a href="#" class="is-active">Module A</a>
+            <a href="#">Module B</a>
+            <a href="#">Module C</a>
+            <a href="#">Module D</a>
+        </nav>
+        <span class="spacer"></span>
+
+        <!-- Optional: Savings chip (omit if your app doesn't track a metric). -->
+        <a href="#" id="savings-counter" data-value="0" class="topnav-savings"
+           title="What this chip counts — server-render the value & label.">
+            <svg class="savings-octagon" viewBox="0 0 100 100" aria-hidden="true">
+                <polygon points="30,5 70,5 95,30 95,70 70,95 30,95 5,70 5,30"
+                         fill="currentColor"/>
+            </svg>
+            <span class="savings-value">~0 km</span>
+            <span class="savings-label">saved</span>
+        </a>
+
+        <a href="#" class="topnav-setup">Setup</a>
+    </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+ ! PAGE — pick one container modifier per page
+ !
+ ! Default (.page)        — wide (1440px), e.g. dense planning grids
+ ! .page.is-2col          — 1180px, main column + sticky right rail
+ ! .page.is-narrow        — 880px,  single centred column (focus mode)
+ ! ─────────────────────────────────────────────────────────────────── -->
+<main class="page is-2col">
+
+    <nav class="breadcrumb">
+        <a href="#">Section</a>
+        <span class="breadcrumb-sep">›</span>
+        <strong>Current page</strong>
+    </nav>
+
+    <div class="page-head">
+        <h1>Page title</h1>
+        <div class="page-actions">
+            <a class="btn btn-ghost" href="#">← Back</a>
+            <a class="btn btn-primary" href="#">+ Primary action</a>
+        </div>
+    </div>
+
+    <div class="layout-2col">
+        <main class="layout-main">
+            <section class="demo-card">
+                <h2 style="margin-top: 0; font-size: var(--font-size-lg)">Main column</h2>
+                <p>This is the primary reading column. Constrained to ~860px so long-form
+                   content + cards aren't stretched across the whole viewport. The page
+                   header above lines up with the left edge of this column.</p>
+                <p>To trigger the Savings chip celebration in this demo, click the form
+                   button below — green octagons fly from the button up to the chip,
+                   and the number pulses up by 26.</p>
+                <form data-savings-km="26" style="margin-top: var(--space-3)">
+                    <button class="btn btn-primary" type="submit">✓ Save action (demo)</button>
+                </form>
+            </section>
+        </main>
+
+        <aside class="layout-rail">
+            <div class="rail-card">
+                <header class="rail-card-head">
+                    <span class="rail-card-eyebrow">Side rail</span>
+                </header>
+                <p style="font-size: var(--font-size-sm); margin: 0; color: var(--neutral-700)">
+                    Sticky to <code>--sticky-top-offset</code> so it stops below the topbar
+                    instead of behind it. Scrolls with the page; collapses below the main
+                    column on narrow viewports.
+                </p>
+            </div>
+
+            <div class="rail-card">
+                <header class="rail-card-head">
+                    <span class="rail-card-eyebrow">Why eyebrows?</span>
+                </header>
+                <p style="font-size: var(--font-size-sm); margin: 0; color: var(--neutral-700)">
+                    Small-caps section headers give every rail card a consistent
+                    "what is this?" anchor without competing with the main column's h2s.
+                </p>
+            </div>
+
+            <div class="rail-card">
+                <header class="rail-card-head">
+                    <span class="rail-card-eyebrow">Jump to</span>
+                </header>
+                <a href="#" class="rail-link">Useful link →</a>
+            </div>
+        </aside>
+    </div>
+</main>
+
+
+<footer class="footer">
+    <span>v0.1.0 &mdash; by CPS Center of Excellence</span>
+</footer>
+
+<!-- Mandatory only if you use the Savings chip. -->
+<script src="shell.js"></script>
+
+<!-- Demo-only: prevent the form from actually navigating. -->
+<script>
+    document.querySelectorAll("form[data-savings-km]").forEach(function (f) {
+        f.submit = function () { f.dataset.celebrating = ""; };
+    });
+</script>
+</body>
+</html>

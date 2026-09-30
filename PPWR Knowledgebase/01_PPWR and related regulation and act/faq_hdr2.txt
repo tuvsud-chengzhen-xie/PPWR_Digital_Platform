@@ -1,0 +1,16 @@
+HTTP/1.1 200 Connection established
+
+HTTP/1.1 200 OK
+Date: Fri, 21 Aug 2026 05:58:57 GMT
+Content-Type: application/pdf
+Content-Length: 1043722
+Connection: keep-alive
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Request-Id: cf53c60e-4e6d-4726-a29d-4ed5dd600b1d
+Content-Disposition: attachment;filename=packaging%20and%20packaging%20waste%20regulation%20ppwr-KH0126068ENN.pdf
+x-azure-ref: 20260821T055855Z-17dd7dfd477bgvl8hC1HK1nvbn00000010pg000000009k3f
+X-Cache: TCP_MISS
+x-fd-int-roxy-purgeid: 0
+Accept-Ranges: bytes
+

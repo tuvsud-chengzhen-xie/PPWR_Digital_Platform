@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ code }}{% endblock %}
+{% block page %}
+<main class="page is-narrow">
+    <section class="card empty-state">
+        <b>{{ 'Not found' if code == 404 else 'Something went wrong' }}</b>
+        <p>{{ detail or 'The page does not exist or is not part of your account.' }}</p>
+        <a class="btn btn-primary" href="/">Back to the dashboard</a>
+    </section>
+</main>
+{% endblock %}

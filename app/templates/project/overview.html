@@ -1,0 +1,101 @@
+{% extends "project/_layout.html" %}
+{% from "_macros.html" import stack, legend, progress_cell %}
+{% block content %}
+<div class="layout-2col">
+    <div class="layout-main">
+        <section class="card">
+            <div class="card-head">
+                <h2 class="card-title">Applicability matrix <span class="hint">TD §5 · from the profile and the BOM</span></h2>
+                <span class="xs muted">Materials in BOM: {{ groups | join(', ') or '— add components' }}</span>
+            </div>
+            <div class="table-wrap">
+            <table class="data matrix">
+                <thead><tr><th>Requirement</th><th>Status</th><th>Applies from</th><th>Basis</th></tr></thead>
+                <tbody>
+                {% for r in matrix %}
+                <tr><td>{{ r.article }}</td><td><span class="badge {{ r.badge }}">{{ r.status }}</span></td>
+                    <td class="nowrap tabnum">{{ r.applies_from }}</td><td class="xs">{{ r.basis }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            <p class="xs muted" style="margin: 8px 0 0">Items evidencing a <b>not applicable</b> article are closed automatically with this rationale
+                (it is quoted in TD §5 and §19). Change the profile below and the items follow.</p>
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <h2 class="card-title">Collection progress by category <span class="hint">16 categories · all units</span></h2>
+                <a class="small" href="/projects/{{ project.id }}/collect">Open data collection →</a>
+            </div>
+            <table class="data">
+                <colgroup><col style="width:40px"><col><col style="width:110px"><col style="width:220px"></colgroup>
+                <tbody>
+                {% for c in cats %}
+                <tr>
+                    <td><span class="cat-no" style="width:24px;height:24px;font-size:11px">{{ c.cat.id }}</span></td>
+                    <td><b>{{ c.cat.name }}</b><span class="zh">{{ c.cat.name_zh }}</span><br><span class="xs muted">{{ c.cat.td }}</span></td>
+                    <td class="num xs tabnum">{{ c.done }}/{{ c.total }}</td>
+                    <td>{{ stack(c) }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ legend() }}
+        </section>
+    </div>
+
+    <aside class="layout-rail">
+        <div class="rail-card">
+            <header class="rail-card-head"><span class="rail-card-eyebrow">Packaging units</span></header>
+            {% for r in units %}
+            <a href="/projects/{{ project.id }}/collect?unit={{ r.u.id }}" style="display:block;color:inherit;margin-bottom:10px;text-decoration:none">
+                <span class="small"><span class="chip-id">{{ r.u.code }}</span> <b>{{ r.u.name }}</b></span>
+                <span class="xs muted" style="display:block;margin:2px 0 4px">{{ r.u.level }} · {{ r.u.components | length }} component{{ 's' if r.u.components | length != 1 }} · UPI {{ r.u.upi or '—' }}</span>
+                {{ progress_cell(r.prog.pct) }}</a>
+            {% else %}
+            <p class="small muted">No packaging registered yet.</p>
+            {% endfor %}
+            <a href="/projects/{{ project.id }}/packaging" class="rail-link">Packaging &amp; BOM →</a>
+        </div>
+
+        <div class="rail-card">
+            <header class="rail-card-head"><span class="rail-card-eyebrow">Profile &amp; scenario</span></header>
+            <details class="fold">
+                <summary>Edit the project profile</summary>
+                <form method="post" action="/projects/{{ project.id }}/profile" class="fold-body">
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Title</span><input name="title" value="{{ project.title }}"></label>
+                    <div class="form-row" style="grid-template-columns: 1fr 1fr">
+                        <label class="field"><span class="field-label">Scenario</span>
+                            <select name="scenario"><option value="A" {{ 'selected' if project.scenario == 'A' }}>A · per unit</option>
+                                <option value="B" {{ 'selected' if project.scenario == 'B' }}>B · consolidated</option></select></label>
+                        <label class="field"><span class="field-label">PS ID</span><input name="ps_code" value="{{ project.ps_code }}"></label>
+                    </div>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Target date</span>
+                        <input type="date" name="target_date" value="{{ project.target_date.isoformat() if project.target_date else '' }}"></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Description</span>
+                        <textarea name="product_description">{{ project.product_description }}</textarea></label>
+                    <div style="display:grid;gap:6px">
+                        <label class="check"><input type="checkbox" name="food_contact" {{ 'checked' if project.food_contact }}><div><b>Food contact</b></div></label>
+                        <label class="check"><input type="checkbox" name="reusable" {{ 'checked' if project.reusable }}><div><b>Reusable</b></div></label>
+                        <label class="check"><input type="checkbox" name="compostable_type" {{ 'checked' if project.compostable_type }}><div><b>Art 9 packaging type</b></div></label>
+                        <label class="check"><input type="checkbox" name="biobased_claim" {{ 'checked' if project.biobased_claim }}><div><b>Biobased claim</b></div></label>
+                    </div>
+                    <div class="form-actions"><button class="btn btn-primary btn-sm">Save profile</button></div>
+                </form>
+            </details>
+            <p class="xs muted" style="margin:8px 0 0">{{ project.product_description | truncate(220) }}</p>
+        </div>
+
+        <div class="rail-card">
+            <header class="rail-card-head"><span class="rail-card-eyebrow">Audit trail</span></header>
+            <ul class="timeline">
+                {% for h in history %}
+                <li><b>{{ h.action }}</b>{% if h.item_id %} · {{ h.item_id }}{% endif %}<br>
+                    <span class="muted">{{ h.actor }} · {{ h.at | ago }}</span>{% if h.comment %}<br><span class="muted">{{ h.comment | truncate(90) }}</span>{% endif %}</li>
+                {% else %}<li>No activity yet.</li>{% endfor %}
+            </ul>
+        </div>
+    </aside>
+</div>
+{% endblock %}

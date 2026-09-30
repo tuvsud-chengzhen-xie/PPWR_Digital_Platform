@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status %}
+{% block title %}{{ ev.code }}{% endblock %}
+{% block page %}
+<main class="page is-2col">
+    <nav class="breadcrumb"><a href="/changes">Change impact</a><span class="breadcrumb-sep">›</span><strong>{{ ev.code }}</strong></nav>
+    <div class="page-head">
+        <div><span class="eyebrow">{{ KIND[ev.kind] }} · raised by {{ ev.created_by }} · {{ ev.created_at | date }}</span>
+            <h1>{{ ev.title }}</h1></div>
+        <span class="badge {{ {'open': 'badge-warn', 'applied': 'badge-ok', 'dismissed': 'badge-muted'}[ev.status] }}" style="font-size:12px">{{ ev.status }}</span>
+    </div>
+    {% if ev.description %}<p class="page-purpose" style="margin-top:-10px">{{ ev.description }}</p>{% endif %}
+
+    <div class="ripple" style="margin-bottom: var(--space-4)">
+        {% set steps = [('1 change', ev.impact.get('material') or impact.material, false),
+                        (impact.components | length ~ ' component' ~ ('s' if impact.components | length != 1 else ''), 're-specified', false),
+                        (impact.units | length ~ ' packaging unit' ~ ('s' if impact.units | length != 1 else ''), (impact.skus | length) ~ ' SKUs', false),
+                        (impact.submissions | length ~ ' items', 'to re-review', impact.submissions | length > 0),
+                        (impact.documents | length ~ ' documents', 'TD / DoC to update', impact.documents | length > 0)] %}
+        {% for n, l, hot in steps %}
+        <div class="ripple-step {{ 'is-hot' if hot }}" style="--i: {{ loop.index0 }}"><div class="n">{{ n.split(' ')[0] }}</div>
+            <div class="l">{{ n.split(' ', 1)[1] }}</div><div class="xs muted">{{ l }}</div></div>
+        {% endfor %}
+    </div>
+
+    <div class="layout-2col">
+        <div class="layout-main">
+            <section class="card">
+                <h2 class="card-title">Impact report</h2>
+<div class="impact-tree"><span class="dim">impact-report — {{ ev.code }}{{ ' — applied ' ~ (ev.applied_at | date) if ev.applied_at }}</span>
+<span class="hl">Δ {{ impact.material }}</span> — {{ impact.supplier }}
+{% for p in impact.projects %}├─ project {{ p.code }}  {{ p.title }}  (scenario {{ p.scenario }})
+{% for u in impact.units if u.project == p.code %}│   ├─ {{ u.unit }}  {{ u.name }}
+{% endfor %}{% endfor %}├─ components affected : {{ impact.components | join(', ') or '—' }}
+├─ SKUs impacted       : {{ impact.skus | join(', ') or '—' }}
+├─ items to re-review  : {{ impact.submissions | length }}  <span class="dim">({{ impact['items'] | join(' ') }})</span>
+├─ TD updates due      : {{ impact.get('td_due', 0) }}
+└─ DoC re-issue due    : {{ impact.get('doc_due', 0) }}{% if ev.status == 'applied' %}
+<span class="ok">✓ applied by {{ ev.applied_by }} — {{ ev.impact.get('reopened', 0) }} items re-opened, {{ ev.impact.get('flagged', 0) }} documents flagged</span>{% endif %}</div>
+            </section>
+
+            <section class="card">
+                <h2 class="card-title">Items affected <span class="hint">{{ subs | length }}</span></h2>
+                {% if subs %}
+                <table class="data scan">
+                    <colgroup><col style="width:120px"><col style="width:80px"><col><col style="width:100px"><col style="width:170px"></colgroup>
+                    <thead><tr><th>Project</th><th>Item</th><th>Requirement</th><th>Unit</th><th>Status now</th></tr></thead>
+                    <tbody>{% for s in subs %}
+                    <tr data-href="/projects/{{ s.project_id }}/items/{{ s.id }}" class="row-link"><td><span class="chip-id">{{ s.project.code }}</span></td><td><span class="chip-id">{{ s.item_id }}</span></td>
+                        <td>{{ catalogue.item(s.item_id).name }}</td><td>{{ s.unit.code if s.unit else 'project' }}</td><td>{{ status(s.status) }}</td></tr>
+                    {% endfor %}</tbody>
+                </table>
+                {% else %}<div class="empty-state"><b>No collected items depend on this yet.</b>The material is not used in an applicable item.</div>{% endif %}
+            </section>
+        </div>
+        <aside class="layout-rail">
+            <div class="rail-card">
+                <header class="rail-card-head"><span class="rail-card-eyebrow">Decision</span></header>
+                {% if ev.status == 'open' %}
+                <p class="small" style="margin-top:0">Applying re-opens <b>{{ impact.submissions | length }}</b> item(s) — their data stays, the AI pre-review
+                    re-runs against the new supplier data, and the expert confirms again. <b>{{ impact.documents | length }}</b> document(s) are
+                    marked “update required”.</p>
+                <form method="post" action="/changes/{{ ev.id }}/apply" data-confirm="Apply {{ ev.code }}? Affected items are re-opened for review.">
+                    <button class="btn btn-primary" style="width:100%;justify-content:center">Apply change</button></form>
+                {% if is_expert %}
+                <form method="post" action="/changes/{{ ev.id }}/dismiss" style="margin-top:8px">
+                    <input class="input" name="reason" placeholder="Reason to dismiss (no conformity impact)">
+                    <button class="btn btn-ghost btn-sm" style="margin-top:6px">Dismiss</button></form>
+                {% endif %}
+                {% elif ev.status == 'applied' %}
+                <p class="small" style="margin:0">Applied by {{ ev.applied_by }} · {{ ev.applied_at | date }}.</p>
+                {% else %}<p class="small muted" style="margin:0">Dismissed.</p>{% endif %}
+            </div>
+            <div class="rail-card">
+                <header class="rail-card-head"><span class="rail-card-eyebrow">Documents</span></header>
+                {% for d in docs %}
+                <a class="small" style="display:block;margin-bottom:6px" href="/projects/{{ d.project_id }}/documents"><span class="mono">{{ d.number }}</span> v{{ d.version }}
+                    <span class="badge {{ {'draft': 'badge-muted', 'issued': 'badge-ok', 'outdated': 'badge-high'}.get(d.status, 'badge-muted') }}">{{ d.status }}</span></a>
+                {% else %}<p class="small muted" style="margin:0">No generated documents are affected.</p>{% endfor %}
+            </div>
+            <div class="rail-card">
+                <header class="rail-card-head"><span class="rail-card-eyebrow">Source</span></header>
+                {% if ev.supplier_material %}<a class="small" href="/suppliers/{{ ev.supplier_material.supplier_id }}#m{{ ev.supplier_material_id }}">{{ ev.supplier_material.supplier.name }} · {{ ev.supplier_material.code }}</a>{% endif %}
+                {% if ev.certificate %}<p class="xs muted" style="margin:4px 0 0">Certificate {{ ev.certificate.number }} · {{ ev.certificate.value }} · until {{ ev.certificate.expires | day }}</p>{% endif %}
+            </div>
+        </aside>
+    </div>
+</main>
+{% endblock %}

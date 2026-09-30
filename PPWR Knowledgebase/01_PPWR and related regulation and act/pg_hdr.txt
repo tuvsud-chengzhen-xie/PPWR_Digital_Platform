@@ -1,0 +1,22 @@
+HTTP/1.1 200 Connection established
+
+HTTP/1.1 200 OK
+Content-Type: application/pdf
+Content-Length: 489338
+Connection: keep-alive
+Date: Fri, 21 Aug 2026 05:57:47 GMT
+X-Age: 35387
+Content-Disposition: inline; filename="Annex to the Communication to the Commission.pdf"
+Content-Language: en
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: Sun, 19 Nov 1978 05:00:00 GMT
+Accept-Ranges: bytes
+X-FPFIS: 26162586 25511024
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload;
+Cache-Control: public, max-age=300, s-maxage=300
+X-Cache: Miss from cloudfront
+Via: 1.1 faf980cb4a759b6ba4ede233ebb27e96.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: SFO5-P3
+X-Amz-Cf-Id: Gv9-EZ9IPybxiWyfGlSSY-OOPbQE6us1IGQ1F6DONE3YWHIWtQ0iJg==
+

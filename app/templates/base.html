@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{% block title %}{{ APP_NAME }}{% endblock %} — {{ APP_SUB }}</title>
+    <link rel="icon" type="image/png" href="/static/logo.png">
+    <link rel="stylesheet" href="/ds/tokens.css">
+    <link rel="stylesheet" href="/ds/shell.css">
+    <link rel="stylesheet" href="/ds/nudges.css">
+    <link rel="stylesheet" href="/ds/ai-overlay.css">
+    <link rel="stylesheet" href="/static/style.css?v=1.0">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" href="/">
+            <img src="/static/logo.png" alt="TÜV SÜD" class="brand-logo">
+            <div class="brand-text">
+                <span class="brand-title">{{ APP_NAME }}</span>
+                <span class="brand-sub">{{ APP_SUB }}</span>
+            </div>
+        </a>
+        {% if user %}
+        <nav class="topnav" aria-label="Main">
+            <a href="/" class="{{ 'is-active' if active == 'dashboard' }}">Dashboard</a>
+            <a href="/projects" class="{{ 'is-active' if active == 'projects' }}">Projects</a>
+            <a href="/review" class="{{ 'is-active' if active == 'review' }}"
+               title="{{ 'Submissions waiting for AI pre-review or your decision' if is_expert else 'Items sent back to you for rework' }}">
+                {{ 'Review queue' if is_expert else 'My actions' }}
+                {% if nav_queue %}<span class="nav-count">{{ nav_queue }}</span>{% endif %}</a>
+            <a href="/suppliers" class="{{ 'is-active' if active == 'suppliers' }}">Suppliers</a>
+            <a href="/changes" class="{{ 'is-active' if active == 'changes' }}" title="Supplier and material changes and where they land">
+                Change impact {% if nav_changes %}<span class="nav-count">{{ nav_changes }}</span>{% endif %}</a>
+            <a href="/knowledge" class="{{ 'is-active' if active == 'knowledge' }}">Knowledge base</a>
+        </nav>
+        {% endif %}
+        <span class="spacer"></span>
+        {% if user %}
+        <span class="who" title="{{ user.display_name }} — {{ 'TÜV SÜD expert: reviews, approves and issues across all clients' if is_expert else 'client account: sees only its own projects and suppliers' }}">
+            <span class="badge">{{ 'Expert' if is_expert else 'Client' }}</span>
+            <span class="who-name">{{ user.client.name if user.client else user.display_name }}</span>
+        </span>
+        <form method="post" action="/logout" style="display:inline">
+            <button type="submit" class="topnav-setup signout">Sign out</button>
+        </form>
+        {% endif %}
+    </div>
+</header>
+
+{% block page %}{% endblock %}
+
+<footer class="footer">
+    <span>v{{ APP_VERSION }} · {{ SERVICE_LINE }} · CPS CoE × HDL &mdash; {{ APP_SUB }}
+        {% if is_expert %}· <form method="post" action="/admin/reset" style="display:inline"
+            data-confirm="Reset all demo data? Every change made in the pilot is replaced by the seed state and you will be signed out.">
+            <button type="submit" class="footer-reset">reset demo data</button></form>{% endif %}</span>
+    <span class="footer-disclaimer">{{ DISCLAIMER }}</span>
+</footer>
+
+<script src="/ds/nudges.js"></script>
+<script src="/ds/ai-overlay.js"></script>
+<script src="/static/app.js?v=1.0"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

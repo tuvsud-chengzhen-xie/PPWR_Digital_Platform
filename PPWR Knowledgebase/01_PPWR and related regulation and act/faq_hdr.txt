@@ -1,0 +1,60 @@
+HTTP/1.1 200 Connection established
+
+HTTP/1.1 302 Moved Temporarily
+Content-Type: text/html; charset=utf-8
+Content-Length: 606
+Connection: keep-alive
+Date: Fri, 21 Aug 2026 05:58:07 GMT
+X-Age: 0
+Content-Language: en
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Expires: Sun, 19 Nov 1978 05:00:00 GMT
+Location: https://op.europa.eu/publication-detail/-/publication/ad14cb8f-8d4f-11f1-9262-01aa75ed71a1
+X-FPFIS: 26708360
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload;
+Cache-Control: public, max-age=300, s-maxage=300
+X-Cache: Miss from cloudfront
+Via: 1.1 faf980cb4a759b6ba4ede233ebb27e96.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: SFO5-P3
+X-Amz-Cf-Id: Axlom7rxnS8si-gWAdy1QTccz5QkzC7Zlpnzo0oPg8-vcxJ9XjGcAQ==
+
+HTTP/1.1 200 Connection established
+
+HTTP/1.1 302 
+Date: Fri, 21 Aug 2026 05:58:14 GMT
+Content-Length: 0
+Connection: keep-alive
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Set-Cookie: JSESSIONID=5839AA527FD99B93D949E7DB79F16275; Path=/; Secure; HttpOnly
+X-Request-Id: e8b69fe0-d952-4711-9876-0ed448b15010
+Location: https://op.europa.eu/en/publication-detail/-/publication/ad14cb8f-8d4f-11f1-9262-01aa75ed71a1
+Set-Cookie: route=1787291894.488ea24c|6fe6088bd2bf749efef1533f218e9513; Expires=Sun, 23-Aug-26 05:58:14 GMT; Max-Age=172800; Path=/; Secure; HttpOnly
+x-azure-ref: 20260821T055814Z-17dd7dfd4774b78khC1HK1rdts0000000nt0000000003qab
+X-Cache: TCP_MISS
+x-fd-int-roxy-purgeid: 0
+
+HTTP/1.1 200 
+Date: Fri, 21 Aug 2026 05:58:15 GMT
+Content-Type: text/html;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Set-Cookie: JSESSIONID=5BE8003243F1FB55FAAA2F6CFEE429C0; Path=/; Secure; HttpOnly
+X-Request-Id: 5a91dce0-8dec-436c-80ea-9c72d811986f
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: private, no-cache, no-store, must-revalidate
+Pragma: no-cache
+Set-Cookie: GUEST_LANGUAGE_ID=en_GB; Max-Age=31536000; Expires=Sat, 21 Aug 2027 05:58:15 GMT; Domain=op.europa.eu; Path=/; Secure; HttpOnly
+Set-Cookie: COOKIE_SUPPORT=true; Max-Age=31536000; Expires=Sat, 21 Aug 2027 05:58:15 GMT; Path=/; Secure; HttpOnly
+Set-Cookie: PORTAL2012_USER_PREFERENCES=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:10 GMT; Path=/; Secure; HttpOnly
+Set-Cookie: OPPORTAL_LAST_PATH=http%3A%2F%2Fop.europa.eu%2Fen%2Fpublication-detail%2F-%2Fpublication%2Fad14cb8f-8d4f-11f1-9262-01aa75ed71a1; Path=/; Secure; HttpOnly
+Set-Cookie: OPPORTAL_LAST_PATH=http%3A%2F%2Fop.europa.eu%2Fen%2Fpublication-detail%2F-%2Fpublication%2Fad14cb8f-8d4f-11f1-9262-01aa75ed71a1; Path=/; Secure; HttpOnly
+Set-Cookie: OPPORTAL_LAST_PATH=http%3A%2F%2Fop.europa.eu%2Fen%2Fpublication-detail%2F-%2Fpublication%2Fad14cb8f-8d4f-11f1-9262-01aa75ed71a1; Path=/; Secure; HttpOnly
+Set-Cookie: route=1787291895.9e4c2fb4|c70e45ca1b364a8704bb0a886c5ac847; Expires=Sun, 23-Aug-26 05:58:15 GMT; Max-Age=172800; Path=/; Secure; HttpOnly
+x-azure-ref: 20260821T055814Z-17dd7dfd4774b78khC1HK1rdts0000000nt0000000003qaq
+X-Cache: PRIVATE_NOSTORE
+x-fd-int-roxy-purgeid: 0
+

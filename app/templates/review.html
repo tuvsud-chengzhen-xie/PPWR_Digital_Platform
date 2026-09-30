@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status, verdict, octagon %}
+{% block title %}Review queue{% endblock %}
+{% block page %}
+<main class="page">
+    <div class="page-head">
+        <div><span class="eyebrow">Two-stage review</span><h1>Review queue</h1></div>
+        <form class="filterbar" method="get">
+            <select name="project" onchange="this.form.submit()"><option value="">All projects</option>
+                {% for p in projects %}<option value="{{ p.id }}" {{ 'selected' if scope_id == p.id }}>{{ p.code }} · {{ p.client.name }}</option>{% endfor %}</select>
+            <select name="verdict" onchange="this.form.submit()"><option value="">Any AI verdict</option>
+                {% for v in ['fail', 'warn', 'pass'] %}<option value="{{ v }}" {{ 'selected' if verdict == v }}>{{ VERDICT_LABEL[v] }}</option>{% endfor %}</select>
+        </form>
+    </div>
+    <p class="page-purpose">① The AI pre-review checks each submission against the PPWR knowledge base; ② the expert approves,
+        rejects with a comment, or confirms N/A. Items with issues come first.</p>
+
+    <div class="grid-2" style="grid-template-columns: minmax(0, 1fr) minmax(0, 2fr)">
+        <section class="card">
+            <div class="card-head">
+                <h2 class="card-title">① Awaiting AI pre-review <span class="hint">{{ waiting_ai | length }}</span></h2>
+            </div>
+            {% if waiting_ai %}
+            <form>
+                <input type="hidden" name="project" value="{{ scope_id or '' }}">
+                <button class="btn btn-primary" id="runAll" data-ai-post="/review/ai-run" style="width:100%;justify-content:center;margin-bottom:10px"
+                        data-ai-stages="Collecting {{ waiting_ai | length }} submissions…|Checking limits and completeness…|Tracing supplier certificates…|Consulting the PPWR knowledge base…|Ranking what needs the expert…">
+                    {{ octagon(16, '#ffffff') }} Run AI pre-review on {{ waiting_ai | length }} item{{ 's' if waiting_ai | length != 1 }}</button>
+            </form>
+            <ul class="todo">
+                {% for s in waiting_ai[:40] %}
+                <li><a href="/projects/{{ s.project_id }}/items/{{ s.id }}"><span class="chip-id">{{ s.item_id }}</span>
+                    <span style="min-width:0"><span class="todo-title">{{ catalogue.item(s.item_id).name }}</span>
+                        <span class="todo-sub">{{ s.project.code }} · {{ s.unit.code if s.unit else 'project' }} · {{ s.submitted_by }} · {{ s.submitted_at | ago }}</span></span></a></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="empty-state"><b>Nothing waiting.</b>New submissions appear here.</div>
+            {% endif %}
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <h2 class="card-title">② Awaiting expert decision <span class="hint">{{ waiting_expert | length }}</span></h2>
+                {% if scope_id and pass_count %}
+                <form method="post" action="/review/approve-clear" data-confirm="Approve the {{ pass_count }} item(s) whose AI pre-review found no issues?">
+                    <input type="hidden" name="project" value="{{ scope_id }}">
+                    <button class="btn btn-success btn-sm">Approve {{ pass_count }} AI-clear item{{ 's' if pass_count != 1 }}</button></form>
+                {% elif pass_count %}<span class="xs muted">Pick a project to batch-approve AI-clear items</span>{% endif %}
+            </div>
+            <div class="table-wrap" style="max-height: 620px">
+            <table class="data scan">
+                <colgroup><col style="width:80px"><col><col style="width:130px"><col style="width:150px"><col style="width:90px"></colgroup>
+                <thead><tr><th>Item</th><th>Requirement · project</th><th>Unit</th><th>AI pre-review</th><th></th></tr></thead>
+                <tbody>
+                {% for s in waiting_expert %}
+                {% set issues = s.ai_checks | selectattr('ok', 'equalto', false) | list %}
+                <tr data-href="/projects/{{ s.project_id }}/items/{{ s.id }}" class="row-link">
+                    <td><span class="chip-id">{{ s.item_id }}</span></td>
+                    <td title="{{ issues | map(attribute='msg') | join(' · ') }}"><b>{{ catalogue.item(s.item_id).name }}</b>{{ ' · N/A requested' if s.na_requested }}<br>
+                        <span class="xs muted">{{ s.project.code }} · {{ s.project.client.name }}{% if issues %} · <span style="color:var(--error-600)">{{ issues[0].msg | truncate(70) }}</span>{% endif %}</span></td>
+                    <td class="xs">{{ (s.unit.code ~ ' ' ~ s.unit.name) if s.unit else 'project' }}</td>
+                    <td>{{ verdict(s.ai_verdict) }}</td>
+                    <td style="text-align:right"><a class="btn btn-sm" href="/projects/{{ s.project_id }}/items/{{ s.id }}">Review</a></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5"><div class="empty-state"><b>Queue is empty.</b>Run the AI pre-review on new submissions first.</div></td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </section>
+    </div>
+
+    <section class="card">
+        <h2 class="card-title">Recent decisions</h2>
+        <ul class="timeline">
+            {% for h in recent %}<li><b>{{ h.action }}</b> · {{ h.item_id }} · {{ h.actor }} · <span class="muted">{{ h.at | ago }}</span>{% if h.comment %}<br><span class="muted">{{ h.comment }}</span>{% endif %}</li>
+            {% else %}<li>No decisions yet.</li>{% endfor %}
+        </ul>
+    </section>
+</main>
+{% endblock %}

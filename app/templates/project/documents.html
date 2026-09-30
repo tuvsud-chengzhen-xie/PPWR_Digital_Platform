@@ -1,0 +1,80 @@
+{% extends "project/_layout.html" %}
+{% from "_macros.html" import progress_cell, octagon %}
+{% block content %}
+{% set outdated = current | selectattr('status', 'equalto', 'outdated') | list %}
+{% if outdated %}
+<div class="banner banner-error"><b>Update required.</b>&nbsp;{{ outdated | length }} issued document(s) no longer reflect the evidence —
+    {{ outdated[0].outdated_reason }}. Art 39(2): the DoC must be continuously updated.</div>
+{% endif %}
+
+<section class="card">
+    <div class="card-head">
+        <h2 class="card-title">Generate from live data
+            <span class="hint">{{ 'Scenario A — one TD + DoC per unit, plus the document-package overview' if project.scenario == 'A' else 'Scenario B — one consolidated TD + one DoC for all units' }}</span></h2>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-primary" id="genBtn" data-ai-post="/projects/{{ project.id }}/documents/generate"
+                    data-ai-stages="Pulling BOM, suppliers and approved evidence…|Re-checking the applicability matrix…|Writing TD sections T00 to §21…|Drafting the Annex VIII declaration…">
+                {{ octagon(16, '#ffffff') }} Generate TD &amp; DoC</button>
+            {% if is_expert %}
+            <form method="post" action="/projects/{{ project.id }}/documents/issue" data-confirm="Issue the current drafts? Earlier issued versions are superseded.">
+                <button class="btn btn-success {{ 'is-disabled' if not ready }}" title="{{ 'All items closed' if ready else 'Blocked until every item is approved or N/A' }}">Issue</button></form>
+            {% endif %}
+            <a class="btn" href="/projects/{{ project.id }}/dossier.zip" title="Art 15(10): documentation to an authority within 10 days">Authority dossier (.zip)</a>
+        </div>
+    </div>
+    <p class="small muted" style="margin:0">Only approved or N/A items are stated as conclusions; anything still open is printed as
+        <b style="color:var(--error-600)">OPEN</b>, and the document is watermarked DRAFT until readiness reaches 100 %.
+        Issuing is reserved to the TÜV SÜD expert; signature remains the manufacturer's (Art 39(4)).</p>
+</section>
+
+<section class="card">
+    <h2 class="card-title">Documents <span class="hint">current versions</span></h2>
+    <div class="table-wrap">
+    <table class="data scan">
+        <colgroup><col style="width:90px"><col><col style="width:70px"><col style="width:110px"><col style="width:120px"><col style="width:160px"><col style="width:100px"></colgroup>
+        <thead><tr><th>Kind</th><th>Number</th><th class="num">Ver.</th><th>Status</th><th class="num">Readiness</th><th>Generated</th><th></th></tr></thead>
+        <tbody>
+        {% for d in current %}
+        <tr>
+            <td><span class="badge badge-outline">{{ {'TD': 'TD', 'DOC': 'EU DoC', 'PACKAGE': 'Package'}[d.kind] }}</span></td>
+            <td><b class="mono">{{ d.number }}</b>{% if d.unit %} <span class="xs muted">· {{ d.unit.code }}</span>{% endif %}
+                {% if d.status == 'outdated' %}<br><span class="xs" style="color:var(--error-600)">{{ d.outdated_reason }}</span>{% endif %}</td>
+            <td class="num">{{ d.version }}</td>
+            <td><span class="badge {{ {'draft': 'badge-muted', 'issued': 'badge-ok', 'outdated': 'badge-high'}[d.status] }}">{{ {'draft': 'Draft', 'issued': 'Issued', 'outdated': 'Update required'}[d.status] }}</span></td>
+            <td class="num">{{ (d.readiness * 100) | round | int }}%</td>
+            <td class="xs">{{ d.generated_at | date }}<br><span class="muted">{{ d.issued_by and ('issued by ' ~ d.issued_by) or d.generated_by }}</span></td>
+            <td style="text-align:right"><a class="btn btn-sm" href="/documents/{{ d.id }}/download">.docx ↓</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7"><div class="empty-state"><b>Nothing generated yet.</b>Generate a first draft at any time — it shows exactly what is still open.</div></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% if history %}
+    <details class="fold" style="margin-top:10px"><summary>Version history ({{ history | length }})</summary>
+        <div class="fold-body"><table class="data"><tbody>{% for d in history %}
+            <tr class="is-muted"><td>{{ d.kind }}</td><td class="mono">{{ d.number }}</td><td class="num">v{{ d.version }}</td><td class="xs">{{ d.generated_at | date }}</td><td class="num"><a href="/documents/{{ d.id }}/download">.docx</a></td></tr>
+        {% endfor %}</tbody></table></div></details>
+    {% endif %}
+</section>
+
+{% for sc in scopes %}
+<section class="card">
+    <div class="card-head">
+        <h2 class="card-title">TD readiness {{ ('· ' ~ sc.unit.code ~ ' ' ~ sc.unit.name) if sc.unit else '· consolidated' }}
+            <span class="hint mono">{{ sc.td_no }} · {{ sc.doc_no }}</span></h2>
+        <span class="small tabnum"><b>{{ sc.prog.pct }}%</b> · {{ sc.prog.open }} open</span>
+    </div>
+    <div class="grid-2" style="gap: 6px 24px">
+        {% for r in sc.sections %}
+        <div style="display:grid;grid-template-columns:44px minmax(0,1fr) 150px;gap:8px;align-items:center;font-size:var(--font-size-sm)">
+            <span class="chip-id" style="text-align:center">{{ r.section.no if r.section.no | length > 2 else '§' ~ r.section.no }}</span>
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="{{ r.section.name }}">{{ r.section.name }}</span>
+            {% if r.total %}{{ progress_cell(r.pct) }}{% else %}<span class="xs muted">generated</span>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+{% endblock %}

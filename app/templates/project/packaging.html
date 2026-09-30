@@ -1,0 +1,155 @@
+{% extends "project/_layout.html" %}
+{% from "_macros.html" import octagon %}
+{% block content %}
+<section class="card">
+    <div class="card-head">
+        <h2 class="card-title">Read a filled BOM workbook <span class="hint">PPWR BOM template V1.1 — one row per component</span></h2>
+        <span class="small"><a href="/kit/PPWR_BOM_V1.xlsx">Blank template</a> · <a href="/projects/{{ project.id }}/bom.xlsx">Export this BOM</a></span>
+    </div>
+    <input type="file" id="bomFile" accept=".xlsx" hidden>
+    <div class="qi-shell">
+        <div id="aiDrop" class="qi-bar gborder" tabindex="0" role="button" data-ai-file="bomFile"
+             data-ai-url="/projects/{{ project.id }}/bom/import"
+             data-ai-stages="Reading the workbook…|Finding PS / PU / component IDs…|Matching suppliers in your library…|Classifying materials for the applicability matrix…">
+            <span class="qi-oct">{{ octagon(24) }}</span>
+            <span class="qi-bar-text">Drop the BOM workbook here, or <u>click to browse</u></span>
+            <span class="qi-bar-hint">.xlsx</span>
+        </div>
+        <div class="qi-glow" aria-hidden="true"></div>
+    </div>
+    <p class="xs muted" style="text-align:center;margin:10px 0 0">Units and components are created or updated by their IDs; suppliers are matched
+        against the supplier library; each material is classified (paper / plastic / …) so the applicability matrix follows.</p>
+</section>
+
+<section class="card">
+    <div class="card-head">
+        <h2 class="card-title">Packaging register <span class="hint">TD §2 · every packaging unit of {{ project.ps_code }}</span></h2>
+    </div>
+    <div class="table-wrap">
+    <table class="data scan">
+        <colgroup><col style="width:80px"><col><col style="width:95px"><col style="width:150px"><col style="width:170px"><col style="width:80px"><col style="width:150px"><col style="width:120px"></colgroup>
+        <thead><tr><th>Unit</th><th>Name</th><th>Level</th><th>UPI</th><th>SKUs</th><th class="num">Mass g</th><th>Supplier</th><th></th></tr></thead>
+        <tbody>
+        {% for u in project.units %}
+        <tr class="{{ 'is-selected' if current and u.id == current.id }}" style="{{ 'background: var(--tuv-blue-50)' if current and u.id == current.id }}">
+            <td><span class="chip-id">{{ u.code }}</span></td>
+            <td><a href="?unit={{ u.id }}"><b>{{ u.name }}</b></a> <span class="xs muted">· {{ u.components | length }} components</span></td>
+            <td>{{ u.level }}</td><td class="mono xs">{{ u.upi or '—' }}</td><td class="xs">{{ u.skus or '—' }}</td>
+            <td class="num">{{ u.mass_g | num }}</td><td class="xs">{{ u.supplier_name or '—' }}</td>
+            <td style="text-align:right"><a class="btn btn-sm" href="?unit={{ u.id }}&edit={{ u.id }}#unit-form">Edit</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8"><div class="empty-state"><b>No packaging registered.</b>Add the first unit below or read a BOM workbook.</div></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% set eu = (project.units | selectattr('id', 'equalto', edit) | first) if edit else none %}
+    <details class="fold" id="unit-form" style="margin-top:12px" {{ 'open' if eu or not project.units }}>
+        <summary>{{ 'Edit ' ~ eu.code if eu else '+ Add a packaging unit (' ~ next_unit ~ ')' }}</summary>
+        <form method="post" action="/projects/{{ project.id }}/units" class="fold-body">
+            {% if eu %}<input type="hidden" name="unit_id" value="{{ eu.id }}">{% endif %}
+            <div class="form-row">
+                <label class="field" style="grid-column: span 2"><span class="field-label">Name / description</span><input name="name" required value="{{ eu.name if eu }}" placeholder="e.g. Folding carton"></label>
+                <label class="field"><span class="field-label">Level (Art 3)</span><select name="level">{% for l in UNIT_LEVELS %}<option {{ 'selected' if eu and eu.level == l }}>{{ l }}</option>{% endfor %}</select></label>
+                <label class="field"><span class="field-label">Type</span><input name="pack_type" value="{{ eu.pack_type if eu }}" placeholder="Carton, pouch, bottle…"></label>
+            </div>
+            <div class="form-row">
+                <label class="field"><span class="field-label">UPI</span><input name="upi" value="{{ eu.upi if eu }}" placeholder="unique packaging ID"></label>
+                <label class="field"><span class="field-label">SKUs</span><input name="skus" value="{{ eu.skus if eu }}" placeholder="SKU-A / SKU-B"></label>
+                <label class="field"><span class="field-label">Mass (g)</span><input name="mass_g" value="{{ eu.mass_g | num if eu and eu.mass_g else '' }}"></label>
+                <label class="field"><span class="field-label">Dimensions (mm)</span><input name="dims" value="{{ eu.dims if eu }}" placeholder="L × W × H"></label>
+            </div>
+            <div class="form-row">
+                <label class="field"><span class="field-label">Packaging supplier</span><input name="supplier_name" value="{{ eu.supplier_name if eu }}"></label>
+                <label class="field"><span class="field-label">Site</span><input name="site" value="{{ eu.site if eu }}"></label>
+                <label class="field"><span class="field-label">Country</span><input name="country" value="{{ eu.country if eu }}"></label>
+                <label class="field"><span class="field-label">Photo / artwork ref.</span><input name="artwork_ref" value="{{ eu.artwork_ref if eu }}"></label>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary">{{ 'Save ' ~ eu.code if eu else 'Add unit' }}</button>
+                {% if eu %}<a class="btn btn-ghost" href="?unit={{ eu.id }}">Cancel</a>{% endif %}
+                <span class="xs muted">Register data feeds items C01-01 to C01-05; changing an approved value re-opens it.</span>
+            </div>
+        </form>
+        {% if eu %}
+        <form method="post" action="/projects/{{ project.id }}/units/{{ eu.id }}/delete" data-confirm="Remove {{ eu.code }} with its components and collection items?" style="margin-top:6px">
+            <button class="linkbtn danger xs">Remove {{ eu.code }}</button></form>
+        {% endif %}
+    </details>
+</section>
+
+{% if current %}
+<section class="card">
+    <div class="card-head">
+        <h2 class="card-title">BOM · {{ current.code }} {{ current.name }} <span class="hint">TD §3 · components, materials and their supplier source</span></h2>
+        <div class="filterbar">{% for u in project.units %}<a class="pill {{ 'is-active' if u.id == current.id }}" href="?unit={{ u.id }}">{{ u.code }}</a>{% endfor %}</div>
+    </div>
+    <div class="table-wrap">
+    <table class="data scan">
+        <colgroup><col style="width:120px"><col style="width:110px"><col><col style="width:110px"><col style="width:80px"><col style="width:80px"><col style="width:240px"><col style="width:60px"><col style="width:90px"></colgroup>
+        <thead><tr><th>Component</th><th>Type</th><th>Material</th><th>Structure</th><th>Group</th><th class="num">Mass g</th><th>Supplier · material (trace code)</th><th class="num">PCR %</th><th></th></tr></thead>
+        <tbody>
+        {% for c in current.components %}
+        <tr>
+            <td><span class="chip-id">{{ c.code }}</span></td><td>{{ c.pack_type }}</td>
+            <td title="{{ c.description }}"><b>{{ c.material or '—' }}</b> <span class="xs muted">{{ c.description }}</span></td>
+            <td class="xs">{{ c.structure }}</td><td><span class="badge badge-outline">{{ c.material_group }}</span></td>
+            <td class="num">{{ c.mass_g | num }}</td>
+            <td class="xs">{% if c.supplier_material %}<a href="/suppliers/{{ c.supplier_id }}">{{ c.supplier.name }}</a> · {{ c.supplier_material.code }} <span class="mono">{{ c.supplier_material.trace_code }}</span>{% else %}<span class="muted">not linked to the library</span>{% endif %}</td>
+            <td class="num">{{ c.recycled_pct | num }}</td>
+            <td style="text-align:right"><a class="btn btn-sm" href="#comp-{{ c.id }}" onclick="const d=document.getElementById('comp-{{ c.id }}');d.open=true;d.scrollIntoView({behavior:'smooth',block:'center'});return false">Edit</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9"><div class="empty-state"><b>No components yet.</b>Add each part — carton, film, cap, label, ink, adhesive — as its own line.</div></td></tr>
+        {% endfor %}
+        </tbody>
+        {% if current.components %}
+        <tfoot><tr><td colspan="5" class="xs muted">Sum of components{% if current.mass_g %} · declared unit mass {{ current.mass_g | num }} g{% endif %}</td>
+            <td class="num"><b>{{ current.components | map(attribute='mass_g') | select | sum | round(2) | num }}</b></td><td colspan="3"></td></tr></tfoot>
+        {% endif %}
+    </table>
+    </div>
+
+    {% macro comp_form(c) %}
+    <form method="post" action="/projects/{{ project.id }}/components" class="fold-body">
+        <input type="hidden" name="unit_id" value="{{ current.id }}">
+        {% if c %}<input type="hidden" name="comp_id" value="{{ c.id }}">{% endif %}
+        <div class="form-row">
+            <label class="field"><span class="field-label">Type</span><input name="pack_type" value="{{ c.pack_type if c }}" placeholder="Carton, film, cap, label…"></label>
+            <label class="field" style="grid-column: span 2"><span class="field-label">Description</span><input name="description" value="{{ c.description if c }}"></label>
+            <label class="field"><span class="field-label">Structure</span><select name="structure">{% for s in STRUCTURES %}<option {{ 'selected' if c and c.structure == s }}>{{ s }}</option>{% endfor %}</select></label>
+        </div>
+        <div class="form-row">
+            <label class="field" style="grid-column: span 2"><span class="field-label">Material</span><input name="material" value="{{ c.material if c }}" placeholder="e.g. Corrugated fibreboard B-flute, PET/PE laminate"></label>
+            <label class="field"><span class="field-label">Material group</span><select name="material_group"><option value="">auto-detect</option>{% for g in MATERIAL_GROUPS %}<option {{ 'selected' if c and c.material_group == g }}>{{ g }}</option>{% endfor %}</select></label>
+            <label class="field"><span class="field-label">Mass (g)</span><input name="mass_g" value="{{ c.mass_g | num if c and c.mass_g is not none else '' }}"></label>
+        </div>
+        <div class="form-row">
+            <label class="field" style="grid-column: span 2"><span class="field-label">Supplier material (library)</span>
+                <select name="supplier_material_id"><option value="">— not linked —</option>
+                    {% for s in suppliers %}<optgroup label="{{ s.code }} {{ s.name }}">{% for m in s.materials %}
+                        <option value="{{ m.id }}" {{ 'selected' if c and c.supplier_material_id == m.id }}>{{ m.code }} · {{ m.name }} ({{ m.trace_code }})</option>{% endfor %}</optgroup>{% endfor %}
+                </select><span class="field-help">Linking makes the supplier's certificates count as evidence — and lets a supplier change find this component.</span></label>
+            <label class="field"><span class="field-label">Dimensions (mm)</span><input name="dims" value="{{ c.dims if c }}"></label>
+            <label class="field"><span class="field-label">Recycled content %</span><input name="recycled_pct" value="{{ c.recycled_pct | num if c and c.recycled_pct is not none else '' }}"></label>
+        </div>
+        <label class="field"><span class="field-label">Remarks</span><input name="remarks" value="{{ c.remarks if c }}"></label>
+        <div class="form-actions"><button class="btn btn-primary btn-sm">{{ 'Save ' ~ c.code if c else 'Add component' }}</button></div>
+    </form>
+    {% endmacro %}
+
+    {% for c in current.components %}
+    <details class="fold" id="comp-{{ c.id }}" style="margin-top:10px">
+        <summary>Edit {{ c.code }}</summary>
+        {{ comp_form(c) }}
+        <form method="post" action="/projects/{{ project.id }}/components/{{ c.id }}/delete" data-confirm="Remove {{ c.code }}?"><button class="linkbtn danger xs">Remove {{ c.code }}</button></form>
+    </details>
+    {% endfor %}
+    <details class="fold" style="margin-top:12px" {{ 'open' if not current.components }}>
+        <summary>+ Add a component ({{ next_comp }})</summary>
+        {{ comp_form(none) }}
+    </details>
+</section>
+{% endif %}
+{% endblock %}

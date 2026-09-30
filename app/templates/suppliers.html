@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Supplier library{% endblock %}
+{% block page %}
+<main class="page is-2col">
+    <div class="page-head">
+        <div><span class="eyebrow">Supplier library</span><h1>Suppliers, materials &amp; certificates</h1></div>
+        <form class="filterbar" method="get"><input type="search" name="q" value="{{ q }}" placeholder="Supplier, material or trace code"></form>
+    </div>
+    <p class="page-purpose">Each supplier's materials carry their own trace code and certificates (heavy metals, PFAS, recyclability, DoC…).
+        Link them to BOM components once — the certificates then count as evidence for every packaging that uses them,
+        and any change is traced to the TDs and DoCs it affects.</p>
+    <div class="layout-2col">
+        <div class="layout-main">
+            <section class="card">
+                <table class="data scan">
+                    <colgroup><col style="width:80px"><col><col style="width:90px"><col style="width:90px"><col style="width:90px"><col style="width:110px"></colgroup>
+                    <thead><tr><th>Code</th><th>Supplier</th><th class="num">Materials</th><th class="num">Certificates</th><th class="num">Used in BOM</th><th>Attention</th></tr></thead>
+                    <tbody>
+                    {% for r in rows %}
+                    <tr data-href="/suppliers/{{ r.s.id }}" class="row-link">
+                        <td><span class="chip-id">{{ r.s.code }}</span></td>
+                        <td><b>{{ r.s.name }}</b><br><span class="xs muted">{{ r.s.country }}{% if is_expert %} · {{ r.s.client.name }}{% endif %}</span></td>
+                        <td class="num">{{ r.materials }}</td><td class="num">{{ r.certs }}</td><td class="num">{{ r.used }}</td>
+                        <td>{% if r.flags %}<span class="badge badge-warn">{{ r.flags }} expiring</span>{% else %}<span class="badge badge-ok">valid</span>{% endif %}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6"><div class="empty-state"><b>No suppliers yet.</b>Add the first one on the right.</div></td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        <aside class="layout-rail">
+            <div class="rail-card">
+                <header class="rail-card-head"><span class="rail-card-eyebrow">Expiry watch · ≤ {{ EXPIRY_WINDOW }} days</span></header>
+                {% for c in expiring %}{% set left = c.expires | days_until %}
+                <a href="/suppliers/{{ c.material.supplier_id }}" style="display:block;color:inherit;margin-bottom:8px;text-decoration:none" class="small">
+                    <b>{{ CERT_SHORT[c.doc_type] }}</b> · {{ c.material.supplier.name }}<br>
+                    <span class="xs muted">{{ c.material.trace_code }} · {{ c.number }}</span>
+                    <span class="badge {{ 'badge-high' if left < 0 else 'badge-warn' }}">{{ 'expired' if left < 0 else left ~ ' d' }}</span></a>
+                {% else %}<p class="small muted" style="margin:0">Nothing expiring.</p>{% endfor %}
+            </div>
+            <div class="rail-card">
+                <header class="rail-card-head"><span class="rail-card-eyebrow">Add a supplier</span></header>
+                <form method="post" action="/suppliers">
+                    {% if is_expert %}<label class="field" style="margin-bottom:8px"><span class="field-label">Client</span>
+                        <select name="client_id">{% for c in clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></label>{% endif %}
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Name</span><input name="name" required></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Country</span><input name="country"></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Address</span><input name="address"></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">Compliance contact</span><input name="contact"></label>
+                    <button class="btn btn-primary btn-sm">Add supplier</button>
+                </form>
+            </div>
+        </aside>
+    </div>
+</main>
+{% endblock %}

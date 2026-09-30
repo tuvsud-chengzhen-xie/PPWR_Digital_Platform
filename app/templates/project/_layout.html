@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_macros.html" import stage as stage_badge %}
+{% block title %}{{ project.code }} · {{ project.title }}{% endblock %}
+{% block page %}
+<main class="page {{ page_class | default('') }}">
+    <nav class="breadcrumb"><a href="/projects">Projects</a><span class="breadcrumb-sep">›</span>
+        <a href="/projects/{{ project.id }}">{{ project.code }}</a>{% block crumb %}{% endblock %}</nav>
+    <div class="proj-head">
+        <div style="min-width:0">
+            <div class="proj-meta">
+                <span class="chip-id">{{ project.code }}</span>
+                <span>{{ project.client.name }}</span><span>·</span>
+                <span>{{ project.ps_code }}</span><span>·</span>
+                <span title="{{ 'Each unit has its own TD + DoC, compiled into a document package' if project.scenario == 'A' else 'One consolidated TD + DoC for all units' }}">Scenario {{ project.scenario }} · {{ 'per-unit TD package' if project.scenario == 'A' else 'consolidated TD' }}</span>
+                {% if project.food_contact %}<span class="badge badge-warn">Food contact</span>{% endif %}
+                {% if project.reusable %}<span class="badge badge-info">Reusable</span>{% endif %}
+            </div>
+            <h1>{{ project.title }}</h1>
+            <div class="proj-meta">{{ stage_badge(stage) }}
+                {% if project.target_date %}<span>Target {{ project.target_date | day }}{% set left = project.target_date | days_until %}{% if left is not none %} · {{ left }} days{% endif %}</span>{% endif %}
+            </div>
+        </div>
+        <div class="proj-ring" title="{{ prog.done }} of {{ prog.total }} items approved or not applicable">
+            <div class="ring" style="--p: {{ prog.pct }}" data-label="{{ prog.pct }}%"></div>
+            <div class="small"><b>{{ prog.done }}</b> / {{ prog.total }} items closed<br>
+                <span class="muted xs">{{ prog.awaiting_ai + prog.awaiting_expert }} in review · {{ prog.rejected }} rework · {{ prog.pending }} to collect</span></div>
+        </div>
+    </div>
+    <nav class="subtabs" aria-label="Project">
+        <a href="/projects/{{ project.id }}" class="{{ 'is-active' if tab == 'overview' }}">Overview</a>
+        <a href="/projects/{{ project.id }}/packaging" class="{{ 'is-active' if tab == 'packaging' }}">Packaging &amp; BOM
+            <span class="nav-count">{{ project.units | map(attribute='components') | map('length') | sum }}</span></a>
+        <a href="/projects/{{ project.id }}/collect" class="{{ 'is-active' if tab == 'collect' }}">Data collection
+            {% if prog.pending + prog.rejected %}<span class="nav-count">{{ prog.pending + prog.rejected }}</span>{% endif %}</a>
+        <a href="/projects/{{ project.id }}/evidence" class="{{ 'is-active' if tab == 'evidence' }}">Evidence vault <span class="nav-count">{{ project.evidence | length }}</span></a>
+        <a href="/projects/{{ project.id }}/documents" class="{{ 'is-active' if tab == 'documents' }}">TD &amp; DoC</a>
+        <a href="/projects/{{ project.id }}/trace" class="{{ 'is-active' if tab == 'trace' }}">Traceability</a>
+    </nav>
+    {% block content %}{% endblock %}
+</main>
+{% endblock %}

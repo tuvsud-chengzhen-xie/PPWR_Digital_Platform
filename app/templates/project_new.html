@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}New project{% endblock %}
+{% block page %}
+<main class="page is-narrow">
+    <nav class="breadcrumb"><a href="/projects">Projects</a><span class="breadcrumb-sep">›</span><strong>New</strong></nav>
+    <div class="page-head"><h1>New TD / DoC project</h1></div>
+    <form method="post" action="/projects/new">
+        <section class="card">
+            <h2 class="card-title">1 · Product and packaging system</h2>
+            <div class="form-row">
+                <label class="field" style="grid-column: span 2"><span class="field-label">Packaged product / project title</span>
+                    <input name="title" required placeholder="e.g. Stand-up pouch 200 ml — tomato sauce"></label>
+                <label class="field"><span class="field-label">Packaging system ID</span>
+                    <input name="ps_code" value="PS-001"><span class="field-help">One SKU family = one packaging system</span></label>
+            </div>
+            <div class="form-row">
+                {% if is_expert %}
+                <label class="field"><span class="field-label">Client (manufacturer)</span>
+                    <select name="client_id">{% for c in clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></label>
+                {% else %}
+                <input type="hidden" name="client_id" value="{{ user.client_id }}">
+                {% endif %}
+                <label class="field"><span class="field-label">Target date</span><input type="date" name="target_date"></label>
+            </div>
+            <label class="field"><span class="field-label">Description and intended use (TD §2)</span>
+                <textarea name="product_description" placeholder="What is packed, how it is sold and shipped, single-use or reusable…"></textarea></label>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">2 · Technical-file scenario <span class="hint">decides TD numbering and what is generated</span></h2>
+            <div class="choice-grid">
+                <label class="choice"><input type="radio" name="scenario" value="A">
+                    <b>A · Per-unit technical file (document package)</b>
+                    <span>Each packaging unit (card, carton, pouch…) gets its own TD and DoC; the set is compiled into a
+                        document package for the final packaging user.</span></label>
+                <label class="choice"><input type="radio" name="scenario" value="B" checked>
+                    <b>B · Consolidated technical file</b>
+                    <span>The product manufacturer is also the packaging manufacturer: all packaging units of the product
+                        in one TD (§2 lists every unit) and one DoC.</span></label>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">3 · Profile <span class="hint">drives the applicability matrix — N/A items are closed automatically</span></h2>
+            <div class="choice-grid">
+                <label class="check"><input type="checkbox" name="food_contact"><div><b>Food-contact packaging</b><span>Art 5(5) PFAS limits apply</span></div></label>
+                <label class="check"><input type="checkbox" name="reusable"><div><b>Reusable packaging</b><span>Art 11 · 10-year retention</span></div></label>
+                <label class="check"><input type="checkbox" name="compostable_type"><div><b>Art 9 packaging type</b><span>Tea / coffee units, fruit stickers, very lightweight bags</span></div></label>
+                <label class="check"><input type="checkbox" name="biobased_claim"><div><b>Biobased feedstock claim</b><span>Art 8</span></div></label>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">4 · First packaging unit <span class="hint">optional — you can also import a BOM workbook next</span></h2>
+            <div class="form-row">
+                <label class="field" style="grid-column: span 2"><span class="field-label">Name</span>
+                    <input name="first_unit" placeholder="e.g. Printed folding carton"></label>
+                <label class="field"><span class="field-label">Level (Art 3)</span>
+                    <select name="first_level">{% for l in UNIT_LEVELS %}<option>{{ l }}</option>{% endfor %}</select></label>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Create project</button>
+                <a class="btn btn-ghost" href="/projects">Cancel</a>
+            </div>
+        </section>
+    </form>
+</main>
+{% endblock %}

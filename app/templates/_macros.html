@@ -1,0 +1,48 @@
+{% macro status(s) -%}
+<span class="badge {{ STATUS_BADGE[s] }}">{{ STATUS_LABEL[s] }}</span>
+{%- endmacro %}
+
+{% macro verdict(v) -%}
+{% if v %}<span class="badge {{ VERDICT_BADGE[v] }}" title="Advisory — the expert decides">{{ VERDICT_LABEL[v] }}</span>{% endif %}
+{%- endmacro %}
+
+{% macro stage(st) -%}
+<span class="badge {{ STAGE_BADGE[st] }}">{{ STAGE_LABEL[st] }}</span>
+{%- endmacro %}
+
+{% macro bar(pct) -%}
+<div class="bar {{ 'is-done' if pct >= 100 }}"><span style="width: {{ pct }}%"></span></div>
+{%- endmacro %}
+
+{% macro progress_cell(pct) -%}
+<div class="progress-cell">{{ bar(pct) }}<b>{{ pct }}%</b></div>
+{%- endmacro %}
+
+{% macro stack(prog) -%}
+{% set total = prog.total or 1 %}
+<div class="bar-stack" title="{% for k, n in prog.counts.items() %}{{ STATUS_LABEL[k] }}: {{ n }}{{ ' · ' if not loop.last }}{% endfor %}">
+    {% for k in ['approved', 'na', 'ai_reviewed', 'submitted', 'rejected'] %}
+    {% if prog.counts.get(k) %}<span class="seg-{{ k }}" style="width: {{ (100 * prog.counts[k] / total) | round(2) }}%"></span>{% endif %}
+    {% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro legend() -%}
+<div class="legend">
+    <span><i class="seg-approved"></i>Approved</span><span><i class="seg-na"></i>N/A</span>
+    <span><i class="seg-ai_reviewed"></i>Awaiting expert</span><span><i class="seg-submitted"></i>Awaiting AI</span>
+    <span><i class="seg-rejected"></i>Rework</span><span><i style="background: var(--neutral-75)"></i>Not collected</span>
+</div>
+{%- endmacro %}
+
+{% macro octagon(size=20, color='#0066cc') -%}
+<svg class="ai-oct" width="{{ size }}" height="{{ size }}" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+    <polygon points="40,6 80,6 114,40 114,80 80,114 40,114 6,80 6,40" stroke="{{ color }}" stroke-width="9" stroke-linejoin="round"/>
+</svg>
+{%- endmacro %}
+
+{% macro cert_state(state, days) -%}
+{% if state == 'expired' %}<span class="cert-cell expired">● expired</span>
+{% elif state == 'expiring' %}<span class="cert-cell expiring">● {{ days }} d left</span>
+{% else %}<span class="cert-cell valid">● valid</span>{% endif %}
+{%- endmacro %}

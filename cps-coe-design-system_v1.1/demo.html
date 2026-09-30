@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TÜV SÜD CPS Design System — Demo</title>
+    <link rel="stylesheet" href="tokens.css">
+    <link rel="stylesheet" href="nudges.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-family);
+            background: var(--neutral-25);
+            color: var(--neutral-900);
+            padding: 2rem 3rem;
+        }
+        h1 { color: var(--tuv-blue-900); font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--neutral-400); margin-bottom: 2rem; }
+        .section { margin-bottom: 2.5rem; }
+        .section h2 {
+            font-size: 1rem; color: var(--tuv-blue-900); margin-bottom: 1rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid var(--tuv-blue-100);
+        }
+        .demo-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .demo-btn {
+            padding: 0.5rem 1rem; border-radius: var(--radius-md);
+            border: 1px solid var(--neutral-200); background: var(--white);
+            color: var(--neutral-900); font-weight: 600; font-size: 0.85rem;
+            cursor: pointer; font-family: inherit; transition: all 0.15s;
+        }
+        .demo-btn:hover { border-color: var(--tuv-blue-600); background: var(--tuv-blue-50); }
+        .demo-btn.primary { background: var(--tuv-blue-600); color: white; border-color: var(--tuv-blue-600); }
+        .demo-btn.primary:hover { background: var(--tuv-blue-700); }
+        .color-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .color-swatch {
+            width: 80px; height: 60px; border-radius: var(--radius-md);
+            display: flex; align-items: flex-end; justify-content: center;
+            padding: 0.3rem; font-size: 0.6rem; font-weight: 600; color: white;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        .autosave-demo { display: flex; gap: 1rem; align-items: center; }
+        .progress-demo {
+            max-width: 500px; background: white; border-radius: var(--radius-lg);
+            border: 1px solid var(--neutral-100); overflow: hidden;
+        }
+        .dots-demo { display: flex; gap: 4px; align-items: center; padding: 1rem; }
+    </style>
+</head>
+<body>
+    <h1>TÜV SÜD CPS Design System</h1>
+    <p class="subtitle">Productivity-first UI components for lab engineering tools — by the CPS Center of Excellence</p>
+
+    <!-- TOKENS -->
+    <div class="section">
+        <h2>Color Tokens</h2>
+        <div class="color-grid">
+            <div class="color-swatch" style="background:var(--tuv-blue-900)">blue-900</div>
+            <div class="color-swatch" style="background:var(--tuv-blue-700)">blue-700</div>
+            <div class="color-swatch" style="background:var(--tuv-blue-600)">blue-600</div>
+            <div class="color-swatch" style="background:var(--tuv-blue-400)">blue-400</div>
+            <div class="color-swatch" style="background:var(--tuv-blue-200);color:var(--tuv-blue-900)">blue-200</div>
+            <div class="color-swatch" style="background:var(--tuv-blue-100);color:var(--tuv-blue-900)">blue-100</div>
+        </div>
+        <br>
+        <div class="color-grid">
+            <div class="color-swatch" style="background:var(--success-500)">success</div>
+            <div class="color-swatch" style="background:var(--error-500)">error</div>
+            <div class="color-swatch" style="background:var(--warning-500)">warning</div>
+            <div class="color-swatch" style="background:var(--tuv-blue-600)">info</div>
+        </div>
+    </div>
+
+    <!-- TOASTS -->
+    <div class="section">
+        <h2>Toast Notifications</h2>
+        <div class="demo-row">
+            <button class="demo-btn" onclick="showToast('Project saved successfully', {type:'success'})">Success Toast</button>
+            <button class="demo-btn" onclick="showToast('Upload failed — check connection', {type:'error', duration:5000})">Error Toast</button>
+            <button class="demo-btn" onclick="showToast('Arrow type locked for this project', {type:'info'})">Info Toast</button>
+            <button class="demo-btn" onclick="showToast('Unsaved changes detected', {type:'warn'})">Warning Toast</button>
+        </div>
+    </div>
+
+    <!-- AUTO-SAVE -->
+    <div class="section">
+        <h2>Auto-Save Indicator</h2>
+        <div class="autosave-demo">
+            <span class="autosave-indicator saved" id="demoAutosave"><span class="autosave-dot"></span><span class="autosave-text">Saved</span></span>
+            <button class="demo-btn" onclick="setAutosaveState('unsaved')">Unsaved</button>
+            <button class="demo-btn" onclick="setAutosaveState('saving')">Saving</button>
+            <button class="demo-btn" onclick="setAutosaveState('saved')">Saved</button>
+            <button class="demo-btn" onclick="setAutosaveState('error')">Error</button>
+        </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="section">
+        <h2>Progress Bar + Nav Dots</h2>
+        <div class="progress-demo">
+            <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="demoProgress" style="width:60%"></div>
+            </div>
+            <div class="dots-demo">
+                <span class="nav-dot complete"></span>
+                <span class="nav-dot complete"></span>
+                <span class="nav-dot has-annotations current"></span>
+                <span class="nav-dot has-annotations"></span>
+                <span class="nav-dot"></span>
+                <span class="nav-dot"></span>
+                <span class="nav-dot"></span>
+            </div>
+        </div>
+        <div class="demo-row" style="margin-top:0.75rem">
+            <button class="demo-btn" onclick="setProgress(0)">0%</button>
+            <button class="demo-btn" onclick="setProgress(33)">33%</button>
+            <button class="demo-btn" onclick="setProgress(66)">66%</button>
+            <button class="demo-btn" onclick="setProgress(100)">100%</button>
+        </div>
+    </div>
+
+    <!-- SHORTCUTS -->
+    <div class="section">
+        <h2>Keyboard Shortcuts Overlay</h2>
+        <div class="demo-row">
+            <button class="demo-btn primary" onclick="toggleShortcutsOverlay()">Open Shortcuts <kbd>?</kbd></button>
+        </div>
+    </div>
+
+    <!-- COMMAND PALETTE -->
+    <div class="section">
+        <h2>Command Palette</h2>
+        <div class="demo-row">
+            <button class="demo-btn primary" onclick="toggleCommandPalette()">Open Command Palette <kbd>⌘</kbd><kbd>K</kbd></button>
+        </div>
+    </div>
+
+    <script src="nudges.js"></script>
+    <script>
+        NudgeSystem.init({
+            shortcuts: [
+                { key: 'a', label: 'Arrow tool', keys: ['A'], section: 'Tools', action: () => showToast('Switched to Arrow tool', {type:'info'}) },
+                { key: 'b', label: 'Boxed Part ID tool', keys: ['B'], section: 'Tools', action: () => showToast('Switched to Boxed Part ID', {type:'info'}) },
+                { key: 't', label: 'Text Part ID tool', keys: ['T'], section: 'Tools', action: () => showToast('Switched to Text Part ID', {type:'info'}) },
+                { key: '1', label: 'Blue color', keys: ['1'], section: 'Colors', action: () => {} },
+                { key: '2', label: 'Red color', keys: ['2'], section: 'Colors', action: () => {} },
+                { key: '3', label: 'Orange color', keys: ['3'], section: 'Colors', action: () => {} },
+                { key: '4', label: 'Green color', keys: ['4'], section: 'Colors', action: () => {} },
+                { key: '5', label: 'Purple color', keys: ['5'], section: 'Colors', action: () => {} },
+                { key: 'z', mod: 'cmd', label: 'Undo', keys: ['⌘', 'Z'], section: 'Edit', action: () => showToast('Undo', {type:'info'}) },
+                { key: 's', mod: 'cmd', label: 'Save project', keys: ['⌘', 'S'], section: 'File', action: () => showToast('Project saved', {type:'success'}) },
+                { key: 'k', mod: 'cmd', label: 'Command palette', keys: ['⌘', 'K'], section: 'General', action: () => toggleCommandPalette() },
+                { key: 'ArrowLeft', label: 'Previous image', keys: ['←'], section: 'Navigation', action: () => {} },
+                { key: 'ArrowRight', label: 'Next image', keys: ['→'], section: 'Navigation', action: () => {} },
+                { key: 'Delete', label: 'Delete selected', keys: ['Del'], section: 'Edit', action: () => {} },
+                { key: 'Escape', label: 'Deselect / close', keys: ['Esc'], section: 'General', action: () => {} },
+                { key: '?', label: 'Show shortcuts', keys: ['?'], section: 'General', action: () => toggleShortcutsOverlay() },
+            ],
+            commands: [
+                { label: 'Add Photos', keys: [], action: () => showToast('Add Photos', {type:'info'}), tags: 'upload import' },
+                { label: 'Camera Capture', keys: [], action: () => showToast('Camera', {type:'info'}), tags: 'photo snap' },
+                { label: 'Save Project', keys: ['⌘', 'S'], action: () => showToast('Saved', {type:'success'}), tags: 'save store' },
+                { label: 'Project Overview', keys: [], action: () => showToast('Projects', {type:'info'}), tags: 'load open' },
+                { label: 'Download Package', keys: ['D'], action: () => showToast('Download', {type:'info'}), tags: 'export zip' },
+                { label: 'Undo', keys: ['⌘', 'Z'], action: () => showToast('Undo', {type:'info'}), tags: 'undo back' },
+                { label: 'Switch to Arrow tool', keys: ['A'], action: () => {}, tags: 'arrow tool' },
+                { label: 'Switch to Boxed Part ID', keys: ['B'], action: () => {}, tags: 'boxed label' },
+                { label: 'Switch to Text Part ID', keys: ['T'], action: () => {}, tags: 'text label' },
+                { label: 'Keyboard Shortcuts', keys: ['?'], action: () => toggleShortcutsOverlay(), tags: 'help keys' },
+            ]
+        });
+
+        function setAutosaveState(state) {
+            const el = document.getElementById('demoAutosave');
+            el.className = 'autosave-indicator ' + state;
+            const labels = { unsaved: 'Unsaved changes', saving: 'Saving…', saved: 'Saved', error: 'Save failed' };
+            el.querySelector('.autosave-text').textContent = labels[state];
+        }
+
+        function setProgress(pct) {
+            document.getElementById('demoProgress').style.width = pct + '%';
+        }
+    </script>
+</body>
+</html>

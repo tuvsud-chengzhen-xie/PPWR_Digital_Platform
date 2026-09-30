@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_macros.html" import stage, stack, legend %}
+{% block title %}Projects{% endblock %}
+{% block page %}
+<main class="page">
+    <div class="page-head">
+        <h1>TD / DoC projects</h1>
+        <div class="page-actions"><a class="btn btn-primary" href="/projects/new">+ New project</a></div>
+    </div>
+    <p class="page-purpose">One project = one packaging system (PS) of a product, taken through data collection,
+        review and the generation of its technical documentation and EU declaration of conformity.</p>
+    <section class="card">
+        <div class="table-wrap">
+        <table class="data scan">
+            <colgroup><col style="width:120px"><col><col style="width:200px"><col style="width:110px"><col style="width:220px"><col style="width:150px"><col style="width:110px"></colgroup>
+            <thead><tr><th>Project</th><th>Packaging system</th><th>Client</th><th>Scenario</th><th>Progress</th><th>Stage</th><th class="num">Target</th></tr></thead>
+            <tbody>
+            {% for r in rows %}
+            <tr data-href="/projects/{{ r.p.id }}" class="row-link">
+                <td><span class="chip-id">{{ r.p.code }}</span></td>
+                <td><b>{{ r.p.title }}</b><br><span class="xs muted">{{ r.p.ps_code }} · {{ r.p.units | map(attribute='code') | join(', ') or 'no units yet' }}{{ ' · food contact' if r.p.food_contact }}</span></td>
+                <td>{{ r.p.client.name }}</td>
+                <td>{{ 'A · per unit' if r.p.scenario == 'A' else 'B · consolidated' }}</td>
+                <td>{{ stack(r.prog) }}<span class="xs muted tabnum">{{ r.prog.pct }}% · {{ r.prog.done }}/{{ r.prog.total }} closed</span></td>
+                <td>{{ stage(r.stage) }}</td>
+                <td class="num">{{ r.p.target_date | day }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7"><div class="empty-state"><b>No projects yet.</b><a href="/projects/new">Start the first TD / DoC project →</a></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {{ legend() }}
+    </section>
+</main>
+{% endblock %}

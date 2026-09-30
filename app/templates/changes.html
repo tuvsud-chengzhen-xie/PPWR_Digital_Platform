@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Change impact{% endblock %}
+{% block page %}
+<main class="page">
+    <div class="page-head">
+        <div><span class="eyebrow">One change anywhere — traceable everywhere</span><h1>Change impact</h1></div>
+        <a class="btn" href="/suppliers">Report a change from the supplier library</a>
+    </div>
+    <p class="page-purpose">Certificate renewals, expiring reports and material changes are walked down the chain —
+        supplier material → components → packaging units → projects → items → TD &amp; DoC — before anything moves.
+        Applying a change re-opens the affected items for review and flags issued documents “update required”.</p>
+    <section class="card">
+        <table class="data scan">
+            <colgroup><col style="width:100px"><col><col style="width:170px"><col style="width:90px"><col style="width:90px"><col style="width:90px"><col style="width:100px"><col style="width:120px"></colgroup>
+            <thead><tr><th>Change</th><th>What</th><th>Kind</th><th class="num">Comp.</th><th class="num">Items</th><th class="num">Docs</th><th>Status</th><th class="num">Raised</th></tr></thead>
+            <tbody>
+            {% for ev in events %}
+            <tr data-href="/changes/{{ ev.id }}" class="row-link">
+                <td><span class="chip-id">{{ ev.code }}</span></td>
+                <td><b>{{ ev.title }}</b><br><span class="xs muted">{{ ev.impact.get('supplier', '') }} · {{ ev.impact.get('material', '') }}{% if is_expert %} · {{ ev.client.name }}{% endif %}</span></td>
+                <td class="xs">{{ KIND[ev.kind] }}</td>
+                <td class="num">{{ ev.impact.get('components', []) | length }}</td>
+                <td class="num">{{ ev.impact.get('reopened', ev.impact.get('submissions', []) | length) }}</td>
+                <td class="num">{{ ev.impact.get('flagged', ev.impact.get('documents', []) | length) }}</td>
+                <td><span class="badge {{ {'open': 'badge-warn', 'applied': 'badge-ok', 'dismissed': 'badge-muted'}[ev.status] }}">{{ ev.status }}</span></td>
+                <td class="num xs">{{ ev.created_at | date }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="8"><div class="empty-state"><b>No changes recorded.</b>They appear when a certificate is renewed, expires, or a material change is reported.</div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+{% endblock %}

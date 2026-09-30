@@ -1,0 +1,127 @@
+/* ════════════════════════════════════════════════════════════════════════
+ * CPS CoE AI — Layer-3 processing identity (reusable)
+ *   • .qi-bar / .gborder         → "Concept B" AI command bar / drop zone
+ *   • .aio-overlay + window.AIOverlay → full-screen swarm processing overlay
+ * Blue & white. Octagon mark. Swarm. Octagon-as-loader. Chat-bubble status.
+ * ════════════════════════════════════════════════════════════════════════ */
+@property --ang { syntax:"<angle>"; initial-value:0deg; inherits:false; }
+:root{ --aio-blue:#0066cc; --aio-blue2:#4d9edf; --aio-ink:#1f3350; --aio-icon:#3a4a63; }
+
+/* ── Concept B: compact AI command bar / drop zone (colorful glowing border) ── */
+/* isolated wrapper: its own stacking context so the glow paints above the page
+   (not behind it) and never gets clipped into a rectangle */
+.qi-shell{position:relative;max-width:560px;margin:0 auto;isolation:isolate}
+/* Glow = layered coloured BOX-SHADOWS, never filter:blur(). A blurred element
+   gets GPU-promoted by WebKit/Safari ~1s after hover and re-rasterised clipped
+   to its own box → the soft halo snaps to a hard rectangle. box-shadow paints
+   outside the border box, is never clipped to it, and is unaffected by layer
+   compositing → identical & stable in Safari and Chrome. (See AI-IDENTITY.md.)
+   OFF at rest, fades in on hover only. Centre is hidden behind the opaque bar;
+   negative spread (-4px) stops colours bleeding inward. */
+.qi-glow{position:absolute;inset:0;border-radius:999px;z-index:0;pointer-events:none;opacity:0;
+  transition:opacity .35s ease, box-shadow .35s ease;
+  box-shadow:
+    -14px -10px 28px -4px rgba(77,158,223,.55),   /* blue   top-left  */
+     14px -10px 28px -4px rgba(34,211,238,.50),   /* cyan   top-right */
+     14px  10px 28px -4px rgba(124,92,255,.55),   /* violet bot-right */
+    -14px  10px 28px -4px rgba(250,180,52,.50);   /* gold   bot-left  */}
+.qi-bar:hover ~ .qi-glow{opacity:.95}             /* glow is a SIBLING behind the bar */
+.qi-bar.dragover ~ .qi-glow{opacity:1;
+  box-shadow:
+    -18px -12px 40px -2px rgba(77,158,223,.62),
+     18px -12px 40px -2px rgba(34,211,238,.56),
+     18px  12px 40px -2px rgba(124,92,255,.62),
+    -18px  12px 40px -2px rgba(250,180,52,.56);}
+
+.qi-bar{
+  position:relative;z-index:1;display:flex;align-items:center;gap:11px;
+  padding:0 16px;height:50px;border-radius:999px;cursor:pointer;
+  background:#fff;color:var(--aio-ink);
+}
+.qi-bar .qi-oct{width:24px;height:24px;flex:0 0 auto;display:flex}
+.qi-bar .qi-oct svg{width:100%;height:100%}
+.qi-bar .qi-bar-text{font-size:14.5px;font-weight:600}
+.qi-bar .qi-bar-text u{text-decoration-color:var(--aio-blue2)}
+.qi-bar .qi-bar-hint{margin-left:auto;font-size:11px;color:#6f86ad;border:1px solid #e0e9f6;border-radius:7px;padding:2px 8px}
+/* colourful flowing aurora ring border on the pill edge (the soft glow halo is
+   the sibling .qi-glow element above) */
+.gborder::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;
+  background:conic-gradient(from var(--ang),#4d9edf,#22d3ee,#7c5cff,#FAB434,#22d3ee,#4d9edf);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;animation:aioSpin 4s linear infinite}
+.qi-bar.dragover::before{animation-duration:1.6s}
+@keyframes aioSpin{to{--ang:360deg}}
+
+/* ── Processing overlay: the APP stays visible, just blurred (it's "living") ── */
+.aio-overlay{position:fixed;inset:0;z-index:6000;display:flex;align-items:center;justify-content:center;
+  background:rgba(240,246,255,.22);
+  backdrop-filter:blur(3px) saturate(1.05);-webkit-backdrop-filter:blur(3px) saturate(1.05);
+  opacity:0;transition:opacity .45s ease}
+.aio-scene{position:relative;width:720px;height:600px;transform-origin:center;opacity:0;
+  transition:transform .6s cubic-bezier(.16,1,.3,1), opacity .5s ease}
+
+.aio-aura{position:absolute;left:50%;top:50%;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;z-index:0;filter:blur(50px);
+  background:radial-gradient(38% 38% at 42% 36%,rgba(77,158,223,.42),transparent 70%),
+            radial-gradient(34% 34% at 64% 44%,rgba(0,102,204,.30),transparent 72%),
+            radial-gradient(46% 46% at 50% 66%,rgba(120,180,255,.36),transparent 72%);
+  animation:aioAuraPulse 4.6s ease-in-out infinite, aioSwirl 22s linear infinite}
+@keyframes aioAuraPulse{0%,100%{opacity:.7}50%{opacity:1}}
+@keyframes aioSwirl{to{transform:rotate(360deg)}}
+
+.aio-swarm{position:absolute;inset:0;z-index:2;transform-origin:50% 50%;
+  animation:aioGspin var(--spin,30s) linear infinite, aioGbreathe 6s ease-in-out infinite}
+@keyframes aioGspin{to{transform:rotate(360deg)}}
+@keyframes aioGbreathe{0%,100%{scale:.92}50%{scale:1.08}}
+
+.aio-node{position:absolute;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--aio-icon);
+  box-shadow:0 18px 40px rgba(28,60,120,.15),0 6px 14px rgba(28,60,120,.08),inset 0 1px 0 rgba(255,255,255,.9);
+  opacity:0;animation:aioNodePulse var(--np,4s) ease-in-out var(--nd,0s) infinite;will-change:transform,opacity}
+/* icons stay UPRIGHT — they counter-rotate the swarm so only the formation orbits */
+.aio-node .aio-ico{display:flex;animation:aioUpright var(--spin,30s) linear infinite reverse}
+@keyframes aioUpright{to{transform:rotate(360deg)}}
+.aio-node svg{width:34px;height:34px;stroke-width:1.6}
+@keyframes aioNodePulse{0%,100%{translate:0 0;scale:1}50%{translate:0 -8px;scale:1.06}}
+.aio-dot{position:absolute;border-radius:50%;opacity:0;background:radial-gradient(circle,#8fc0ff,rgba(77,158,223,0) 72%)}
+
+.aio-core{position:absolute;left:50%;top:50%;width:244px;height:244px;margin:-122px 0 0 -122px;z-index:4;
+  border-radius:46% 54% 55% 45% / 52% 47% 53% 48%;
+  background:radial-gradient(120% 120% at 38% 30%,#fff 0%,#fff 60%,#eef4ff 100%);
+  box-shadow:0 34px 76px rgba(26,70,150,.16),0 12px 28px rgba(26,70,150,.10),inset 0 2px 4px rgba(255,255,255,.9);
+  display:flex;align-items:center;justify-content:center;
+  animation:aioBreathe 4s ease-in-out infinite, aioWobble 6.5s ease-in-out infinite, aioDrift 7.5s ease-in-out infinite}
+@keyframes aioBreathe{0%,100%{transform:scale(.985)}50%{transform:scale(1.05)}}
+@keyframes aioDrift{0%,100%{translate:0 0}50%{translate:0 -9px}}
+@keyframes aioWobble{0%,100%{border-radius:46% 54% 55% 45%/52% 47% 53% 48%}
+  25%{border-radius:56% 44% 44% 56%/45% 56% 44% 55%}50%{border-radius:47% 53% 57% 43%/56% 45% 55% 44%}
+  75%{border-radius:53% 47% 45% 55%/46% 54% 46% 54%}}
+
+.aio-octwrap{position:relative;width:154px;height:154px;animation:aioOctPulse 3.6s ease-in-out infinite}
+@keyframes aioOctPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.aio-octwrap svg{width:100%;height:100%;overflow:visible}
+.aio-trace{fill:none;stroke:url(#aioTrace);stroke-width:3;stroke-linejoin:round;stroke-linecap:round;animation:aioTraceA 3s linear infinite}
+.aio-trace.head{filter:drop-shadow(0 0 5px rgba(47,155,255,.95)) drop-shadow(0 0 13px rgba(47,155,255,.55))}
+@keyframes aioTraceA{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+.aio-octtext{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-weight:800;color:var(--aio-blue);line-height:1.02;letter-spacing:.05em;text-align:center;
+  animation:aioTxtPulse 2s ease-in-out infinite}
+@keyframes aioTxtPulse{0%,100%{transform:scale(.96);opacity:.8}50%{transform:scale(1.1);opacity:1}}
+.aio-octtext .l1,.aio-octtext .l2{font-size:20px}
+.aio-octtext .l3{font-size:14px;color:var(--aio-blue2);letter-spacing:.18em;margin-top:2px}
+
+.aio-statuswrap{position:absolute;left:0;right:0;bottom:64px;display:flex;justify-content:center;z-index:5}
+.aio-statusbar{position:relative;display:inline-flex;align-items:center;gap:.55rem;
+  padding:.62rem 1.25rem;border-radius:999px;background:#fff;color:#27406a;font-size:16px;font-weight:600;
+  box-shadow:0 12px 30px rgba(20,60,140,.14);white-space:nowrap;overflow:hidden;
+  transition:width .6s cubic-bezier(.16,1,.3,1)}
+.aio-statusbar .sb-text{display:inline-block;transition:opacity .32s ease;opacity:1}
+.aio-statusbar::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;
+  background:conic-gradient(from var(--ang),#cfe6ff,#4d9edf,#0066cc,#9cc3ee,#cfe6ff);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;animation:aioSpin 4.5s linear infinite}
+.aio-statusbar::after{content:"";position:absolute;inset:-3px;border-radius:inherit;z-index:-1;filter:blur(11px);opacity:.45;
+  background:conic-gradient(from var(--ang),#cfe6ff,#4d9edf,#0066cc,#9cc3ee,#cfe6ff);animation:aioSpin 4.5s linear infinite}
+.aio-statusbar .sb-spark{color:#0066cc;font-size:14px;flex:0 0 auto}
+
+.aio-pt{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:50%;z-index:1;
+  background:radial-gradient(circle,#7fb6ff,rgba(77,158,223,0) 70%)}
+@media (prefers-reduced-motion:reduce){.aio-overlay *{animation:none!important}}

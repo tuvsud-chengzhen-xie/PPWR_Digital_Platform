@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Knowledge base{% endblock %}
+{% block page %}
+<main class="page">
+    <div class="page-head"><div><span class="eyebrow">Regulation (EU) 2025/40</span><h1>PPWR knowledge base</h1></div></div>
+    <p class="page-purpose">The sources the AI pre-review cites, the dates that drive the applicability matrix, and the service
+        definition — the 69 items and where each lands in the technical documentation.</p>
+
+    <section class="card">
+        <h2 class="card-title">Key dates</h2>
+        <div class="dates">
+            {% for d, t, p, cls in dates %}
+            <div class="date-card {{ cls }}"><div class="d">{{ d }}{% if cls == 'now' %} <span class="badge badge-info">in force now</span>{% endif %}</div>
+                <div class="t">{{ t }}</div><p>{{ p }}</p></div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="card">
+        <h2 class="card-title">Articles ↔ evidence required <span class="hint">rule of thumb: every applicable article → at least one evidence file</span></h2>
+        <div class="art-grid">
+            {% for a, t, p in article_map %}<div class="art-card"><b>{{ a }}</b><span class="t">{{ t }}</span><p>{{ p }}</p></div>{% endfor %}
+        </div>
+    </section>
+
+    <div class="grid-2">
+        <section class="card">
+            <h2 class="card-title">Regulation library <span class="hint">PPWR Knowledgebase folder</span></h2>
+            {% for f in folders %}
+            <details class="fold" style="margin-bottom:10px" {{ 'open' if loop.first }}>
+                <summary>{{ f.label }} <span class="xs muted">· {{ f.files | length }}</span></summary>
+                <ul class="file-list fold-body">
+                    {% for x in f.files %}
+                    <li><span class="file-ico">{{ x.ext }}</span><span class="file-meta"><b><a href="{{ x.href }}" target="_blank" rel="noopener">{{ x.name }}</a></b><small>{{ x.size | size }}</small></span></li>
+                    {% endfor %}
+                </ul>
+            </details>
+            {% else %}<p class="muted small">The knowledge-base folder is not available.</p>{% endfor %}
+        </section>
+        <section class="card">
+            <h2 class="card-title">Client template kit <span class="hint">manual collection · usable offline</span></h2>
+            <ul class="file-list">
+                {% for x in kit %}
+                <li><span class="file-ico">{{ x.ext }}</span><span class="file-meta"><b><a href="{{ x.href }}" target="_blank" rel="noopener">{{ x.name }}</a></b><small>{{ x.size | size }}</small></span></li>
+                {% endfor %}
+            </ul>
+            <p class="xs muted">A filled <b>PPWR_BOM_V1.xlsx</b> can be read straight into a project (Packaging &amp; BOM tab); any project exports back to the BOM and
+                Evidence List formats. Note: the kit's guide images cite the draft numbering (Annex II / Art 45); the platform uses the adopted text —
+                TD per <b>Annex VII</b>, DoC per <b>Art 39 / Annex VIII</b>.</p>
+        </section>
+    </div>
+
+    <section class="card">
+        <h2 class="card-title">Requirement catalogue <span class="hint">16 categories · 69 items → TD V1.5 sections</span></h2>
+        {% for c in cats %}
+        <details class="fold" style="margin-bottom:8px">
+            <summary>{{ c.id }} · {{ c.name }} <span class="zh">{{ c.name_zh }}</span> <span class="xs muted">· {{ c.td }}</span></summary>
+            <div class="fold-body">
+                <p class="xs muted" style="margin-top:0">{{ c.logic }}</p>
+                <table class="data"><tbody>
+                    {% for it in items if it.cat == c.id %}
+                    <tr><td style="width:80px"><span class="chip-id">{{ it.id }}</span></td><td><b>{{ it.name }}</b><br><span class="xs muted">{{ it.requirement }}</span></td>
+                        <td class="xs" style="width:260px">{{ it.legal }}</td><td class="xs nowrap" style="width:120px">{{ it.td }}</td></tr>
+                    {% endfor %}
+                </tbody></table>
+            </div>
+        </details>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
