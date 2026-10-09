@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PPWR Digital Platform | 中英文用户操作手册 / Bilingual User Manual</title>
+<style>
+@page { size: A4; margin: 0; }
+:root { --ink: #18252e; --blue: #075a98; --green: #157865; --muted: #53636e; --line: #d6dfe5; }
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: #e7ecef; font-family: "Microsoft YaHei", "Noto Sans CJK SC", "SimSun", sans-serif; font-size: 9.5pt; line-height: 1.5; }
+.page { width: 210mm; height: 297mm; padding: 17mm 18mm 19mm; margin: 12mm auto; background: white; position: relative; break-after: page; overflow: hidden; }
+.page:last-child { break-after: auto; }
+.running { border-bottom: 1px solid var(--line); padding-bottom: 3mm; margin-bottom: 7mm; color: var(--muted); font-size: 8pt; display: flex; justify-content: space-between; }
+.foot { position: absolute; bottom: 9mm; left: 18mm; right: 18mm; border-top: 1px solid var(--line); padding-top: 2mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--muted); }
+.eyebrow { color: var(--green); font-size: 9pt; font-weight: 700; margin-bottom: 3mm; }
+h1 { font-size: 29pt; line-height: 1.3; margin: 0 0 7mm; font-weight: 700; }
+h2 { font-size: 19pt; line-height: 1.4; color: var(--blue); margin: 0 0 5mm; }
+h3 { font-size: 11.5pt; margin: 4mm 0 2mm; color: var(--green); }
+p { margin: 0 0 3mm; }
+.en { color: var(--muted); font-size: 8.7pt; line-height: 1.45; margin-top: 1mm; }
+.pair { margin-bottom: 4mm; }
+.pair p { margin-bottom: 1mm; }
+.note { padding: 3mm 4mm; border-left: 3px solid var(--green); background: #eff7f4; margin: 4mm 0; }
+.warn { border-color: #a75119; background: #fff5ec; }
+table { border-collapse: collapse; width: 100%; table-layout: fixed; font-size: 9pt; margin: 3mm 0 5mm; }
+th { background: #edf3f7; text-align: left; color: var(--blue); font-weight: 700; }
+th, td { padding: 2mm 3mm; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+td .en { font-size: 8.3pt; }
+ol, ul { margin: 2mm 0 4mm; padding-left: 6mm; }
+li { margin-bottom: 3mm; }
+li .en { display: block; }
+.path { font-weight: 700; color: var(--blue); font-size: 9pt; margin: 2mm 0 4mm; }
+.label { font-weight: 700; }
+code { font-family: Consolas, "Microsoft YaHei", monospace; font-size: 9pt; overflow-wrap: anywhere; }
+a { color: var(--blue); text-decoration: none; }
+.flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; margin: 5mm 0; }
+.flow div { border-top: 3px solid var(--green); background: #f3f6f8; padding: 4mm 3mm; font-weight: 700; font-size: 10pt; }
+.flow small { display: block; font-weight: 400; color: var(--muted); font-size: 8pt; }
+.cover { padding-top: 30mm; }
+.cover .brand { color: var(--blue); font-weight: 700; font-size: 15pt; border-bottom: 3px solid var(--green); padding-bottom: 5mm; margin-bottom: 18mm; }
+.cover .subtitle { font-size: 18pt; color: var(--muted); margin-bottom: 10mm; }
+.cover .scope { margin-top: 13mm; border-top: 1px solid var(--line); padding-top: 6mm; }
+.meta { font-size: 9pt; margin-top: 8mm; }
+.toc td { padding: 2.5mm 1mm; }
+.toc td:last-child { width: 13mm; text-align: right; }
+#help td { padding-top: 1.5mm; padding-bottom: 1.5mm; }
+.compact li { margin-bottom: 2mm; }
+.check { width: 6mm; color: var(--green); font-weight: 700; }
+@media print { body { background: white; } .page { margin: 0; } * { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+
+<section class="page cover" id="cover">
+  <div class="brand">PPWR Digital Platform<br><span class="en">CPS CoE × HDL · TD &amp; EU DoC Service</span></div>
+  <div class="eyebrow">USER OPERATIONS · 用户操作</div>
+  <h1>中英文用户操作手册</h1>
+  <div class="subtitle">Bilingual User Manual</div>
+  <p>从包装登记、证据采集与审核，到技术文件生成和变更追踪。</p>
+  <p class="en">From packaging registration, evidence collection and review to technical-document generation and change tracing.</p>
+  <div class="flow">
+    <div>01 登记与采集<small>Register &amp; collect</small></div>
+    <div>02 预审与决策<small>Pre-review &amp; decide</small></div>
+    <div>03 出文与更新<small>Generate &amp; update</small></div>
+  </div>
+  <div class="scope">
+    <p><b>适用对象：</b>客户用户、TÜV SÜD 专家及试点项目协调人员。</p>
+    <p class="en"><b>Audience:</b> Client users, TÜV SÜD experts and pilot project coordinators.</p>
+    <p><b>适用范围：</b>当前项目试点实现；以实际部署界面和组织授权为准。</p>
+    <p class="en"><b>Scope:</b> The current pilot implementation; the deployed interface and organizational authorization take precedence.</p>
+  </div>
+  <div class="meta">
+    手册版本 / Manual version: 1.0<br>
+    平台版本 / Platform version: 0.1.0<br>
+    编制日期 / Prepared: 2026-10-08<br>
+    法规参考 / Regulatory reference: Regulation (EU) 2025/40
+  </div>
+  <div class="note warn">
+    本手册说明软件操作，不构成法律意见或符合性保证。AI 预审不替代专家判断；EU DoC 由制造商负责签署。
+    <div class="en">This manual describes software operations, not legal advice or a guarantee of conformity. AI pre-review does not replace expert judgment; the manufacturer is responsible for signing the EU DoC.</div>
+  </div>
+  <div class="foot"><span>PPWR · 用户操作手册 / User Manual</span><span>01 / 16</span></div>
+</section>
+
+<section class="page" id="contents">
+  <div class="running"><span>PPWR Digital Platform</span><span>阅读指南 / Reading Guide</span></div>
+  <h2>目录 / Contents</h2>
+  <table class="toc">
+    <tr><th>章节 / Section</th><th style="width:13mm">页 / Page</th></tr>
+    <tr><td><a href="#start">01 · 登录、角色与导航 / Sign-in, roles &amp; navigation</a></td><td>03</td></tr>
+    <tr><td><a href="#project">02 · 创建项目与适用性 / Create a project &amp; applicability</a></td><td>04</td></tr>
+    <tr><td><a href="#packaging">03 · 包装单元与 BOM / Packaging units &amp; BOM</a></td><td>05</td></tr>
+    <tr><td><a href="#bom">04 · Excel 导入与导出 / Excel import &amp; export</a></td><td>06</td></tr>
+    <tr><td><a href="#supplier">05 · 供应商、材料与证书 / Suppliers, materials &amp; certificates</a></td><td>07</td></tr>
+    <tr><td><a href="#collect">06 · 数据采集与 N/A / Data collection &amp; N/A</a></td><td>08</td></tr>
+    <tr><td><a href="#evidence">07 · 上传与管理证据 / Upload &amp; manage evidence</a></td><td>09</td></tr>
+    <tr><td><a href="#ai">08 · AI 预审与客户待办 / AI pre-review &amp; client actions</a></td><td>10</td></tr>
+    <tr><td><a href="#expert">09 · 专家审核与退回 / Expert review &amp; rework</a></td><td>11</td></tr>
+    <tr><td><a href="#documents">10 · TD、EU DoC 与资料包 / TD, EU DoC &amp; dossier</a></td><td>12</td></tr>
+    <tr><td><a href="#change">11 · 变更影响与重新审核 / Change impact &amp; re-review</a></td><td>13</td></tr>
+    <tr><td><a href="#trace">12 · 追溯、知识库与标识 / Traceability, knowledge &amp; IDs</a></td><td>14</td></tr>
+    <tr><td><a href="#help">13 · 常见问题与安全提醒 / Troubleshooting &amp; safety</a></td><td>15</td></tr>
+    <tr><td><a href="#checklist">14 · 交付检查单与术语 / Handover checklist &amp; glossary</a></td><td>16</td></tr>
+  </table>
+  <h3>首次使用的推荐顺序 / Recommended first-use sequence</h3>
+  <p>登录 → 创建项目 → 建立供应商材料 → 登记或导入 BOM → 核对适用性 → 填写并提交数据和证据 → AI 预审 → 专家审核 → 生成并签发文件。</p>
+  <p class="en">Sign in → create a project → register supplier materials → enter or import the BOM → check applicability → complete and submit data and evidence → AI pre-review → expert review → generate and issue documents.</p>
+  <div class="note">
+    页面英文按钮名称在本手册中保留原文，中文用于解释操作。每个中文步骤下方均提供对应英文说明。
+    <div class="en">English button labels are retained to match the interface. Each Chinese instruction is paired with its English equivalent.</div>
+  </div>
+  <div class="foot"><span>v1.0 · 2026-10-08</span><span>02 / 16</span></div>
+</section>
+
+<section class="page" id="start">
+  <div class="running"><span>PPWR Digital Platform</span><span>01 · 访问 / Access</span></div>
+  <h2>登录、角色与导航<br>Sign-in, Roles &amp; Navigation</h2>
+  <ol>
+    <li>打开管理员提供的平台网址。本地运行的默认访问地址为 <code>http://127.0.0.1:8130</code>；云端部署网址请向管理员确认。<span class="en">Open the platform URL supplied by your administrator. The documented local address is <code>http://127.0.0.1:8130</code>; obtain the cloud URL from your administrator.</span></li>
+    <li>输入分配的账号和密码登录，核对顶部显示的角色及客户名称。<span class="en">Sign in with your assigned credentials and check the role and client name shown in the top bar.</span></li>
+    <li>完成操作后点击 <b>Sign out</b>，尤其在共享设备上。<span class="en">Select <b>Sign out</b> when finished, particularly on a shared device.</span></li>
+  </ol>
+  <table>
+    <tr><th style="width:30%">角色 / Role</th><th>可执行操作 / Available operations</th></tr>
+    <tr><td>Client<br>客户</td><td>仅访问所属客户的项目和供应商；录入、提交、申请 N/A、处理变更、生成与下载文件。<div class="en">Access own-client projects and suppliers only; enter and submit data, request N/A, handle changes, generate and download documents.</div></td></tr>
+    <tr><td>Expert<br>专家</td><td>跨客户审核；批准、退回、确认 N/A、重开条目及签发文件；可驳回变更事件。<div class="en">Review across clients; approve, reject, confirm N/A, reopen items and issue documents; may dismiss change events.</div></td></tr>
+  </table>
+  <h3>顶部导航 / Top navigation</h3>
+  <table>
+    <tr><td style="width:35%"><b>Dashboard / Projects</b></td><td>总览、提醒；项目列表与项目入口。<div class="en">Overview and alerts; project list and access.</div></td></tr>
+    <tr><td><b>My actions / Review queue</b></td><td>客户的修改待办 / 专家的两阶段审核队列。<div class="en">Client rework actions / expert two-stage review queue.</div></td></tr>
+    <tr><td><b>Suppliers / Change impact</b></td><td>供应商材料和证书；变更事件及影响范围。<div class="en">Supplier materials and certificates; change events and impact.</div></td></tr>
+    <tr><td><b>Knowledge base</b></td><td>法规来源、要求目录及可用模板。<div class="en">Regulatory sources, requirement catalogue and available templates.</div></td></tr>
+  </table>
+  <div class="note warn">演示账号仅用于试点：<code>expert</code>、<code>lumen</code>、<code>aurora</code>，演示密码均为 <code>demo</code>。不要在公开生产环境继续使用演示凭据。<div class="en">Pilot demo accounts: <code>expert</code>, <code>lumen</code>, <code>aurora</code>; password: <code>demo</code>. Do not retain demo credentials in a public production environment.</div></div>
+  <div class="foot"><span>访问与权限 / Access &amp; Permissions</span><span>03 / 16</span></div>
+</section>
+
+<section class="page" id="project">
+  <div class="running"><span>PPWR Digital Platform</span><span>02 · 项目 / Project</span></div>
+  <h2>创建项目与适用性<br>Create a Project &amp; Applicability</h2>
+  <div class="path">Projects → New project → Create project</div>
+  <ol>
+    <li>填写产品/项目标题、包装系统编号（如 <code>PS-001</code>）、目标日期和预期用途。专家须核对所属客户；客户账号自动归属自己的客户。<span class="en">Enter the product/project title, packaging system ID (e.g. <code>PS-001</code>), target date and intended use. Experts must select the correct client; client accounts use their own client.</span></li>
+    <li>选择技术文件场景 A 或 B。场景影响文件的范围和编号，不能仅为提高完成率而选择。<span class="en">Choose technical-file scenario A or B. It determines document scope and numbering; do not choose it merely to improve completion figures.</span></li>
+    <li>按真实用途勾选 <b>Food-contact packaging</b>、<b>Reusable packaging</b>、<b>Art 9 packaging type</b>、<b>Biobased feedstock claim</b>。<span class="en">Set food-contact, reusable, Article 9 packaging-type and biobased-claim flags according to actual use.</span></li>
+    <li>可填写第一个包装单元名称和层级，也可稍后登记或导入；点击 <b>Create project</b>。<span class="en">Optionally enter the first packaging-unit name and level, or register/import it later; select <b>Create project</b>.</span></li>
+  </ol>
+  <table>
+    <tr><th style="width:25%">场景 / Scenario</th><th>输出 / Output</th></tr>
+    <tr><td><b>A · Per-unit</b><br>按单元</td><td>每个包装单元各有一份 TD 和 EU DoC，另有文件包总览供最终包装使用方索引。<div class="en">One TD and EU DoC per packaging unit, plus a document-package overview for the final packaging user.</div></td></tr>
+    <tr><td><b>B · Consolidated</b><br>合并</td><td>同一产品各包装单元汇总在一份 TD 和一份 EU DoC 中。<div class="en">All packaging units of the product are covered by one consolidated TD and one EU DoC.</div></td></tr>
+  </table>
+  <h3>核对适用性矩阵 / Check the applicability matrix</h3>
+  <p>进入项目 <b>Overview</b> 查看 <b>Applicability matrix</b> 的状态、适用日期和依据。矩阵由项目属性及 BOM 材料组推导；自动 N/A 的理由会写入 TD。</p>
+  <p class="en">In project <b>Overview</b>, inspect each requirement's status, application date and basis in the <b>Applicability matrix</b>. It is derived from project flags and BOM material groups; automatic N/A rationales feed the TD.</p>
+  <div class="note">如判断不符，通过 <b>Edit the project profile → Save profile</b> 修正用途属性，并检查 BOM 材料组。修改后重新查看条目状态和文件完成度。<div class="en">If applicability is incorrect, use <b>Edit the project profile → Save profile</b> and check BOM material groups. Recheck item statuses and document readiness afterward.</div></div>
+  <div class="foot"><span>项目设置 / Project Setup</span><span>04 / 16</span></div>
+</section>
+
+<section class="page" id="packaging">
+  <div class="running"><span>PPWR Digital Platform</span><span>03 · 包装登记 / Packaging Register</span></div>
+  <h2>包装单元与 BOM<br>Packaging Units &amp; BOM</h2>
+  <div class="path">Projects → 项目 / Project → Packaging &amp; BOM</div>
+  <h3>登记包装单元 / Register a packaging unit</h3>
+  <ol>
+    <li>展开 <b>+ Add a packaging unit</b>，填写名称、层级、类型、UPI、SKU、重量（g）和尺寸（mm）。同时录入供应商、生产地点、国家及图稿引用（如适用）。<span class="en">Expand <b>+ Add a packaging unit</b>. Enter name, level, type, UPI, SKUs, mass (g) and dimensions (mm), plus supplier, site, country and artwork reference where relevant.</span></li>
+    <li>点击 <b>Add unit</b>；新增单元获得 PU 编号。已有记录通过行末 <b>Edit</b> 修改，再点击 <b>Save</b>。<span class="en">Select <b>Add unit</b>; the unit receives a PU code. Use row-level <b>Edit</b> and <b>Save</b> for an existing record.</span></li>
+  </ol>
+  <h3>登记 BOM 组件 / Register BOM components</h3>
+  <ol>
+    <li>在包装登记表选择目标单元，展开 <b>+ Add a component</b>。将纸盒、膜、盖、标签、油墨、胶黏剂等按独立组件登记。<span class="en">Select the target unit and expand <b>+ Add a component</b>. Register parts such as carton, film, cap, label, ink and adhesive as separate components.</span></li>
+    <li>填写组件类型、描述、结构、材料、材料组和重量。填写再生含量百分比、尺寸及备注（如适用）。<span class="en">Enter component type, description, structure, material, material group and mass. Add recycled-content percentage, dimensions and remarks where relevant.</span></li>
+    <li>在 <b>Supplier material (library)</b> 选择供应商材料，点击 <b>Add component</b> 或 <b>Save</b>。未建立材料时，先按第 7 页完成供应商登记。<span class="en">Select a <b>Supplier material (library)</b> and click <b>Add component</b> or <b>Save</b>. If no material exists, complete supplier registration on page 7 first.</span></li>
+  </ol>
+  <div class="note">关联供应商材料，才能让材料证书参与证据检查，并让后续供应商变更追溯到该组件。仅填写供应商名称不等于建立材料关联。<div class="en">A supplier-material link enables certificate checks and traces later supplier changes to the component. Entering a supplier name alone does not create this link.</div></div>
+  <h3>保存后的检查 / Checks after saving</h3>
+  <p>核对组件重量合计与声明的包装重量；检查材料组、SKU 和供应商关联。C01 类字段来自包装登记，应在本页修改，而非在采集条目内修改。</p>
+  <p class="en">Compare component mass totals with declared unit mass; check material groups, SKUs and supplier links. C01 fields originate in the packaging register and should be edited here, not in collection items.</p>
+  <div class="note warn">修改已批准的登记值可能重开相关条目。删除包装单元会同时移除其组件和采集条目；操作前应导出并确认影响。<div class="en">Changing approved register values may reopen related items. Removing a unit also removes its components and collection items; export and confirm the impact first.</div></div>
+  <div class="foot"><span>包装与组件 / Units &amp; Components</span><span>05 / 16</span></div>
+</section>
+
+<section class="page" id="bom">
+  <div class="running"><span>PPWR Digital Platform</span><span>04 · 工作簿 / Workbooks</span></div>
+  <h2>Excel 导入与导出<br>Excel Import &amp; Export</h2>
+  <div class="path">Project → Packaging &amp; BOM → Blank template / Export this BOM</div>
+  <ol>
+    <li>下载 <b>Blank template</b>（界面链接为 <code>PPWR_BOM_V1.xlsx</code>）；如链接不可用，请联系管理员提供模板。不要用任意自制表格替代。<span class="en">Download <b>Blank template</b> (linked as <code>PPWR_BOM_V1.xlsx</code>). If unavailable, request the template from your administrator; do not substitute an arbitrary workbook.</span></li>
+    <li>按模板一行填写一个组件，保留表头，正确填写 PS / PU / Component ID、材料、重量及供应商信息。<span class="en">Use one row per component. Keep the template headers and complete PS / PU / Component IDs, material, mass and supplier information accurately.</span></li>
+    <li>打开目标项目的 <b>Packaging &amp; BOM</b>，将 <code>.xlsx</code> 文件拖入导入区域，或点击浏览选择。等待导入结果提示。<span class="en">Open the target project's <b>Packaging &amp; BOM</b>. Drop the <code>.xlsx</code> file onto the import area or browse to it, then wait for the result message.</span></li>
+    <li>核对新增/更新的单元和组件、材料组及供应商材料关联；回到 <b>Overview</b> 检查适用性和采集状态。<span class="en">Verify created/updated units and components, material groups and supplier-material links. Recheck applicability and collection statuses in <b>Overview</b>.</span></li>
+  </ol>
+  <div class="note warn">导入按编号创建或更新，不是仅追加。请先用 <b>Export this BOM</b> 留存现有数据，再确认导入文件的项目和编号。界面未提供一键撤销导入。<div class="en">Import creates or updates by ID; it is not append-only. Save an <b>Export this BOM</b> copy and confirm the target project and identifiers first. The interface provides no one-click import undo.</div></div>
+  <table>
+    <tr><th style="width:36%">导出入口 / Export entry</th><th>用途 / Purpose</th></tr>
+    <tr><td><b>Export this BOM</b><br>Packaging &amp; BOM</td><td>导出项目 BOM 工作簿，用于离线检查、沟通或修改后再次导入。<div class="en">Export the project's BOM workbook for offline checking, communication or later re-import after editing.</div></td></tr>
+    <tr><td><b>Export Evidence List (.xlsx)</b><br>Evidence vault</td><td>导出证据索引和元数据；不等于下载所有附件。<div class="en">Export the evidence index and metadata; this does not download all attachments.</div></td></tr>
+  </table>
+  <h3>导入失败时 / If import fails</h3>
+  <p>如出现 <b>No 'Component ID' header found</b>，检查是否使用正确模板以及表头是否被修改。若材料或供应商未正确关联，先补齐供应商材料，再检查或编辑组件。</p>
+  <p class="en">For <b>No 'Component ID' header found</b>, check that the correct template is used and its headers are unchanged. If materials or suppliers are not linked correctly, register the supplier materials and inspect or edit the components.</p>
+  <div class="foot"><span>批量录入 / Batch Entry</span><span>06 / 16</span></div>
+</section>
+
+<section class="page" id="supplier">
+  <div class="running"><span>PPWR Digital Platform</span><span>05 · 供应商库 / Supplier Library</span></div>
+  <h2>供应商、材料与证书<br>Suppliers, Materials &amp; Certificates</h2>
+  <div class="path">Suppliers → Add a supplier → 供应商详情 / Supplier details</div>
+  <ol>
+    <li>在 <b>Add a supplier</b> 输入名称、国家、地址和合规联系人；专家同时选择所属客户。点击 <b>Add supplier</b>。<span class="en">Enter name, country, address and compliance contact in <b>Add a supplier</b>; experts also select the client. Click <b>Add supplier</b>.</span></li>
+    <li>打开供应商，使用 <b>Add a material</b> 登记材料名称、供应商自身的 <b>Trace code</b>、材料及材料组，点击 <b>Add material</b>。<span class="en">Open the supplier and use <b>Add a material</b> to register its name, supplier's own <b>Trace code</b>, material and group; click <b>Add material</b>.</span></li>
+    <li>在目标材料展开 <b>Add / renew a certificate</b>，填写类型、编号、签发机构、结果、签发日期及有效期，可附报告文件；点击 <b>Save certificate</b>。<span class="en">Under the material, expand <b>Add / renew a certificate</b>. Enter type, number, issuer, result, issue date and expiry; optionally attach the report. Click <b>Save certificate</b>.</span></li>
+    <li>回到项目 BOM，将组件关联到此材料；在供应商页面检查 <b>Used by</b> 是否显示预期组件。<span class="en">Link the BOM component to this material and verify that the supplier page's <b>Used by</b> list shows the expected components.</span></li>
+  </ol>
+  <h3>续期与到期提醒 / Renewal &amp; expiry alerts</h3>
+  <p><b>Expiry watch</b> 显示已到期或剩余不超过 30 天的证书。点击提醒进入材料详情，核实编号、期限和附件；按上述步骤保存新的证书。</p>
+  <p class="en"><b>Expiry watch</b> shows expired certificates or those expiring within 30 days. Open the material from the alert, verify the number, dates and attachment, and save a new certificate using the steps above.</p>
+  <div class="note warn">同类型证书续期会将旧证书标为 <b>superseded</b>；材料已用于 BOM 时，可能产生变更事件。保存新证书后仍需检查 <b>Change impact</b>，不能视为文件已自动重新签发。<div class="en">Renewal supersedes the previous certificate of the same type and may raise a change event when the material is used in a BOM. Check <b>Change impact</b> afterward; saving a certificate does not automatically re-issue documents.</div></div>
+  <h3>报告材料或供应商变更 / Report a material or supplier change</h3>
+  <p>展开 <b>Report a material / supplier change</b>，填写变更标题、类别和详情（建议包括生效日期及供应商通知），点击 <b>Trace the impact</b>，按第 13 页处理。</p>
+  <p class="en">Expand <b>Report a material / supplier change</b>. Enter title, kind and details, preferably including effective date and supplier notice; select <b>Trace the impact</b> and follow page 13.</p>
+  <div class="foot"><span>共享材料证据 / Shared Material Evidence</span><span>07 / 16</span></div>
+</section>
+
+<section class="page" id="collect">
+  <div class="running"><span>PPWR Digital Platform</span><span>06 · 数据采集 / Collection</span></div>
+  <h2>数据采集与 N/A<br>Data Collection &amp; N/A</h2>
+  <div class="path">Project → Data collection → 包装单元或 / Unit or Project-level items</div>
+  <ol>
+    <li>选择包装单元标签，或 <b>Project-level items</b>。项目级条目（如标准、风险分析及 DoC 数据）只采集一次，不要只完成包装单元而遗漏项目级数据。<span class="en">Select a unit tab or <b>Project-level items</b>. Project-level data such as standards, risk analysis and DoC data is collected once; do not overlook it when completing unit data.</span></li>
+    <li>按条目编号/名称搜索，或按状态筛选；展开类别，打开条目。目录含 16 类、69 个要求，项目实际条目数随单元数量及范围变化。<span class="en">Search by item ID/name or filter by status. Expand a category and open an item. The catalogue contains 16 categories and 69 requirements; project item counts vary with unit numbers and scope.</span></li>
+    <li>阅读 <b>Legal basis</b>、<b>Why it is needed</b>、<b>Feeds</b>、<b>Typical form</b> 和示例，填写 <b>Your entry</b>；表格可用 <b>+ Row</b> 增行。<span class="en">Read the legal basis, purpose, TD destination, typical evidence form and example. Complete <b>Your entry</b>; use <b>+ Row</b> for additional table rows.</span></li>
+    <li>上传关联证据（见第 9 页），点击 <b>Save draft</b> 暂存，或 <b>Submit for review</b> 提交；可用 <b>Submit &amp; next open item</b> 连续处理。<span class="en">Upload linked evidence (page 9). Select <b>Save draft</b> to save, or <b>Submit for review</b> to submit; <b>Submit &amp; next open item</b> supports consecutive entry.</span></li>
+  </ol>
+  <h3>不适用申请 / Requesting N/A</h3>
+  <p>展开 <b>Not applicable to this packaging?</b>，在 <b>Reason</b> 填写可核查的法规/材料/用途依据（至少 10 个字符），客户点击 <b>Request N/A</b>。申请仍需专家确认，不等于已经关闭。</p>
+  <p class="en">Expand <b>Not applicable to this packaging?</b>. Enter a verifiable legal, material or use-based rationale in <b>Reason</b> (at least 10 characters). Clients select <b>Request N/A</b>; expert confirmation is still required before closure.</p>
+  <div class="note">自动 N/A 来自适用性矩阵，不应通过编写无依据的理由绕过采集。若自动判断不正确，应修正项目属性或 BOM。N/A 理由会引用到 TD §5 / §19。<div class="en">Automatic N/A comes from the applicability matrix. Do not bypass collection with unsupported rationales. Correct the project profile or BOM if the automatic result is wrong. N/A rationales are quoted in TD §5 / §19.</div></div>
+  <h3>平台组装条目 / Platform-assembled items</h3>
+  <p>显示 <b>Assembled by the platform</b> 的条目由 BOM、矩阵或证据登记等来源组装；通过页面提供的入口修改源数据，不寻找不存在的手工输入框。</p>
+  <p class="en">Items marked <b>Assembled by the platform</b> are built from sources such as the BOM, matrix or evidence register. Follow the source-editing links instead of looking for manual entry fields.</p>
+  <div class="foot"><span>保存不是提交 / Saving Is Not Submission</span><span>08 / 16</span></div>
+</section>
+
+<section class="page" id="evidence">
+  <div class="running"><span>PPWR Digital Platform</span><span>07 · 证据 / Evidence</span></div>
+  <h2>上传与管理证据<br>Upload &amp; Manage Evidence</h2>
+  <h3>首选：从采集条目上传 / Preferred: upload from an item</h3>
+  <ol>
+    <li>在条目的 <b>Evidence</b> 区域选择文件；界面提示支持 PDF、图片、Office、DWG，每个文件最大 25 MB。<span class="en">Choose a file in the item's <b>Evidence</b> area. The interface lists PDF, images, Office and DWG; each file must be no larger than 25 MB.</span></li>
+    <li>填写标题、证据类型、组件（或 whole unit）、报告编号、签发机构、签发日期及 <b>Conformity</b>。选择实际结果，不要将不符合报告标为符合。<span class="en">Enter title, evidence type, component (or whole unit), report number, issuer, issue date and <b>Conformity</b>. Record the actual result; never label non-conforming evidence as conforming.</span></li>
+    <li>点击 <b>Upload to the vault</b>，核对生成的证据编号和链接，点击标题验证文件能下载，然后提交条目。<span class="en">Select <b>Upload to the vault</b>. Check the generated evidence ID and link, verify the file downloads from its title, then submit the item.</span></li>
+  </ol>
+  <h3>综合证据与登记表 / Combined evidence &amp; the register</h3>
+  <p>进入项目 <b>Evidence vault</b>，按单元和类型筛选、点击证据编号下载，或用 <b>Export Evidence List (.xlsx)</b> 导出索引。综合声明可在 <b>Add a file that is not tied to one item</b> 上传，并选择单元/组件。</p>
+  <p class="en">In project <b>Evidence vault</b>, filter by unit/type, download by evidence ID or use <b>Export Evidence List (.xlsx)</b>. Upload combined declarations under <b>Add a file that is not tied to one item</b> and select the unit/component.</p>
+  <div class="note warn">综合文件未必自动满足某一采集条目的证据要求。对关键要求，优先从相应条目上传，确保条目、单元、组件和报告对应。已批准条目的附件操作可能被锁定，应联系专家重开。<div class="en">A general upload may not automatically satisfy a specific collection item. Upload critical evidence from its item to ensure correct item, unit, component and report alignment. Approved-item attachments may be locked; ask the expert to reopen the item.</div></div>
+  <table>
+    <tr><th style="width:30%">提示 / Indicator</th><th>处理 / Action</th></tr>
+    <tr><td><b>&gt; 24 months</b></td><td>核实报告是否仍代表当前材料及用途，必要时补充新证据；这是试点检查阈值，并非所有报告统一的法定有效期。<div class="en">Check continued relevance to the current material/use and refresh where needed. This is a pilot check threshold, not a universal legal expiry period.</div></td></tr>
+    <tr><td><b>Non-conform</b></td><td>提交真实结果并处理不符合，不得通过修改元数据隐藏问题。<div class="en">Record the actual result and resolve the non-conformity; do not hide it by editing metadata.</div></td></tr>
+    <tr><td>组件缺证据提示<br>Missing evidence</td><td>为组件上传至少一份相关证据，或建立有效的供应商材料关联。<div class="en">Upload relevant component evidence or establish a valid supplier-material link.</div></td></tr>
+  </table>
+  <div class="foot"><span>证据与元数据 / Evidence &amp; Metadata</span><span>09 / 16</span></div>
+</section>
+
+<section class="page" id="ai">
+  <div class="running"><span>PPWR Digital Platform</span><span>08 · 预审与待办 / Pre-review &amp; Actions</span></div>
+  <h2>AI 预审与客户待办<br>AI Pre-review &amp; Client Actions</h2>
+  <h3>运行与阅读预审 / Run &amp; read pre-review</h3>
+  <ol>
+    <li>提交条目后，查看右侧 <b>AI pre-review</b>。若显示等待，点击 <b>Run AI pre-review</b>；已有结果时可用 <b>Re-run</b>。<span class="en">After submission, inspect the right-hand <b>AI pre-review</b> panel. If pending, click <b>Run AI pre-review</b>; use <b>Re-run</b> when a result already exists.</span></li>
+    <li>逐项查看检查描述、提示和法规引用，不要只看总体结论。检查涉及完整性、限值、项目属性/BOM 一致性、证据日期及供应商证书。<span class="en">Read each check, message and source reference, not only the overall verdict. Checks cover completeness, limits, profile/BOM consistency, evidence dates and supplier certificates.</span></li>
+    <li>缺失、过期或矛盾的数据应补充或更正；保存并重新提交后再次运行预审，等待专家决定。<span class="en">Correct missing, stale or inconsistent data. Save and resubmit, rerun pre-review and await the expert's decision.</span></li>
+  </ol>
+  <table>
+    <tr><th style="width:26%">结果值 / Verdict</th><th>含义与操作 / Meaning &amp; action</th></tr>
+    <tr><td><code>pass</code></td><td>规则检查未发现问题；仍须专家审核，不等于法规符合性认证。<div class="en">No issues found by the rule checks; expert review is still required. This is not conformity certification.</div></td></tr>
+    <tr><td><code>warn</code></td><td>存在注意项或待判断事项；补充依据，供专家判断。<div class="en">Attention points or judgment needed; provide supporting information for the expert.</div></td></tr>
+    <tr><td><code>fail</code></td><td>存在明确检查失败；阅读具体信息，处理后重新提交。<div class="en">One or more checks failed; read the messages, resolve the issues and resubmit.</div></td></tr>
+  </table>
+  <h3>客户处理退回 / Client rework</h3>
+  <p>进入顶部 <b>My actions</b>，打开退回条目；阅读 <b>Sent back by</b> 的审核意见。若显示 <b>Re-opened</b>，核对重开原因。修正字段和附件后点击 <b>Submit for review</b>，不要仅保存草稿。</p>
+  <p class="en">Open a returned item from <b>My actions</b> and read <b>Sent back by</b>. If <b>Re-opened</b> appears, check its reason. Correct fields/attachments and select <b>Submit for review</b>, not merely draft save.</p>
+  <div class="note">当前“AI”预审由确定性规则引擎实现，不是自主作出最终决策的 LLM。预审结果仅供参考，专家拥有最终审核权。<div class="en">The current “AI” pre-review uses a deterministic rule engine, not an LLM making autonomous final decisions. Its output is advisory; the expert decides.</div></div>
+  <div class="foot"><span>两阶段审核 / Two-stage Review</span><span>10 / 16</span></div>
+</section>
+
+<section class="page" id="expert">
+  <div class="running"><span>PPWR Digital Platform</span><span>09 · 专家 / Expert</span></div>
+  <h2>专家审核与退回<br>Expert Review &amp; Rework</h2>
+  <div class="path">Expert → Review queue → Review → Expert decision</div>
+  <ol>
+    <li>在 <b>Review queue</b> 选择项目。左侧 <b>Awaiting AI pre-review</b> 可批量运行预审；右侧 <b>Awaiting expert decision</b> 可按 AI 结果筛选。<span class="en">Select a project in <b>Review queue</b>. Run checks in <b>Awaiting AI pre-review</b>; filter the <b>Awaiting expert decision</b> list by AI verdict.</span></li>
+    <li>点击 <b>Review</b> 打开条目，检查数据、证据原文件、适用性依据及预审提示。核对项目和包装单元，避免跨客户误操作。<span class="en">Select <b>Review</b>. Check data, original evidence files, applicability and pre-review messages. Verify the project/unit to avoid cross-client mistakes.</span></li>
+    <li>在 <b>Expert decision</b> 写入审核意见并选择相应决策。勾选默认的下一条选项会跳转到本项目下一条待审条目。<span class="en">Enter comments and choose a decision in <b>Expert decision</b>. The default next-item checkbox moves to the next waiting item in this project.</span></li>
+  </ol>
+  <table>
+    <tr><th style="width:30%">按钮 / Button</th><th>使用条件 / When to use</th></tr>
+    <tr><td><b>Approve</b></td><td>数据和证据可接受；批准后一般锁定编辑。<div class="en">Data and evidence are acceptable; approval generally locks editing.</div></td></tr>
+    <tr><td><b>Reject</b></td><td>需要客户返工；必须写明意见，建议列明问题、所需资料和修正要求。<div class="en">Client rework is required; a comment is mandatory. State the issue, required evidence and correction.</div></td></tr>
+    <tr><td><b>Confirm N/A / Mark N/A</b></td><td>确认客户申请或专家判定不适用；记录可审核的依据。<div class="en">Confirm a client request or determine non-applicability; record an auditable rationale.</div></td></tr>
+    <tr><td><b>Re-open item</b></td><td>对已关闭/锁定条目要求重新处理，填写重开原因。<div class="en">Require renewed work on a closed/locked item and enter the reason.</div></td></tr>
+  </table>
+  <h3>批量批准 / Batch approval</h3>
+  <p>选择具体项目后，如存在预审无问题条目，队列显示 <b>Approve … AI-clear items</b>。先检查本批次的范围和依据，再确认；批量操作不免除专家责任。</p>
+  <p class="en">After selecting a project, <b>Approve … AI-clear items</b> appears when eligible items exist. Check batch scope and evidence before confirming; batch approval does not remove expert responsibility.</p>
+  <div class="note warn">提交、预审、批准是不同状态。只有批准或确认 N/A 才算关闭要求；客户提交成功或 AI 通过不能替代专家批准。<div class="en">Submission, pre-review and approval are distinct states. Only approval or confirmed N/A closes a requirement; submission or AI pass does not replace expert approval.</div></div>
+  <div class="foot"><span>专家专用流程 / Expert-only Workflow</span><span>11 / 16</span></div>
+</section>
+
+<section class="page" id="documents">
+  <div class="running"><span>PPWR Digital Platform</span><span>10 · 文件交付 / Documents</span></div>
+  <h2>TD、EU DoC 与资料包<br>TD, EU DoC &amp; Dossier</h2>
+  <div class="path">Project → TD &amp; DoC</div>
+  <ol>
+    <li>查看 <b>TD readiness</b> 及仍未关闭的章节/条目。按场景 A 查看各单元，场景 B 查看合并范围。<span class="en">Inspect <b>TD readiness</b> and open sections/items, per unit for scenario A or consolidated for scenario B.</span></li>
+    <li>点击 <b>Generate TD &amp; DoC</b> 从当前数据生成文件。客户和专家均可生成；未完成时可先生成草稿检查缺口。<span class="en">Select <b>Generate TD &amp; DoC</b> to generate from current data. Clients and experts can generate; draft generation can expose gaps before completion.</span></li>
+    <li>在 <b>Documents</b> 表中核对编号、版本、状态、完成度和生成时间，点击 <b>.docx</b> 下载检查内容。平台当前业务文件输出为 Word，不是此手册的 PDF 格式。<span class="en">Check number, version, status, readiness and timestamp in <b>Documents</b>; download <b>.docx</b> to inspect content. Business documents currently export as Word, distinct from this PDF manual.</span></li>
+    <li>全部要求批准或 N/A、相关草稿完成度达 100% 后，由专家点击 <b>Issue</b> 并确认。应先生成最新草稿，再签发；旧签发版本将被新版本替代。<span class="en">Once all requirements are approved or N/A and relevant drafts reach 100% readiness, the expert selects <b>Issue</b> and confirms. Generate fresh drafts first; earlier issued versions are superseded.</span></li>
+  </ol>
+  <table>
+    <tr><th style="width:31%">状态 / Status</th><th>解释 / Meaning</th></tr>
+    <tr><td><b>Draft / DRAFT / OPEN</b></td><td>未签发文件；未关闭事项标为 OPEN，未达完成度的文件带 DRAFT 标识。不得当作最终已签发声明。<div class="en">Unissued output; unresolved matters appear as OPEN, with DRAFT marking before readiness is complete. Do not treat it as a final issued declaration.</div></td></tr>
+    <tr><td><b>Issued</b></td><td>专家完成平台签发；制造商仍需核实并签署 DoC。<div class="en">Issued by the expert in the platform; the manufacturer must still verify and sign the DoC.</div></td></tr>
+    <tr><td><b>Update required</b></td><td>数据/证据变更导致文件待更新；完成重新审核后重新生成并签发。<div class="en">Changed data/evidence requires an update; re-review, regenerate and re-issue.</div></td></tr>
+  </table>
+  <h3>主管机关资料包 / Authority dossier</h3>
+  <p>点击 <b>Authority dossier (.zip)</b> 下载 TD、DoC 和证据附件资料包；解压后检查完整性和版本。<b>Version history</b> 可查看旧版本。该下载不自动提交给机关，也不自动保证资料已符合要求。</p>
+  <p class="en">Download <b>Authority dossier (.zip)</b> containing TD, DoC and evidence attachments. Extract and check completeness/versioning; inspect older versions under <b>Version history</b>. Download does not submit to an authority or guarantee compliance.</p>
+  <div class="note warn">平台签发不是制造商签名。DoC 签署责任保留在制造商；资料包可含草稿，提供给外部前必须核对状态。<div class="en">Platform issuance is not a manufacturer signature. Signing remains the manufacturer's responsibility; a dossier may contain drafts, so verify status before external delivery.</div></div>
+  <div class="foot"><span>生成、签发、签署须区分 / Generate, Issue &amp; Sign Are Distinct</span><span>12 / 16</span></div>
+</section>
+
+<section class="page" id="change">
+  <div class="running"><span>PPWR Digital Platform</span><span>11 · 变更 / Changes</span></div>
+  <h2>变更影响与重新审核<br>Change Impact &amp; Re-review</h2>
+  <div class="path">Change impact → 变更事件 / Change event → Impact report</div>
+  <div class="flow">
+    <div>材料 / 证书<small>Material / certificate</small></div>
+    <div>组件 / 单元 / 项目<small>Components / units / projects</small></div>
+    <div>条目 / TD / DoC<small>Items / TD / DoC</small></div>
+  </div>
+  <ol>
+    <li>从供应商材料报告变更、续期证书，或在 <b>Change impact</b> 查看已产生的事件。打开事件，核实类型、来源、创建人及描述。<span class="en">Report a supplier-material change, renew a certificate or inspect existing events in <b>Change impact</b>. Open the event and verify kind, source, creator and description.</span></li>
+    <li>查看 <b>Impact report</b>，核对受影响组件、单元、SKU、项目、采集条目和 TD/DoC。没有影响可能是未关联 BOM，而不是变更一定没有风险。<span class="en">Inspect affected components, units, SKUs, projects, items and TD/DoC in <b>Impact report</b>. No listed impact may mean a missing BOM link, not necessarily no risk.</span></li>
+    <li>确认需要重新审核后，点击 <b>Apply change</b> 并确认。客户可处理自己的范围；只有专家可用 <b>Dismiss</b> 驳回事件，并应记录理由。<span class="en">If re-review is needed, select and confirm <b>Apply change</b>. Clients act within their own scope; only experts can <b>Dismiss</b> an event and should record the reason.</span></li>
+    <li>跟进 <b>Items affected</b>，检查保留的数据及新供应商证据，补充/修正后提交，由专家再次审核。<span class="en">Follow <b>Items affected</b>, check retained data against new supplier evidence, correct/resubmit and obtain renewed expert review.</span></li>
+    <li>完成后到 <b>TD &amp; DoC</b> 重新生成最新文件，由专家签发；核对此前 <b>Update required</b> 文件的替代版本。<span class="en">Regenerate in <b>TD &amp; DoC</b> after completion and have the expert issue the new documents. Check replacement versions for previously outdated documents.</span></li>
+  </ol>
+  <table>
+    <tr><th style="width:25%">事件状态 / State</th><th>含义 / Meaning</th></tr>
+    <tr><td><code>open</code></td><td>待处理；查看影响并作出操作。<div class="en">Pending; inspect impact and take action.</div></td></tr>
+    <tr><td><code>applied</code></td><td>影响已应用；不等于重新审核和出文已经完成。<div class="en">Impact applied; re-review and document updates may still be outstanding.</div></td></tr>
+    <tr><td><code>dismissed</code></td><td>专家驳回；保留判断理由。<div class="en">Dismissed by an expert; retain the rationale.</div></td></tr>
+  </table>
+  <div class="note">应用变更会重开相关条目、保留原数据并更新预审，对相关文件标记更新需求；不会替你自动完成专家审核、修改所有技术内容或制造商签署。<div class="en">Applying a change reopens related items, retains their data, refreshes pre-review and flags documents. It does not complete expert review, revise every technical statement or sign for the manufacturer.</div></div>
+  <div class="foot"><span>持续更新 / Continuous Updating</span><span>13 / 16</span></div>
+</section>
+
+<section class="page" id="trace">
+  <div class="running"><span>PPWR Digital Platform</span><span>12 · 追溯与知识 / Traceability &amp; Knowledge</span></div>
+  <h2>追溯、知识库与标识<br>Traceability, Knowledge &amp; IDs</h2>
+  <h3>项目追溯与历史 / Project traceability &amp; history</h3>
+  <p>在项目追溯页查看材料到组件、单元及文件的关联；在 <b>Overview</b> 查看 <b>Audit trail</b>，在条目侧栏查看 <b>History</b>，在文件页查看 <b>Version history</b>。</p>
+  <p class="en">Use the project traceability page to inspect material-to-component/unit/document links. Review <b>Audit trail</b> in <b>Overview</b>, item-side <b>History</b> and document <b>Version history</b>.</p>
+  <p>交接时记录项目编号、包装单元、条目编号、证据编号和文件版本，便于专家定位。审核意见和变更理由应具体、可追溯。</p>
+  <p class="en">At handover, record project, unit, item and evidence IDs plus document versions so the expert can locate records. Review comments and change rationales should be specific and traceable.</p>
+  <h3>常用标识 / Common identifiers</h3>
+  <table>
+    <tr><th style="width:40%">示例 / Example</th><th>含义 / Meaning</th></tr>
+    <tr><td><code>PRJ-2026-001</code></td><td>项目 / Project</td></tr>
+    <tr><td><code>PS-001</code></td><td>包装系统 / Packaging system</td></tr>
+    <tr><td><code>PU-001</code></td><td>包装单元 / Packaging unit</td></tr>
+    <tr><td><code>PU-001-C001</code></td><td>BOM 组件 / BOM component</td></tr>
+    <tr><td><code>C02-06</code></td><td>要求目录条目 / Requirement catalogue item</td></tr>
+    <tr><td><code>PU-001-C001-TST-001</code></td><td>组件测试证据编号 / Component test-evidence ID</td></tr>
+  </table>
+  <h3>知识库与模板 / Knowledge base &amp; templates</h3>
+  <p>顶部 <b>Knowledge base</b> 包含 <b>Key dates</b>、条款与证据对应、<b>Regulation library</b>、<b>Client template kit</b> 和 <b>Requirement catalogue</b>。点击库中文件查看来源，展开目录查看要求及 TD 章节映射。</p>
+  <p class="en"><b>Knowledge base</b> contains key dates, article-to-evidence mapping, the regulation library, client template kit and requirement catalogue. Open library files to inspect sources and expand the catalogue to see requirements and TD mappings.</p>
+  <div class="note warn">部分离线模板指南引用草案编号。当前平台按已通过法规：TD 对应 Annex VII；DoC 对应 Art 39 / Annex VIII；可回收性对应 Annex II；最小化对应 Annex IV。知识库和模板目录可能为空，应联系管理员补齐。<div class="en">Some offline guides use draft numbering. The platform follows the adopted text: TD → Annex VII; DoC → Art 39 / Annex VIII; recyclability → Annex II; minimisation → Annex IV. Libraries or template folders may be empty; request missing content from the administrator.</div></div>
+  <div class="foot"><span>来源与记录 / Sources &amp; Records</span><span>14 / 16</span></div>
+</section>
+
+<section class="page" id="help">
+  <div class="running"><span>PPWR Digital Platform</span><span>13 · 帮助 / Help</span></div>
+  <h2>常见问题与安全提醒<br>Troubleshooting &amp; Safety</h2>
+  <table>
+    <tr><th style="width:28%">问题 / Issue</th><th>处理方式 / Resolution</th></tr>
+    <tr><td>看不到项目<br>Project not visible</td><td>核对账号及客户归属。客户不能访问其他客户的数据；需要额外权限时联系管理员。<div class="en">Check the account/client. Clients cannot access other clients' data; request any required authorization from the administrator.</div></td></tr>
+    <tr><td>无法编辑条目<br>Item locked</td><td>检查是否已批准或 N/A；请专家使用 Re-open item，说明原因后再修改。<div class="en">Check whether approved or N/A; ask the expert to reopen it with a reason before editing.</div></td></tr>
+    <tr><td>上传失败<br>Upload fails</td><td>检查是否选择文件、是否超过 25 MB、网络和会话状态；超大文件请管理员安排受控存储。<div class="en">Check file selection, the 25 MB limit, network and session. Ask the administrator for controlled storage of oversized files.</div></td></tr>
+    <tr><td>完成率停滞<br>Readiness stuck</td><td>检查所有单元及 Project-level items 的未关闭项；草稿、提交及预审通过均不等于批准。<div class="en">Check open items across all units and project-level items; draft, submitted or AI-clear is not approved.</div></td></tr>
+    <tr><td>无法签发<br>Cannot issue</td><td>确认专家角色、已有最新草稿且完成度为 100%，全部要求批准或 N/A；不要绕过拦截。<div class="en">Verify expert role, fresh drafts at 100% and all requirements approved/N/A. Do not bypass the gate.</div></td></tr>
+    <tr><td>文件下载 404<br>Download 404</td><td>生成文件丢失时重新生成；上传证据丢失时联系管理员检查存储/备份，必要时补传原件。<div class="en">Regenerate missing generated files. For missing uploads, ask the administrator to check storage/backups and re-upload originals if needed.</div></td></tr>
+    <tr><td>文件要求更新<br>Update required</td><td>检查变更事件及受影响条目，重新审核、生成并由专家签发。<div class="en">Inspect the event and affected items; re-review, regenerate and have the expert re-issue.</div></td></tr>
+  </table>
+  <h3>高风险操作与数据边界 / High-risk actions &amp; data boundaries</h3>
+  <p>专家页脚的 <b>reset demo data</b> 会恢复演示种子数据、替换当前试点改动并退出登录。该功能不是刷新，也不是普通故障排除手段。</p>
+  <p class="en">The expert footer's <b>reset demo data</b> restores seed data, replaces current pilot changes and signs you out. It is not a page refresh or a routine troubleshooting action.</p>
+  <div class="note warn">当前试点使用本地账号、SQLite 和磁盘文件；PDF/Excel 导出不是完整系统备份。生产使用前应由管理员配置访问控制、持久化存储、备份及保留策略；上传敏感资料须符合组织政策。<div class="en">The pilot uses local accounts, SQLite and disk files. PDF/Excel exports are not full system backups. Administrators should establish access control, persistent storage, backups and retention before production use. Sensitive uploads must follow organizational policy.</div></div>
+  <div class="foot"><span>遇到问题请保留编号与错误信息 / Retain IDs &amp; Error Messages</span><span>15 / 16</span></div>
+</section>
+
+<section class="page" id="checklist">
+  <div class="running"><span>PPWR Digital Platform</span><span>14 · 交付 / Handover</span></div>
+  <h2>交付检查单与术语<br>Handover Checklist &amp; Glossary</h2>
+  <table>
+    <tr><th class="check"></th><th>签发与交付前检查 / Before issuance &amp; delivery</th></tr>
+    <tr><td class="check">□</td><td>项目客户、用途、场景和适用性已核实。<div class="en">Client, use, scenario and applicability are verified.</div></td></tr>
+    <tr><td class="check">□</td><td>全部包装单元、组件、重量、SKU 及供应商材料关联完整。<div class="en">All units, components, masses, SKUs and supplier-material links are complete.</div></td></tr>
+    <tr><td class="check">□</td><td>单元级与项目级要求均已批准或确认 N/A，理由可审核。<div class="en">Unit/project-level requirements are approved or confirmed N/A with auditable rationales.</div></td></tr>
+    <tr><td class="check">□</td><td>证据可下载、信息与原件相符；证书到期和不符合项已处理。<div class="en">Evidence downloads correctly and metadata matches originals; expiry/non-conformity issues are resolved.</div></td></tr>
+    <tr><td class="check">□</td><td>影响本次交付的变更已处理，重开条目已重新审核。<div class="en">Changes affecting delivery are handled and reopened items are re-reviewed.</div></td></tr>
+    <tr><td class="check">□</td><td>已生成最新 TD/DoC，核对 100% 完成度和专家签发状态。<div class="en">Fresh TD/DoC are generated; 100% readiness and expert issuance are verified.</div></td></tr>
+    <tr><td class="check">□</td><td>制造商完成 DoC 内容核实及必要签署；最终版本与资料包已留存。<div class="en">The manufacturer verifies and signs the DoC as required; final versions and dossier are retained.</div></td></tr>
+  </table>
+  <h3>术语速查 / Glossary</h3>
+  <table>
+    <tr><th style="width:22%">缩写 / Term</th><th>中文 / Chinese</th><th>English</th></tr>
+    <tr><td>PPWR</td><td>包装与包装废弃物法规</td><td>Packaging and Packaging Waste Regulation</td></tr>
+    <tr><td>TD / EU DoC</td><td>技术文件 / 欧盟符合性声明</td><td>Technical Documentation / EU Declaration of Conformity</td></tr>
+    <tr><td>PS / PU</td><td>包装系统 / 包装单元</td><td>Packaging System / Packaging Unit</td></tr>
+    <tr><td>BOM / UPI</td><td>物料清单 / 唯一包装标识</td><td>Bill of Materials / Unique Packaging Identifier</td></tr>
+    <tr><td>N/A / PCR</td><td>不适用 / 消费后再生材料</td><td>Not Applicable / Post-consumer Recycled material</td></tr>
+  </table>
+  <p class="en">Basis: current project README, page templates and workflow implementation. This manual covers the pilot interface as inspected on 2026-10-08; deployments may differ.</p>
+  <p>编制依据：当前项目说明、页面模板及工作流实现。操作说明以 2026-10-08 核对的试点界面为准，不同部署可能存在差异。</p>
+  <div class="foot"><span>手册结束 / End of Manual</span><span>16 / 16</span></div>
+</section>
+</body>
+</html>
