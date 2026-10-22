@@ -1,13 +1,13 @@
 {% macro status(s) -%}
-<span class="badge {{ STATUS_BADGE[s] }}">{{ STATUS_LABEL[s] }}</span>
+<span class="badge {{ STATUS_BADGE[s] }}">{{ t(STATUS_LABEL[s], STATUS_ZH[s]) }}</span>
 {%- endmacro %}
 
 {% macro verdict(v) -%}
-{% if v %}<span class="badge {{ VERDICT_BADGE[v] }}" title="Advisory — the expert decides">{{ VERDICT_LABEL[v] }}</span>{% endif %}
+{% if v %}<span class="badge {{ VERDICT_BADGE[v] }}" title="{{ tt('Advisory — the expert decides', '仅供参考——由专家决定') }}">{{ t(VERDICT_LABEL[v], VERDICT_ZH[v]) }}</span>{% endif %}
 {%- endmacro %}
 
 {% macro stage(st) -%}
-<span class="badge {{ STAGE_BADGE[st] }}">{{ STAGE_LABEL[st] }}</span>
+<span class="badge {{ STAGE_BADGE[st] }}">{{ t(STAGE_LABEL[st], STAGE_ZH[st]) }}</span>
 {%- endmacro %}
 
 {% macro bar(pct) -%}
@@ -29,9 +29,9 @@
 
 {% macro legend() -%}
 <div class="legend">
-    <span><i class="seg-approved"></i>Approved</span><span><i class="seg-na"></i>N/A</span>
-    <span><i class="seg-ai_reviewed"></i>Awaiting expert</span><span><i class="seg-submitted"></i>Awaiting AI</span>
-    <span><i class="seg-rejected"></i>Rework</span><span><i style="background: var(--neutral-75)"></i>Not collected</span>
+    <span><i class="seg-approved"></i>{{ t('Approved', '已批准') }}</span><span><i class="seg-na"></i>{{ t('N/A', '不适用') }}</span>
+    <span><i class="seg-ai_reviewed"></i>{{ t('Awaiting expert', '待专家') }}</span><span><i class="seg-submitted"></i>{{ t('Awaiting AI', '待 AI') }}</span>
+    <span><i class="seg-rejected"></i>{{ t('Rework', '返工') }}</span><span><i style="background: var(--neutral-75)"></i>{{ t('Not collected', '未收集') }}</span>
 </div>
 {%- endmacro %}
 
@@ -45,4 +45,13 @@
 {% if state == 'expired' %}<span class="cert-cell expired">● expired</span>
 {% elif state == 'expiring' %}<span class="cert-cell expiring">● {{ days }} d left</span>
 {% else %}<span class="cert-cell valid">● valid</span>{% endif %}
+{%- endmacro %}
+
+
+{% macro level_badge(code, date=None) -%}
+<span class="badge {{ LEVEL[code][2] }} level-badge" title="{{ tt('Legal status of this evidence for this packaging', '该证据对本包装的法律地位') }}">{{ t(LEVEL[code][0], LEVEL[code][1]) }}{% if code == 'mandatory_from' and date %} {{ date | day }}{% endif %}</span>
+{%- endmacro %}
+
+{% macro check_mark(ok) -%}
+<span class="ai-mark {{ 'ok' if ok == true else 'no' if ok == false else 'maybe' }}">{{ '✓' if ok == true else '!' if ok == false else '?' }}</span>
 {%- endmacro %}

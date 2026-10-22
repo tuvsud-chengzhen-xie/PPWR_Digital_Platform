@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, Response
 from sqlalchemy.orm import Session
 
-from .. import applicability, auth, catalogue, changes, excel_io, workflow
+from .. import applicability, auth, catalogue, changes, excel_io, guidance, monitor, workflow
 from ..db import Client, Component, PackagingUnit, Project, Supplier, SupplierMaterial, User, get_session, log
 from ..web import base_context, project_context, redirect, render
 
@@ -85,7 +85,8 @@ def overview(pid: int, request: Request, session: Session = Depends(get_session)
         .order_by(AuditEvent.at.desc()).limit(12).all()
     return render("project/overview.html", project_context(
         request, session, p, "overview", cats=workflow.category_progress(p.submissions), units=unit_rows,
-        history=history, groups=sorted(applicability.material_groups(p))))
+        history=history, groups=sorted(applicability.material_groups(p)), gaps=guidance.project_gaps(p),
+        alerts=monitor.project_alerts(session, p)))
 
 
 @router.post("/projects/{pid}/profile")

@@ -1,31 +1,62 @@
 {% extends "base.html" %}
-{% block title %}Knowledge base{% endblock %}
+{% from "_macros.html" import octagon with context %}
+{% block title %}{{ tt('Knowledge base', '知识库') }}{% endblock %}
 {% block page %}
 <main class="page">
-    <div class="page-head"><div><span class="eyebrow">Regulation (EU) 2025/40</span><h1>PPWR knowledge base</h1></div></div>
-    <p class="page-purpose">The sources the AI pre-review cites, the dates that drive the applicability matrix, and the service
-        definition — the 69 items and where each lands in the technical documentation.</p>
+    <div class="page-head"><div><span class="eyebrow">Regulation (EU) 2025/40</span><h1>{{ t('PPWR knowledge base & AI assistant', 'PPWR 知识库与 AI 助手') }}</h1></div></div>
+    <p class="page-purpose">{{ t('Ask a question in English or Chinese: the assistant retrieves from the regulation, harmonised standards, implementing decisions, official interpretations and good practice, and answers with citations. Below: the structured knowledge pool, key dates, the source library and the 73-item service definition.',
+        '可用中文或英文提问：助手从法规、协调标准、实施决定、官方解释及良好实践中检索，并给出带引用的回答。下方为结构化知识池、关键日期、资料库及 73 项服务定义。') }}</p>
+
+    <section class="card ai-assist">
+        <div class="card-head"><h2 class="card-title ai-card-title">{{ octagon(18) }} {{ t('Ask the PPWR knowledge base', '向 PPWR 知识库提问') }}</h2>
+            <span class="xs muted">{{ kb_status.pool }} {{ t('curated entries', '条精选条目') }} · {{ kb_status.indexed }} {{ t('documents', '份文件') }} / {{ kb_status.chunks }} {{ t('passages', '段落') }} · {{ kb_status.state }}</span></div>
+        <form class="ask" data-ask="/assistant/ask">
+            <textarea name="q" rows="2" class="input" placeholder="{{ tt('e.g. Which evidence must be in the technical documentation for recyclability?', '例：可回收性需要在技术文档中提供哪些证据？') }}"></textarea>
+            <div class="sugg">{% for q in suggestions %}<button type="button" class="pill" data-q="{{ q[1] if lang == 'zh' else q[0] }}">{{ t(q[0], q[1]) }}</button>{% endfor %}</div>
+            <button class="btn btn-primary btn-sm ai-btn">{{ t('Ask', '提问') }}</button>
+            <div class="ask-out" hidden></div>
+        </form>
+    </section>
 
     <section class="card">
-        <h2 class="card-title">Key dates</h2>
+        <div class="card-head"><h2 class="card-title">{{ t('Structured knowledge pool', '结构化知识池') }} <span class="hint">{{ pool | length }}</span></h2>
+            <div class="filterbar" data-kind-filter>
+                <button type="button" class="pill is-active" data-kind="">{{ t('All', '全部') }}</button>
+                {% for k, v in kinds.items() %}<button type="button" class="pill" data-kind="{{ k }}">{{ t(v[0], v[1]) }}</button>{% endfor %}
+            </div></div>
+        <div class="pool-list">
+        {% for e in pool %}
+            <details class="fold pool-entry" data-kind="{{ e.kind }}">
+                <summary><span class="badge {{ 'badge-high' if e.binding else 'badge-outline' }}">{{ t(kinds[e.kind][0], kinds[e.kind][1]) }}</span>
+                    <b>{{ t(e.title, e.title_zh) }}</b> <span class="xs muted">{{ e.ref }}{% if e.applies_from %} · {{ t('applies from', '适用自') }} {{ e.applies_from }}{% endif %}</span></summary>
+                <div class="fold-body small">{{ tb(e.text, e.text_zh) }}
+                    <div class="xs muted" style="margin-top:6px">{% if e['items'] %}{{ t('Items', '条目') }}: {{ e['items'] | join(', ') }} · {% endif %}{% if kb_href(e) %}<a href="{{ kb_href(e) }}" target="_blank" rel="noopener">{{ t('source', '来源') }}{% if e.page %} p.{{ e.page }}{% endif %}</a>{% endif %}</div></div>
+            </details>
+        {% endfor %}
+        </div>
+        <p class="xs muted">{{ t('Regulation and implementing entries paraphrase the source page linked; good-practice entries are TÜV SÜD recommendations and are not legal requirements.', '法规与实施类条目为所链接原文页的释义；良好实践条目为 TÜV SÜD 建议，并非法定要求。') }}</p>
+    </section>
+
+    <section class="card">
+        <h2 class="card-title">{{ t('Key dates', '关键日期') }}</h2>
         <div class="dates">
-            {% for d, t, p, cls in dates %}
-            <div class="date-card {{ cls }}"><div class="d">{{ d }}{% if cls == 'now' %} <span class="badge badge-info">in force now</span>{% endif %}</div>
-                <div class="t">{{ t }}</div><p>{{ p }}</p></div>
+            {% for d, title_, p, cls in dates %}
+            <div class="date-card {{ cls }}"><div class="d">{{ d }}{% if cls == 'now' %} <span class="badge badge-info">{{ t('in force now', '现已适用') }}</span>{% endif %}</div>
+                <div class="t">{{ title_ }}</div><p>{{ p }}</p></div>
             {% endfor %}
         </div>
     </section>
 
     <section class="card">
-        <h2 class="card-title">Articles ↔ evidence required <span class="hint">rule of thumb: every applicable article → at least one evidence file</span></h2>
+        <h2 class="card-title">{{ t('Articles ↔ evidence required', '条款 ↔ 所需证据') }} <span class="hint">{{ t('every applicable article → at least one evidence file', '每个适用条款 → 至少一份证据') }}</span></h2>
         <div class="art-grid">
-            {% for a, t, p in article_map %}<div class="art-card"><b>{{ a }}</b><span class="t">{{ t }}</span><p>{{ p }}</p></div>{% endfor %}
+            {% for a, title_, p in article_map %}<div class="art-card"><b>{{ a }}</b><span class="t">{{ title_ }}</span><p>{{ p }}</p></div>{% endfor %}
         </div>
     </section>
 
     <div class="grid-2">
         <section class="card">
-            <h2 class="card-title">Regulation library <span class="hint">PPWR Knowledgebase folder</span></h2>
+            <h2 class="card-title">{{ t('Regulation library', '法规资料库') }} <span class="hint">PPWR Knowledgebase</span></h2>
             {% for f in folders %}
             <details class="fold" style="margin-bottom:10px" {{ 'open' if loop.first }}>
                 <summary>{{ f.label }} <span class="xs muted">· {{ f.files | length }}</span></summary>
@@ -35,37 +66,47 @@
                     {% endfor %}
                 </ul>
             </details>
-            {% else %}<p class="muted small">The knowledge-base folder is not available.</p>{% endfor %}
+            {% else %}<p class="muted small">{{ t('The knowledge-base folder is not available.', '知识库文件夹不可用。') }}</p>{% endfor %}
         </section>
         <section class="card">
-            <h2 class="card-title">Client template kit <span class="hint">manual collection · usable offline</span></h2>
+            <h2 class="card-title">{{ t('Client template kit', '客户模板包') }} <span class="hint">{{ t('manual collection · usable offline', '手工收集 · 可离线使用') }}</span></h2>
             <ul class="file-list">
                 {% for x in kit %}
                 <li><span class="file-ico">{{ x.ext }}</span><span class="file-meta"><b><a href="{{ x.href }}" target="_blank" rel="noopener">{{ x.name }}</a></b><small>{{ x.size | size }}</small></span></li>
                 {% endfor %}
             </ul>
-            <p class="xs muted">A filled <b>PPWR_BOM_V1.xlsx</b> can be read straight into a project (Packaging &amp; BOM tab); any project exports back to the BOM and
-                Evidence List formats. Note: the kit's guide images cite the draft numbering (Annex II / Art 45); the platform uses the adopted text —
-                TD per <b>Annex VII</b>, DoC per <b>Art 39 / Annex VIII</b>.</p>
+            <p class="xs muted">{{ t('A filled PPWR_BOM_V1.xlsx can be read straight into a project (Packaging & BOM tab), and any file set can be dropped on Smart import. The kit’s guide images cite the draft numbering (Annex II / Art 45); the platform uses the adopted text — TD per Annex VII, DoC per Art 39 / Annex VIII.',
+                '填好的 PPWR_BOM_V1.xlsx 可直接读入项目（包装与 BOM 页），任何文件集均可拖入智能导入。模板包中的指引图片沿用草案编号（Annex II / Art 45）；平台采用正式文本——技术文档依 Annex VII，DoC 依 Art 39 / Annex VIII。') }}</p>
         </section>
     </div>
 
     <section class="card">
-        <h2 class="card-title">Requirement catalogue <span class="hint">16 categories · 69 items → TD V1.5 sections</span></h2>
+        <h2 class="card-title">{{ t('Requirement catalogue', '要求目录') }} <span class="hint">{{ t('16 categories · 73 items → TD V1.5 sections · legal level · template', '16 类 · 73 项 → TD V1.5 章节 · 法律级别 · 模板') }}</span></h2>
         {% for c in cats %}
         <details class="fold" style="margin-bottom:8px">
-            <summary>{{ c.id }} · {{ c.name }} <span class="zh">{{ c.name_zh }}</span> <span class="xs muted">· {{ c.td }}</span></summary>
+            <summary>{{ c.id }} · {{ tf(c, 'name') }} <span class="xs muted">· {{ c.td }}</span></summary>
             <div class="fold-body">
-                <p class="xs muted" style="margin-top:0">{{ c.logic }}</p>
+                <p class="xs muted" style="margin-top:0">{{ tf(c, 'logic', true) }}</p>
                 <table class="data"><tbody>
-                    {% for it in items if it.cat == c.id %}
-                    <tr><td style="width:80px"><span class="chip-id">{{ it.id }}</span></td><td><b>{{ it.name }}</b><br><span class="xs muted">{{ it.requirement }}</span></td>
-                        <td class="xs" style="width:260px">{{ it.legal }}</td><td class="xs nowrap" style="width:120px">{{ it.td }}</td></tr>
+                    {% for it in items if it.cat == c.id %}{% set lv = levels[it.id] %}
+                    <tr><td style="width:80px"><span class="chip-id">{{ it.id }}</span></td><td><b>{{ tf(it, 'name') }}</b><br><span class="xs muted">{{ it.requirement }}</span></td>
+                        <td class="xs" style="width:120px"><span class="badge {{ 'badge-high' if lv[0] == 'required' else 'badge-info' if lv[0] == 'supporting' else 'badge-outline' }}">{{ t({'required': 'Required*', 'supporting': 'Recommended evidence', 'practice': 'Good practice'}[lv[0]], {'required': '法定*', 'supporting': '建议证据', 'practice': '良好实践'}[lv[0]]) }}</span></td>
+                        <td class="xs" style="width:240px">{{ it.legal }}</td><td class="xs nowrap" style="width:110px">{{ it.td }}</td>
+                        <td class="xs"><a href="/catalogue/{{ it.id }}/template.docx">{{ t('template', '模板') }}</a></td></tr>
                     {% endfor %}
                 </tbody></table>
             </div>
         </details>
         {% endfor %}
+        <p class="xs muted">* {{ t('Required when the article applies to the packaging and from its application date — the project’s Compliance guide shows the status for each packaging.', '在条款适用于该包装且自适用日期起为法定——各包装的状态见项目的“合规指引”。') }}</p>
     </section>
 </main>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelectorAll("[data-kind-filter] [data-kind]").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll("[data-kind-filter] .pill").forEach(x => x.classList.toggle("is-active", x === b));
+    document.querySelectorAll(".pool-entry").forEach(e => { e.hidden = !!b.dataset.kind && e.dataset.kind !== b.dataset.kind; });
+}));
+</script>
 {% endblock %}

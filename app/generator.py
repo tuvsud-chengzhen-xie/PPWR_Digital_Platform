@@ -289,7 +289,7 @@ def build_td(scope: Scope, number: str, version: int, status: str) -> Docx:
            [[r.article, r.status, r.applies_from, r.basis, r.evidence] for r in scope.matrix])
 
     art_sections = [
-        ("6 Article 5 — Substances of concern", ["C04-16", "C04-17", "C04-18"]),
+        ("6 Article 5 — Substances of concern", ["C04-16", "C04-17", "C04-18", "C04-70", "C04-71", "C04-72", "C04-73"]),
         ("7 Article 6 — Recyclability / design for recycling", ["C05-19", "C05-20", "C05-21"]),
         ("8 Article 7 — Recycled content", ["C06-22", "C06-23"]),
         ("9 Article 8 — Biobased feedstock", ["C07-24", "C07-25"]),

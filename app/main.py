@@ -14,9 +14,10 @@ from sqlalchemy.orm import Session
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.sessions import SessionMiddleware
 
-from . import auth, changes, config, seed
-from .db import Base, SessionLocal, User, engine, get_session, init_db
-from .routers import catalogue_views, dashboard, documents, evidence, projects, review, suppliers
+from . import auth, changes, config, monitor, rag, seed, workflow
+from .db import Base, Project, SessionLocal, User, engine, get_session, init_db
+from .routers import (catalogue_views, dashboard, documents, evidence, guide, imports, monitoring, projects, review,
+                      settings, suppliers)
 from .web import base_context, redirect, render
 
 
@@ -25,8 +26,13 @@ async def lifespan(_app: FastAPI):
     init_db()
     with SessionLocal() as session:
         seed.seed(session)
+        monitor.seed_updates(session)
+        for p in session.query(Project):   # catalogue grew (V4.2 Art 5 evidence items): top up existing projects
+            workflow.ensure_submissions(session, p)
         changes.scan_expiries(session)
+        monitor.scan(session, "Platform monitor (startup)")
         session.commit()
+    rag.CORPUS.start_background()
     yield
 
 
@@ -41,7 +47,8 @@ if config.KNOWLEDGE_DIR.exists():
 if config.TEMPLATE_KIT_DIR.exists():
     app.mount("/kit", StaticFiles(directory=str(config.TEMPLATE_KIT_DIR)), name="kit")
 
-for r in (dashboard, projects, review, evidence, documents, suppliers, catalogue_views):
+for r in (dashboard, projects, review, evidence, documents, suppliers, catalogue_views, guide, imports, monitoring,
+          settings):
     app.include_router(r.router)
 
 
@@ -90,6 +97,7 @@ def reset(request: Request, user: User = Depends(auth.require_expert)):
     init_db()
     with SessionLocal() as session:
         seed.seed(session)
+        monitor.seed_updates(session)
         session.commit()
     auth.logout_user(request)
     return redirect("/login", "Demo data restored — please sign in again.", "info")

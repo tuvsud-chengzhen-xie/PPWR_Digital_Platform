@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ tt('Regulatory updates', '法规动态') }}{% endblock %}
+{% block page %}
+<main class="page">
+    <div class="page-head"><div><span class="eyebrow">{{ t('Regulatory monitoring', '法规监控') }}</span><h1>{{ t('Regulatory updates', '法规动态') }}</h1></div>
+        <div style="display:flex;gap:8px">
+            <form method="post" action="/updates/ack-all"><button class="btn btn-sm">{{ t('Mark all read', '全部标为已读') }}</button></form>
+            {% if is_expert %}<button class="btn btn-sm ai-btn" data-ai-post="/updates/scan" data-ai-stages="Comparing the knowledge base · 比对知识库…|Reading new documents · 读取新文件…|Mapping articles and items · 映射条款与条目…|Assessing project impact · 评估项目影响…">{{ t('Scan for updates', '扫描更新') }}</button>{% endif %}
+        </div></div>
+    <p class="page-purpose">{{ t('Implementing and delegated acts, harmonised standards, Commission guidance and consultations that can change what your technical documentation must contain. Each update explains its impact and the evidence that changes; binding acts are marked as such.',
+        '可能改变技术文档内容的实施与授权法案、协调标准、委员会指南及征询意见。每条动态均说明影响及证据变化；具有约束力的法案会明确标注。') }}</p>
+
+    <div class="filterbar" style="margin-bottom:12px">
+        <a class="pill {{ 'is-active' if not kind and not unread }}" href="/updates">{{ t('All', '全部') }}</a>
+        <a class="pill {{ 'is-active' if unread }}" href="?unread=1">{{ t('Unread', '未读') }}</a>
+        {% for k, v in KIND.items() %}<a class="pill {{ 'is-active' if kind == k }}" href="?kind={{ k }}">{{ t(v[0], v[1]) }}</a>{% endfor %}
+    </div>
+
+    {% for u in rows %}{% set imp = impacts[u.id] %}
+    <a class="card update-card {{ 'is-unread' if u.id not in seen }}" href="/updates/{{ u.id }}">
+        <div class="update-head">
+            <span class="chip-id">{{ u.code }}</span>
+            <span class="badge {{ SEV[u.severity] }}">{{ t({'high': 'High impact', 'medium': 'Medium', 'info': 'Info'}[u.severity], {'high': '高影响', 'medium': '中', 'info': '信息'}[u.severity]) }}</span>
+            <span class="badge {{ 'badge-high' if u.binding else 'badge-outline' }}">{{ t('binding', '具约束力') if u.binding else t('not binding', '无约束力') }}</span>
+            <span class="badge badge-muted">{{ t(KIND[u.kind][0], KIND[u.kind][1]) }} · {{ t(STATUS[u.status][0], STATUS[u.status][1]) }}</span>
+            {% if not u.reviewed %}<span class="badge badge-warn">{{ t('auto-detected — expert review pending', '自动检测——待专家审核') }}</span>{% endif %}
+            {% if u.id not in seen %}<span class="badge badge-info">{{ t('new', '新') }}</span>{% endif %}
+            <span class="spacer"></span><span class="xs muted">{{ u.date_label or (u.published | day) }}</span>
+        </div>
+        <h3>{{ t(u.title, u.title_zh) }}</h3>
+        <p class="small">{{ tb(u.summary, u.summary_zh) }}</p>
+        <p class="small"><b>{{ t('Impact', '影响') }}:</b> {{ t(u.impact, u.impact_zh) }}</p>
+        <div class="xs muted">{% if u.items %}{{ t('Items', '条目') }}: {{ u.items | join(', ') }} · {% endif %}
+            {% if imp %}<b>{{ imp | length }} {{ t('of your projects affected', '个项目受影响') }}</b>{% else %}{{ t('no open impact on your projects', '对您的项目无待处理影响') }}{% endif %}</div>
+    </a>
+    {% else %}<div class="empty-state"><b>{{ t('No updates.', '暂无动态。') }}</b></div>{% endfor %}
+</main>
+{% endblock %}

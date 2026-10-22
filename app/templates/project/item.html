@@ -1,82 +1,187 @@
 {% extends "project/_layout.html" %}
-{% from "_macros.html" import status, verdict, octagon %}
-{% block crumb %}<span class="breadcrumb-sep">›</span><a href="/projects/{{ project.id }}/collect?unit={{ s.unit_id or 'project' }}">{{ s.unit.code if s.unit else 'Project-level' }}</a><span class="breadcrumb-sep">›</span><strong>{{ s.item_id }}</strong>{% endblock %}
+{% from "_macros.html" import status, verdict, octagon, level_badge, check_mark with context %}
+{% set g = ev.g %}{% set ob = ev.ob %}
+{% block crumb %}<span class="breadcrumb-sep">›</span><a href="/projects/{{ project.id }}/collect?unit={{ s.unit_id or 'project' }}">{{ s.unit.code if s.unit else t('Project-level', '项目级') }}</a><span class="breadcrumb-sep">›</span><strong>{{ s.item_id }}</strong>{% endblock %}
 {% block content %}
 <div class="layout-2col">
 <div class="layout-main">
     <section class="card">
         <div class="item-head">
             <div style="min-width:0">
-                <span class="eyebrow">Category {{ cat.id }} · {{ cat.name }} · {{ s.unit.code ~ ' ' ~ s.unit.name if s.unit else 'Project-level' }}</span>
-                <h1><span class="chip-id" style="font-size:13px;vertical-align:3px">{{ s.item_id }}</span> {{ it.name }}</h1>
-                <div class="muted small">{{ it.name_zh }} · {{ it.requirement }}</div>
+                <span class="eyebrow">{{ t('Category', '类别') }} {{ cat.id }} · {{ tf(cat, 'name') }} · {{ s.unit.code ~ ' ' ~ s.unit.name if s.unit else t('Project-level', '项目级') }}</span>
+                <h1><span class="chip-id" style="font-size:13px;vertical-align:3px">{{ s.item_id }}</span> {{ tf(it, 'name') }}</h1>
+                <div class="muted small">{{ tf(it, 'requirement') }}</div>
             </div>
-            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">{{ status(s.status) }} {{ verdict(s.ai_verdict) if s.status == 'ai_reviewed' }}</div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">{{ level_badge(ob.code, ob.applies_from) }} {{ status(s.status) }} {{ verdict(s.ai_verdict) if s.status == 'ai_reviewed' }}</div>
         </div>
 
         <div style="margin-top:12px">
         {% if s.status == 'rejected' %}
-        <div class="banner banner-error"><b>Sent back by {{ s.reviewed_by }}:</b>&nbsp;{{ s.review_comment }}</div>
+        <div class="banner banner-error"><b>{{ t('Sent back by', '退回人') }} {{ s.reviewed_by }}:</b>&nbsp;{{ s.review_comment }}</div>
         {% endif %}
         {% if s.reopened_reason and s.status not in ('approved', 'na') %}
-        <div class="banner banner-warn"><b>Re-opened:</b>&nbsp;{{ s.reopened_reason }}</div>
+        <div class="banner banner-warn"><b>{{ t('Re-opened', '已重新打开') }}:</b>&nbsp;{{ s.reopened_reason }}</div>
         {% endif %}
         {% if s.status == 'na' %}
-        <div class="banner banner-info"><b>Not applicable.</b>&nbsp;{{ s.na_reason }}{% if s.na_auto %} <span class="xs">(set by the applicability matrix — change the project profile if this is wrong)</span>{% endif %}</div>
+        <div class="banner banner-info"><b>{{ t('Not applicable.', '不适用。') }}</b>&nbsp;{{ s.na_reason }}{% if s.na_auto %} <span class="xs">({{ t('set by the applicability matrix — change the project profile if this is wrong', '由适用性矩阵设定——如有误请修改项目概况') }})</span>{% endif %}</div>
         {% elif s.na_requested and s.status in ('submitted', 'ai_reviewed') %}
-        <div class="banner banner-info"><b>N/A requested:</b>&nbsp;{{ s.na_reason }}</div>
+        <div class="banner banner-info"><b>{{ t('N/A requested', '已申请不适用') }}:</b>&nbsp;{{ s.na_reason }}</div>
         {% endif %}
         {% if s.status == 'approved' %}
-        <div class="banner banner-ok"><b>Approved</b>&nbsp;by {{ s.reviewed_by }} · {{ s.reviewed_at | date }}{% if s.review_comment %} — {{ s.review_comment }}{% endif %}</div>
+        <div class="banner banner-ok"><b>{{ t('Approved', '已批准') }}</b>&nbsp;{{ t('by', '审批人') }} {{ s.reviewed_by }} · {{ s.reviewed_at | date }}{% if s.review_comment %} — {{ s.review_comment }}{% endif %}</div>
         {% endif %}
         {% if art_status != 'Applicable' and s.status != 'na' %}
-        <div class="banner banner-warn">Article status: <b>&nbsp;{{ art_status }}</b>. {{ art_basis }}</div>
+        <div class="banner banner-warn">{{ t('Article status', '条款状态') }}: <b>&nbsp;{{ art_status }}</b>. {{ art_basis }}</div>
         {% endif %}
         </div>
 
+        <p class="plain-summary">{{ tp(g.summary) }}</p>
         <div class="why">
             <dl>
-                <dt>Legal basis</dt><dd>{{ it.legal }}</dd>
-                <dt>Why it is needed</dt><dd>{{ it.logic }}</dd>
-                <dt>Feeds</dt><dd>{{ it.td }}{% if it.scope == 'project' %} · collected once per project{% endif %}</dd>
-                <dt>Typical form</dt><dd>{{ it.form_zh }} · evidence type <span class="chip-id">{{ it.evidence_code }}</span> {{ EVIDENCE_TYPES[it.evidence_code] }}</dd>
+                <dt>{{ t('Legal basis', '法规依据') }}</dt><dd>{{ it.legal }}</dd>
+                <dt>{{ t('Why it is needed', '为何需要') }}</dt><dd>{{ tf(it, 'logic', true) }}</dd>
+                <dt>{{ t('Feeds', '对应 TD') }}</dt><dd>{{ it.td }}{% if it.scope == 'project' %} · {{ t('collected once per project', '每个项目收集一次') }}{% endif %}</dd>
+                <dt>{{ t('Typical form', '常见形式') }}</dt><dd>{{ it.form_zh }} · {{ t('evidence type', '证据类型') }} <span class="chip-id">{{ it.evidence_code }}</span> {{ tp(g.profile.name) }}</dd>
             </dl>
         </div>
-        {% if it.example %}<p class="example" style="margin:10px 0 0"><b>What good looks like:</b> {{ it.example }}</p>{% endif %}
+    </section>
+
+    {# ------------------------------------------------------------------ evidence requirements #}
+    <section class="card req-card" id="requirements">
+        <div class="card-head">
+            <h2 class="card-title">{{ t('Evidence requirements', '证据要求') }} <span class="hint">{{ t('live — updates as you fill in and upload', '实时——随填写和上传更新') }}</span></h2>
+            {% if ob.code != 'not_required' and ev.minimum %}<div class="progress-cell" style="min-width:150px"><div class="bar {{ 'is-done' if ev.ready_pct >= 100 }}"><span style="width: {{ ev.ready_pct }}%"></span></div><b>{{ ev.ready_pct }}%</b></div>{% endif %}
+        </div>
+        <div class="obligation ob-{{ ob.code }}">
+            <div>{{ level_badge(ob.code, ob.applies_from) }}</div>
+            <div class="small">
+                {% if ob.code == 'not_required' %}{{ t('This item is not required for this packaging.', '本包装不需要此项。') }} {{ ob.art_basis }}
+                {% else %}<b>{{ t('Why', '依据') }}:</b> {{ t(ob.why, ob.why_zh) }}{% endif %}
+                {% for n in ob.notes %}<br>{{ t(n[0], n[1]) }}{% endfor %}
+                {% if ob.due %}<br><b>{{ t('Due', '截止') }}:</b> {{ ob.due | day }}
+                    {% if ob.overdue %}<span class="badge badge-high">{{ t('overdue', '已逾期') }}</span>{% elif ob.days_left is not none %}<span class="xs muted">· {{ ob.days_left }} {{ t('days', '天') }}</span>{% endif %}
+                    {% if ob.code == 'mandatory_now' %}<span class="xs muted">({{ t('project target date', '项目目标日期') }})</span>{% endif %}
+                {% elif ob.code == 'mandatory_now' %}<br><b>{{ t('Due', '截止') }}:</b> {{ t('before the packaging is placed on the market', '包装投放市场前') }}{% endif %}
+            </div>
+        </div>
+        {% if ob.code != 'not_required' %}
+        <div class="req-grid">
+            <div>
+                <h3 class="req-h">{{ t('Minimum evidence to demonstrate compliance', '证明符合所需的最低证据') }}</h3>
+                <ul class="ai-checks" id="minList">
+                    {% for m in ev.minimum %}<li>{{ check_mark(m.ok) }}<span>{{ t(m.en, m.zh) }}{% if m.ok is none %}<span class="ai-msg">{{ t('verified by the expert', '由专家核实') }}</span>{% endif %}</span></li>
+                    {% else %}<li class="muted small">{{ t('Assembled by the platform — nothing to upload.', '由平台自动生成——无需上传。') }}</li>{% endfor %}
+                </ul>
+                {% if ev.gaps %}
+                <div class="gap-box">
+                    <b>{{ t('Missing before submission', '提交前仍缺少') }} ({{ ev.gaps | length }})</b>
+                    <ul>{% for gp in ev.gaps %}<li>{{ t(gp.en, gp.zh) }}</li>{% endfor %}</ul>
+                </div>
+                {% elif ev.minimum %}<div class="banner banner-ok small">{{ t('Minimum evidence complete — ready to submit.', '最低证据已齐全——可以提交。') }}</div>{% endif %}
+            </div>
+            <div>
+                <h3 class="req-h">{{ t('Recommended — not legally required', '建议——非法定要求') }}</h3>
+                <ul class="rec-list">
+                    {% for r in g.recommended %}<li>{{ t(r[0], r[1]) }}</li>{% else %}<li class="muted">{{ t('No additional recommendations.', '无其他建议。') }}</li>{% endfor %}
+                </ul>
+                <p class="xs muted" style="margin:6px 0 0">{{ t('Only the lines on the left are needed to demonstrate compliance; recommendations reduce rework and authority questions.', '仅左侧条目为证明符合所必需；建议项可减少返工和主管机关问询。') }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    {# ------------------------------------------------------------------ guidance #}
+    <section class="card guide-card" id="guide">
+        <div class="card-head"><h2 class="card-title">{{ t('How to complete this item', '如何完成本项') }} <span class="hint">{{ t('plain-language guidance', '通俗指引') }}{% if not g.detailed %} · {{ t('generic profile for this evidence type', '该证据类型的通用指引') }}{% endif %}</span></h2></div>
+
+        <details class="fold" open>
+            <summary>① {{ t('Regulatory description, key terms and logic', '法规说明、关键术语与逻辑分析') }}</summary>
+            <div class="fold-body">
+                <ol class="logic-chain">{% for l in g.logic %}<li>{{ tp(l) }}</li>{% endfor %}</ol>
+                {% if g.terms %}<dl class="terms">{% for term in g.terms %}<dt>{{ t(term[0], term[1]) }}</dt><dd>{{ tb(term[2], term[3]) }}</dd>{% endfor %}</dl>{% endif %}
+            </div>
+        </details>
+        <details class="fold">
+            <summary>② {{ t('What information and documents are expected', '需要哪些信息与文件') }}</summary>
+            <div class="fold-body">
+                <ul>{% for x in g.info %}<li>{{ tp(x) }}</li>{% endfor %}</ul>
+                <p class="small"><b>{{ t('Document type', '文件类型') }}:</b> <span class="chip-id">{{ it.evidence_code }}</span> {{ tp(g.profile.name) }} · <b>{{ t('Accepted formats', '接受格式') }}:</b> {{ g.formats | join(', ') | upper }}</p>
+                {% if g.profile.content %}<p class="small" style="margin-bottom:4px"><b>{{ t('The document should show', '文件应包含') }}:</b></p><ul class="small">{% for x in g.profile.content %}<li>{{ tp(x) }}</li>{% endfor %}</ul>{% endif %}
+                <p class="small" style="margin-bottom:4px"><b>{{ t('Acceptance criteria', '验收标准') }}:</b></p>
+                <ul class="small">{% for x in g.acceptance %}<li>{{ tp(x) }}</li>{% endfor %}</ul>
+            </div>
+        </details>
+        <details class="fold">
+            <summary>③ {{ t('Step by step, with examples', '分步说明与示例') }}</summary>
+            <div class="fold-body">
+                <ol class="steps">{% for st in g.steps %}<li>{{ tp(st) }}</li>{% endfor %}</ol>
+                {% if g.good %}<div class="example-good"><b>✓ {{ t('Acceptable submission', '合格示例') }}</b>{% for x in g.good %}<p>{{ tp(x) }}</p>{% endfor %}</div>{% endif %}
+                {% if g.bad %}<div class="example-bad"><b>✗ {{ t('Typical reasons for rejection', '常见退回原因') }}</b><ul>{% for x in g.bad %}<li>{{ tp(x) }}</li>{% endfor %}</ul></div>{% endif %}
+            </div>
+        </details>
+        <details class="fold">
+            <summary>④ {{ t('Samples, template and validation rules', '样本、模板与校验规则') }}</summary>
+            <div class="fold-body">
+                {% if it.sample_html %}<div class="sample-box">{{ it.sample_html | safe }}</div>{% elif cat.sample_html %}<div class="sample-box">{{ cat.sample_html | safe }}</div>{% endif %}
+                <p><a class="btn btn-sm" href="/projects/{{ project.id }}/items/{{ s.id }}/template.docx">⬇ {{ t('Download fill-in template (Word)', '下载填写模板（Word）') }}</a>
+                   <a class="btn btn-sm btn-ghost" href="/kit/PPWR_Evidence_List_V1.xlsx">{{ t('Evidence list template', '证据清单模板') }}</a></p>
+                <p class="small" style="margin-bottom:4px"><b>{{ t('Validation rules the platform applies', '平台执行的校验规则') }}:</b></p>
+                <ul class="small">
+                    {% for m in ev.minimum %}<li>{{ t(m.en, m.zh) }}</li>{% endfor %}
+                    {% for k, r in g.fields.items() if r.pattern %}<li>{{ t('Format of', '格式') }} “{{ k }}”: {{ t(r.msg[0], r.msg[1]) }} <span class="xs muted">({{ t('e.g.', '例') }} {{ r.ph }})</span></li>{% endfor %}
+                    <li>{{ t('File formats', '文件格式') }}: {{ g.formats | join(', ') | upper }} · {{ t('max', '最大') }} 25 MB</li>
+                    <li>{{ t('AI pre-review rules (completeness, limits, BOM and profile consistency, report age, supplier certificates) — see the AI pre-review panel.', 'AI 初审规则（完整性、限值、BOM 与概况一致性、报告时效、供应商证书）——见 AI 初审面板。') }}</li>
+                </ul>
+            </div>
+        </details>
+        <details class="fold">
+            <summary>⑤ {{ t('Regulatory sources', '法规来源') }} <span class="xs muted">· {{ ev.kb | length }}</span></summary>
+            <div class="fold-body">
+                <ul class="kb-list">{% for e in ev.kb %}
+                    <li><span class="badge {{ 'badge-high' if e.binding else 'badge-outline' }}">{{ t(KB_KINDS[e.kind][0], KB_KINDS[e.kind][1]) }}</span>
+                        <b>{{ t(e.title, e.title_zh) }}</b> <span class="xs muted">{{ e.ref }}{% if kb_href(e) %} · <a href="{{ kb_href(e) }}" target="_blank" rel="noopener">{{ t('open source', '查看原文') }}{% if e.page %} p.{{ e.page }}{% endif %}</a>{% endif %}</span>
+                        <div class="small">{{ tb(e.text, e.text_zh) }}</div></li>
+                {% else %}<li class="muted small">{{ t('No curated source for this item.', '本项暂无精选来源。') }}</li>{% endfor %}</ul>
+            </div>
+        </details>
     </section>
 
     {% if it.system %}
     <section class="card">
-        <h2 class="card-title">Assembled by the platform</h2>
+        <h2 class="card-title">{{ t('Assembled by the platform', '由平台自动生成') }}</h2>
         <p class="small">{{ it.system }}</p>
         {% if s.item_id == 'C02-06' %}
         <table class="data">
-            <thead><tr><th>Component</th><th>Material</th><th class="num">Mass g</th><th>Supplier</th></tr></thead>
+            <thead><tr><th>{{ t('Component', '组件') }}</th><th>{{ t('Material', '材料') }}</th><th class="num">{{ t('Mass g', '质量 g') }}</th><th>{{ t('Supplier', '供应商') }}</th></tr></thead>
             <tbody>{% for c in comps %}<tr><td><span class="chip-id">{{ c.code }}</span></td><td>{{ c.material or '—' }}</td><td class="num">{{ c.mass_g | num }}</td><td class="xs">{{ c.supplier.name if c.supplier else '—' }}</td></tr>
-            {% else %}<tr><td colspan="4" class="muted">No components yet.</td></tr>{% endfor %}</tbody>
+            {% else %}<tr><td colspan="4" class="muted">{{ t('No components yet.', '尚无组件。') }}</td></tr>{% endfor %}</tbody>
         </table>
-        <a class="btn btn-sm" style="margin-top:10px" href="/projects/{{ project.id }}/packaging?unit={{ s.unit_id }}">Edit the BOM →</a>
+        <a class="btn btn-sm" style="margin-top:10px" href="/projects/{{ project.id }}/packaging?unit={{ s.unit_id }}">{{ t('Edit the BOM', '编辑 BOM') }} →</a>
         {% elif s.item_id == 'C16-68' %}
         <table class="data"><tbody>{% for r in matrix %}<tr><td>{{ r.article }}</td><td><span class="badge {{ r.badge }}">{{ r.status }}</span></td><td class="xs">{{ r.basis }}</td></tr>{% endfor %}</tbody></table>
         {% elif s.item_id == 'C14-55' %}
-        <a class="btn btn-sm" href="/projects/{{ project.id }}/evidence">Open the evidence register ({{ project.evidence | length }} files) →</a>
+        <a class="btn btn-sm" href="/projects/{{ project.id }}/evidence">{{ t('Open the evidence register', '打开证据登记表') }} ({{ project.evidence | length }}) →</a>
         {% endif %}
     </section>
     {% else %}
-    <section class="card">
+    <section class="card" id="entry">
         <div class="card-head">
-            <h2 class="card-title">Your entry</h2>
-            {% if locked %}<span class="badge badge-muted">locked after approval</span>{% endif %}
+            <h2 class="card-title">{{ t('Your entry', '您的填写') }}</h2>
+            {% if locked %}<span class="badge badge-muted">{{ t('locked after approval', '批准后锁定') }}</span>{% endif %}
         </div>
-        <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/save" id="itemForm">
+        <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/save" id="itemForm"
+              data-precheck="/projects/{{ project.id }}/items/{{ s.id }}/precheck" data-lang="{{ lang }}">
             <fieldset {{ 'disabled' if locked }} style="border:0;padding:0;margin:0">
-            {% for f in it.fields %}
-            <label class="field" style="margin-bottom:10px"><span class="field-label">{{ f.label }}</span>
-                {% if f.type == 'ta' %}<textarea name="f_{{ f.k }}">{{ s.data.get(f.k, '') }}</textarea>
-                {% elif f.type == 'sel' %}<select name="f_{{ f.k }}"><option value="">— select —</option>
-                    {% for o in f.options %}<option {{ 'selected' if s.data.get(f.k) == o }}>{{ o }}</option>{% endfor %}</select>
-                {% else %}<input name="f_{{ f.k }}" value="{{ s.data.get(f.k, '') }}" {{ 'readonly' if s.item_id.startswith('C01-') }}>{% endif %}
-                {% if s.item_id.startswith('C01-') %}<span class="field-help">From the packaging register — edit it on the <a href="/projects/{{ project.id }}/packaging?unit={{ s.unit_id }}&edit={{ s.unit_id }}#unit-form">Packaging &amp; BOM</a> tab.</span>{% endif %}
+            {% for f in it.fields %}{% set fh = g.fields.get(f.k, {}) %}
+            <label class="field" style="margin-bottom:10px"><span class="field-label">{{ t(f.label, f.label_zh) }}</span>
+                {% if f.type == 'ta' %}<textarea name="f_{{ f.k }}" placeholder="{{ fh.ph or '' }}">{{ s.data.get(f.k, '') }}</textarea>
+                {% elif f.type == 'sel' %}<select name="f_{{ f.k }}"><option value="">— {{ tt('select', '请选择') }} —</option>
+                    {% for o in f.options %}<option value="{{ o }}" {{ 'selected' if s.data.get(f.k) == o }}>{{ tt(o, f.options_zh[loop.index0] if f.options_zh and f.options_zh | length > loop.index0 else '') }}</option>{% endfor %}</select>
+                {% else %}<input name="f_{{ f.k }}" value="{{ s.data.get(f.k, '') }}" placeholder="{{ fh.ph or '' }}" {{ 'readonly' if s.item_id.startswith('C01-') }}
+                    {% if fh.pattern %}data-pattern="{{ fh.pattern }}" data-pattern-msg="{{ tt(fh.msg[0], fh.msg[1]) }}"{% endif %}>{% endif %}
+                {% if fh.help %}<span class="field-help">{{ t(fh.help[0], fh.help[1]) }}</span>{% endif %}
+                <span class="field-help field-error" hidden></span>
+                {% if s.item_id.startswith('C01-') %}<span class="field-help">{{ t('From the packaging register — edit it on the', '来自包装登记表——请在') }} <a href="/projects/{{ project.id }}/packaging?unit={{ s.unit_id }}&edit={{ s.unit_id }}#unit-form">{{ t('Packaging & BOM', '包装与 BOM') }}</a> {{ t('tab.', '页编辑。') }}</span>{% endif %}
             </label>
             {% endfor %}
             {% if it.table %}
@@ -85,38 +190,40 @@
                 <thead><tr>{% for c in it.table %}<th>{{ c }}</th>{% endfor %}</tr></thead>
                 <tbody id="tblBody">{% for row in table %}{% set r = loop.index0 %}<tr>{% for c in it.table %}<td><input name="t_{{ r }}_{{ loop.index0 }}" value="{{ row[loop.index0] if row | length > loop.index0 else '' }}"></td>{% endfor %}</tr>{% endfor %}</tbody>
             </table></div>
-            <button type="button" class="btn btn-sm" style="margin-top:6px" data-add-row="tblBody" data-cols="{{ it.table | length }}">+ Row</button>
+            <button type="button" class="btn btn-sm" style="margin-top:6px" data-add-row="tblBody" data-cols="{{ it.table | length }}">+ {{ t('Row', '行') }}</button>
             {% endif %}
             {% if not it.fields and not it.table %}
-            <p class="small muted" style="margin:0">This item is evidenced by files — upload them below, then submit.</p>
+            <p class="small muted" style="margin:0">{{ t('This item is evidenced by files — upload them below, then submit.', '本项以文件为证据——请在下方上传后提交。') }}</p>
             {% endif %}
             </fieldset>
             {% if not locked %}
             <input type="hidden" name="next_id" value="{{ next_open.id if next_open else '' }}">
             <div class="form-actions">
-                <button class="btn btn-primary" name="action" value="submit">Submit for review</button>
-                {% if next_open %}<button class="btn" name="action" value="submit" onclick="this.form.then.value='next'">Submit &amp; next open item →</button>{% endif %}
+                <button type="button" class="btn ai-btn" data-precheck-run>{{ octagon(14) }} {{ t('Check my entry', '检查我的填写') }}</button>
+                <button class="btn btn-primary" name="action" value="submit">{{ t('Submit for review', '提交审核') }}</button>
+                {% if next_open %}<button class="btn" name="action" value="submit" onclick="this.form.then.value='next'">{{ t('Submit & next open item', '提交并转到下一项') }} →</button>{% endif %}
                 <input type="hidden" name="then" value="">
-                <button class="btn btn-ghost" name="action" value="save">Save draft</button>
+                <button class="btn btn-ghost" name="action" value="save">{{ t('Save draft', '保存草稿') }}</button>
             </div>
+            <div id="precheckResult" class="precheck" hidden></div>
             {% endif %}
         </form>
         {% if not locked and s.status != 'na' %}
         <details class="fold" style="margin-top:12px">
-            <summary>Not applicable to this packaging?</summary>
+            <summary>{{ t('Not applicable to this packaging?', '不适用于本包装？') }}</summary>
             <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/na" class="fold-body">
-                <label class="field"><span class="field-label">Reason (quoted in TD §5 / §19)</span>
-                    <textarea name="reason" required minlength="10" placeholder="e.g. Art 7 applies to the plastic part of packaging only; this unit contains no plastic.">{{ s.na_reason }}</textarea></label>
-                <div class="form-actions"><button class="btn btn-sm">{{ 'Mark N/A' if is_expert else 'Request N/A' }}</button></div>
+                <label class="field"><span class="field-label">{{ t('Reason (quoted in TD §5 / §19)', '理由（将引用于 TD §5 / §19）') }}</span>
+                    <textarea name="reason" required minlength="10" placeholder="{{ tt('e.g. Art 7 applies to the plastic part of packaging only; this unit contains no plastic.', '例：Art 7 仅适用于包装的塑料部分；本单元不含塑料。') }}">{{ s.na_reason }}</textarea></label>
+                <div class="form-actions"><button class="btn btn-sm">{{ t('Mark N/A', '标记不适用') if is_expert else t('Request N/A', '申请不适用') }}</button></div>
             </form>
         </details>
         {% endif %}
     </section>
     {% endif %}
 
-    <section class="card">
+    <section class="card" id="evidence">
         <div class="card-head">
-            <h2 class="card-title">Evidence <span class="hint">{{ evidence | length }} file{{ 's' if evidence | length != 1 }} · IDs follow PU-xxx-Cxxx-TYPE-nnn</span></h2>
+            <h2 class="card-title">{{ t('Evidence', '证据文件') }} <span class="hint">{{ evidence | length }} · {{ t('IDs follow PU-xxx-Cxxx-TYPE-nnn', '编号规则 PU-xxx-Cxxx-TYPE-nnn') }}</span></h2>
         </div>
         {% if evidence %}
         <ul class="file-list">
@@ -125,7 +232,7 @@
                 <span class="file-meta"><b><a href="/evidence/{{ e.id }}/download">{{ e.title }}</a></b>
                     <small><span class="chip-id">{{ e.code }}</span> · {{ EVIDENCE_TYPES.get(e.type_code, e.type_code) }}{{ ' · ' ~ e.file_no if e.file_no }}{{ ' · ' ~ e.issuer if e.issuer }} · {{ e.issued_date | day }} · {{ e.size | size }}</small></span>
                 {% if e.conformity and e.conformity.lower().startswith('non') %}<span class="badge badge-high">non-conform</span>{% endif %}
-                {% if not locked %}<form method="post" action="/evidence/{{ e.id }}/delete" data-confirm="Remove {{ e.code }}?"><input type="hidden" name="back" value="/projects/{{ project.id }}/items/{{ s.id }}"><button class="linkbtn danger xs">remove</button></form>{% endif %}
+                {% if not locked %}<form method="post" action="/evidence/{{ e.id }}/delete" data-confirm="Remove {{ e.code }}?"><input type="hidden" name="back" value="/projects/{{ project.id }}/items/{{ s.id }}"><button class="linkbtn danger xs">{{ t('remove', '删除') }}</button></form>{% endif %}
             </li>
             {% endfor %}
         </ul>
@@ -133,80 +240,96 @@
         {% if not locked %}
         <form method="post" action="/projects/{{ project.id }}/evidence" enctype="multipart/form-data" style="margin-top:10px">
             <input type="hidden" name="sub_id" value="{{ s.id }}">
-            <input type="hidden" name="back" value="/projects/{{ project.id }}/items/{{ s.id }}">
-            <label class="upload" style="display:block;cursor:pointer">
+            <input type="hidden" name="back" value="/projects/{{ project.id }}/items/{{ s.id }}#evidence">
+            <label class="upload" style="display:block;cursor:pointer" data-accept="{{ g.formats | join(',') }}" data-accept-msg="{{ tt('Unusual format for this item. Expected', '该项文件格式不常见，预期') }}">
                 <input type="file" name="file" hidden>
-                <span class="small"><b data-file-label>Drop a file here or click to choose</b> <span class="muted">· PDF, image, Office, DWG · max 25 MB</span></span>
+                <span class="small"><b data-file-label>{{ t('Drop a file here or click to choose', '拖入文件或点击选择') }}</b> <span class="muted">· {{ g.formats | join(', ') | upper }} · max 25 MB</span></span>
             </label>
             <div class="form-row" style="margin-top:10px">
-                <label class="field" style="grid-column: span 2"><span class="field-label">Title</span><input name="title" placeholder="e.g. Heavy-metal test report"></label>
-                <label class="field"><span class="field-label">Type</span><select name="type_code">{% for k, v in EVIDENCE_TYPES.items() %}<option value="{{ k }}" {{ 'selected' if k == it.evidence_code }}>{{ k }} · {{ v }}</option>{% endfor %}</select></label>
-                <label class="field"><span class="field-label">Component</span><select name="component_id"><option value="">whole unit</option>{% for c in comps %}<option value="{{ c.id }}">{{ c.code }} {{ c.material }}</option>{% endfor %}</select></label>
+                <label class="field" style="grid-column: span 2"><span class="field-label">{{ t('Title', '标题') }}</span><input name="title" placeholder="{{ tt('e.g.', '例：') }} {{ it.name }}"></label>
+                <label class="field"><span class="field-label">{{ t('Type', '类型') }}</span><select name="type_code">{% for k, v in EVIDENCE_TYPES.items() %}<option value="{{ k }}" {{ 'selected' if k == it.evidence_code }}>{{ k }} · {{ v }}</option>{% endfor %}</select></label>
+                <label class="field"><span class="field-label">{{ t('Component', '组件') }}</span><select name="component_id"><option value="">{{ tt('whole unit', '整个单元') }}</option>{% for c in comps %}<option value="{{ c.id }}">{{ c.code }} {{ c.material }}</option>{% endfor %}</select></label>
             </div>
             <div class="form-row">
-                <label class="field"><span class="field-label">Document / report no.</span><input name="file_no"></label>
-                <label class="field"><span class="field-label">Issued by</span><input name="issuer"></label>
-                <label class="field"><span class="field-label">Issue date</span><input type="date" name="issued_date"></label>
-                <label class="field"><span class="field-label">Conformity</span><select name="conformity"><option>Conform</option><option>Non-conform</option><option>Not stated</option></select></label>
+                <label class="field"><span class="field-label">{{ t('Document / report no.', '文件 / 报告编号') }}</span><input name="file_no"></label>
+                <label class="field"><span class="field-label">{{ t('Issued by', '签发方') }}</span><input name="issuer"></label>
+                <label class="field"><span class="field-label">{{ t('Issue date', '签发日期') }}</span><input type="date" name="issued_date"></label>
+                <label class="field"><span class="field-label">{{ t('Conformity', '符合性') }}</span><select name="conformity"><option>Conform</option><option>Non-conform</option><option>Not stated</option></select></label>
             </div>
-            <button class="btn btn-sm">Upload to the vault</button>
+            <button class="btn btn-sm">{{ t('Upload to the vault', '上传至证据库') }}</button>
+            <span class="xs muted">{{ t('The AI checks whether the file looks like this item and warns if not.', 'AI 会检查文件是否与本项相符，不符时提醒。') }}</span>
         </form>
         {% endif %}
     </section>
 </div>
 
 <aside class="layout-rail">
+    <div class="rail-card ai-assist">
+        <header class="rail-card-head ai-card-title">{{ octagon(18) }}<span class="rail-card-eyebrow">{{ t('AI guidance', 'AI 指引') }}</span></header>
+        {% if ev.hints %}
+        <ul class="hint-list">{% for h in ev.hints %}<li class="hint-{{ h.kind }}">{{ t(h.en, h.zh) }}</li>{% endfor %}</ul>
+        {% else %}<p class="small muted" style="margin:0 0 8px">{{ t('No alerts for this item right now.', '本项目前没有提醒。') }}</p>{% endif %}
+        <form class="ask" data-ask="/assistant/ask">
+            <input type="hidden" name="pid" value="{{ project.id }}"><input type="hidden" name="sid" value="{{ s.id }}">
+            <label class="field"><span class="field-label">{{ t('Ask about this item', '就本项提问') }}</span>
+                <textarea name="q" rows="2" placeholder="{{ tt('e.g. Is a supplier declaration enough?', '例：供应商声明是否足够？') }}"></textarea></label>
+            <div class="sugg">{% for q in suggestions %}<button type="button" class="pill" data-q="{{ tt(q[0], q[1]) if lang != 'zh' else q[1] }}">{{ t(q[0], q[1]) }}</button>{% endfor %}</div>
+            <button class="btn btn-sm ai-btn">{{ t('Ask', '提问') }}</button>
+            <div class="ask-out" hidden></div>
+        </form>
+        <p class="xs muted" style="margin:8px 0 0">{{ t('Answers come only from the PPWR knowledge base and cite their sources. Advisory — the expert decides.', '回答仅来自 PPWR 知识库并注明来源。仅供参考——由专家决定。') }}</p>
+    </div>
+
     <div class="rail-card">
-        <header class="rail-card-head ai-card-title">{{ octagon(18) }}<span class="rail-card-eyebrow">AI pre-review</span></header>
+        <header class="rail-card-head ai-card-title">{{ octagon(18) }}<span class="rail-card-eyebrow">{{ t('AI pre-review', 'AI 初审') }}</span></header>
         {% if s.ai_checks %}
         <div style="margin-bottom:6px">{{ verdict(s.ai_verdict) }} <span class="xs muted">· {{ s.ai_at | date }}</span></div>
         <ul class="ai-checks">
             {% for c in s.ai_checks %}
-            <li><span class="ai-mark {{ 'ok' if c.ok == true else 'no' if c.ok == false else 'maybe' }}">{{ '✓' if c.ok == true else '!' if c.ok == false else '?' }}</span>
-                <span>{{ c.desc }}{% if c.msg %}<span class="ai-msg">{{ c.msg }}</span>{% endif %}{% if c.ref %}<span class="ai-ref">{{ c.ref }}</span>{% endif %}</span></li>
+            <li>{{ check_mark(c.ok) }}
+                <span>{{ t(c.desc, c.desc_zh) }}{% if c.msg %}<span class="ai-msg">{{ t(c.msg, c.msg_zh) }}</span>{% endif %}{% if c.ref %}<span class="ai-ref">{{ c.ref }}</span>{% endif %}</span></li>
             {% endfor %}
         </ul>
         {% elif s.status == 'submitted' %}
-        <p class="small muted" style="margin:0 0 8px">Submitted {{ s.submitted_at | ago }} by {{ s.submitted_by }} — waiting for the AI pre-review.</p>
+        <p class="small muted" style="margin:0 0 8px">{{ t('Submitted', '已提交') }} {{ s.submitted_at | ago }} · {{ s.submitted_by }} — {{ t('waiting for the AI pre-review.', '等待 AI 初审。') }}</p>
         {% else %}
-        <p class="small muted" style="margin:0">Runs when the item is submitted: completeness, limit values, consistency with the
-            project profile and BOM, evidence age and supplier certificates — each check cites its source.</p>
+        <p class="small muted" style="margin:0">{{ t('Runs when the item is submitted: completeness, limit values, consistency with the project profile and BOM, evidence age and supplier certificates — each check cites its source.', '提交后运行：完整性、限值、与项目概况和 BOM 的一致性、证据时效及供应商证书——每项检查均注明依据。') }}</p>
         {% endif %}
         {% if s.status in ('submitted', 'ai_reviewed') %}
         <button class="btn btn-sm" id="aiRun" style="margin-top:8px" data-ai-post="/projects/{{ project.id }}/items/{{ s.id }}/ai"
-                data-ai-stages="Reading the submission…|Checking against PPWR (EU) 2025/40…|Tracing supplier certificates…|Writing the pre-review…">{{ 'Re-run' if s.ai_checks else 'Run' }} AI pre-review</button>
+                data-ai-stages="Reading the submission · 读取提交…|Retrieving PPWR sources · 检索法规来源…|Tracing supplier certificates · 追溯供应商证书…|Writing the pre-review · 生成初审…">{{ t('Re-run', '重新运行') if s.ai_checks else t('Run', '运行') }} {{ t('AI pre-review', 'AI 初审') }}</button>
         {% endif %}
-        <p class="xs muted" style="margin:8px 0 0">Advisory only — the TÜV SÜD expert decides.</p>
+        <p class="xs muted" style="margin:8px 0 0">{{ t('Advisory only — the TÜV SÜD expert decides.', '仅供参考——由 TÜV SÜD 专家决定。') }}</p>
     </div>
 
     {% if is_expert %}
     <div class="rail-card">
-        <header class="rail-card-head"><span class="rail-card-eyebrow">Expert decision</span></header>
+        <header class="rail-card-head"><span class="rail-card-eyebrow">{{ t('Expert decision', '专家决定') }}</span></header>
         {% if s.status in ('submitted', 'ai_reviewed', 'pending', 'rejected') and not it.system %}
         <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/decide" class="decision">
-            <label class="field"><span class="field-label">Comment {{ '(required to reject)' }}</span><textarea name="comment" placeholder="What the client should fix, or a note for the file"></textarea></label>
+            <label class="field"><span class="field-label">{{ t('Comment (required to reject)', '意见（退回时必填）') }}</span><textarea name="comment" placeholder="{{ tt('What the client should fix, or a note for the file', '客户须修正的内容，或备注') }}"></textarea></label>
             <div style="display:flex;gap:6px;flex-wrap:wrap">
-                <button class="btn btn-success btn-sm" name="decision" value="approve">{{ 'Confirm N/A' if s.na_requested else 'Approve' }}</button>
-                <button class="btn btn-danger btn-sm" name="decision" value="reject">Reject</button>
-                <button class="btn btn-sm" name="decision" value="na">Mark N/A</button>
+                <button class="btn btn-success btn-sm" name="decision" value="approve">{{ t('Confirm N/A', '确认不适用') if s.na_requested else t('Approve', '批准') }}</button>
+                <button class="btn btn-danger btn-sm" name="decision" value="reject">{{ t('Reject', '退回') }}</button>
+                <button class="btn btn-sm" name="decision" value="na">{{ t('Mark N/A', '标记不适用') }}</button>
             </div>
-            <label class="xs muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" name="go_next" value="1" checked> then open the next item waiting in this project</label>
+            <label class="xs muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" name="go_next" value="1" checked> {{ t('then open the next item waiting in this project', '然后打开本项目下一个待审项') }}</label>
         </form>
         {% else %}
         <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/reopen" class="decision">
-            <p class="small muted" style="margin:0">{{ STATUS_LABEL[s.status] }}{{ ' by ' ~ s.reviewed_by if s.reviewed_by }}.</p>
+            <p class="small muted" style="margin:0">{{ t(STATUS_LABEL[s.status], STATUS_ZH[s.status]) }}{{ ' · ' ~ s.reviewed_by if s.reviewed_by }}.</p>
             <input class="input" name="reason" value="Re-opened for correction">
-            <button class="btn btn-sm">Re-open item</button>
+            <button class="btn btn-sm">{{ t('Re-open item', '重新打开') }}</button>
         </form>
         {% endif %}
     </div>
     {% endif %}
 
     <div class="rail-card">
-        <header class="rail-card-head"><span class="rail-card-eyebrow">History</span></header>
+        <header class="rail-card-head"><span class="rail-card-eyebrow">{{ t('History', '历史') }}</span></header>
         <ul class="timeline">
             {% for h in history %}<li><b>{{ h.action }}</b> · {{ h.actor }}<br><span class="muted">{{ h.at | date }}</span>{% if h.comment %}<br><span class="muted">{{ h.comment }}</span>{% endif %}</li>
-            {% else %}<li>No activity yet.</li>{% endfor %}
+            {% else %}<li>{{ t('No activity yet.', '暂无记录。') }}</li>{% endfor %}
         </ul>
     </div>
 

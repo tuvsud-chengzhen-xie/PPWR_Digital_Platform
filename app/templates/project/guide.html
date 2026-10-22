@@ -1,0 +1,69 @@
+{% extends "project/_layout.html" %}
+{% from "_macros.html" import status, level_badge, bar with context %}
+{% block content %}
+<p class="page-purpose">{{ t('What this packaging must prove under Regulation (EU) 2025/40, from when, and which evidence is still missing. Legally required items come first; recommendations are shown separately and are never presented as legal requirements.',
+    '本包装依据 (EU) 2025/40 法规须证明的内容、起始日期及仍缺少的证据。法定必需项优先列出；建议项单独显示，绝不作为法定要求呈现。') }}</p>
+
+<div class="kpi-strip">
+    <a class="kpi-tile is-headline" href="?level=mandatory_now"><span class="kpi-label">{{ t('Legally required now — open', '现行法定必需——未完成') }}</span>
+        <span class="kpi-value {{ 'is-alert' if report.counts.mandatory_now }}" data-tick="{{ report.counts.mandatory_now }}">{{ report.counts.mandatory_now }}</span>
+        <span class="kpi-sub">{{ report.overdue }} {{ t('past the project target date', '已过项目目标日期') }}</span></a>
+    <a class="kpi-tile" href="?level=mandatory_from"><span class="kpi-label">{{ t('Required from a later date', '将于日后法定必需') }}</span>
+        <span class="kpi-value" data-tick="{{ report.counts.mandatory_from }}">{{ report.counts.mandatory_from }}</span>
+        <span class="kpi-sub">{{ t('collect now to avoid rework', '建议现在收集，避免返工') }}</span></a>
+    <a class="kpi-tile" href="?level=supporting"><span class="kpi-label">{{ t('Recommended evidence — open', '建议证据——未完成') }}</span>
+        <span class="kpi-value" data-tick="{{ report.counts.supporting }}">{{ report.counts.supporting }}</span>
+        <span class="kpi-sub">{{ t('accepted ways to prove a legal requirement', '证明法定要求的常用方式') }}</span></a>
+    <a class="kpi-tile" href="?level=practice"><span class="kpi-label">{{ t('Good practice — open', '良好实践——未完成') }}</span>
+        <span class="kpi-value" data-tick="{{ report.counts.practice }}">{{ report.counts.practice }}</span>
+        <span class="kpi-sub">{{ t('optional', '可选') }}</span></a>
+</div>
+
+<div class="grid-2">
+    <section class="card">
+        <h2 class="card-title">{{ t('Implementation timeline for this packaging', '本包装的实施时间表') }}</h2>
+        <ul class="timeline">
+            <li><b>12 Aug 2026</b> · {{ t('PPWR applies: TD, DoC, Art 5 limits, Art 15(5)-(6) markings', 'PPWR 适用：技术文档、DoC、Art 5 限值、Art 15(5)-(6) 标识') }}</li>
+            {% for d, art in timeline %}<li><b>{{ d | day }}</b> · {{ art_label.get(art, art) }}</li>{% endfor %}
+            {% if project.target_date %}<li><b>{{ project.target_date | day }}</b> · {{ t('Project target date (TD & DoC issue)', '项目目标日期（签发 TD 与 DoC）') }}</li>{% endif %}
+        </ul>
+    </section>
+    <section class="card">
+        <h2 class="card-title">{{ t('Regulatory updates affecting this project', '影响本项目的法规动态') }}</h2>
+        {% for a in alerts %}
+        <div class="alert-row"><a href="/updates/{{ a.u.id }}"><span class="chip-id">{{ a.u.code }}</span> {{ t(a.u.title, a.u.title_zh) }}</a>
+            <div class="xs muted">{{ a.open }} {{ t('open item(s) to collect against the update', '项待按新规收集') }} · {{ a.approved }} {{ t('approved item(s) to re-check', '项已批准需复核') }}</div></div>
+        {% else %}<p class="small muted">{{ t('No tracked update touches this project.', '暂无法规动态影响本项目。') }}</p>{% endfor %}
+    </section>
+</div>
+
+<section class="card">
+    <div class="card-head">
+        <h2 class="card-title">{{ t('Open evidence, by legal priority', '待完成证据（按法律优先级）') }} <span class="hint">{{ rows | length }}</span></h2>
+        <div class="filterbar">
+            <a class="pill {{ 'is-active' if not level }}" href="?">{{ t('All', '全部') }}</a>
+            {% for code in ['mandatory_now', 'mandatory_from', 'supporting', 'practice'] %}
+            <a class="pill {{ 'is-active' if level == code }}" href="?level={{ code }}">{{ t(LEVEL[code][0], LEVEL[code][1]) }} <span class="pill-n">{{ report.counts[code] }}</span></a>{% endfor %}
+        </div>
+    </div>
+    <div class="table-wrap"><table class="data guide-table">
+        <thead><tr><th>{{ t('Item', '条目') }}</th><th>{{ t('Unit', '单元') }}</th><th>{{ t('Legal status', '法律地位') }}</th><th>{{ t('Due', '截止') }}</th>
+            <th>{{ t('Minimum evidence', '最低证据') }}</th><th>{{ t('Still missing', '仍缺少') }}</th><th>{{ t('Status', '状态') }}</th></tr></thead>
+        <tbody>
+        {% for r in rows %}
+        <tr data-href="/projects/{{ project.id }}/items/{{ r.sub.id }}#requirements" class="row-link">
+            <td><span class="chip-id">{{ r.sub.item_id }}</span> <b>{{ tf(r.item, 'name') }}</b><div class="xs muted">{{ t(r.ob.why, r.ob.why_zh) }}</div></td>
+            <td class="nowrap">{{ r.sub.unit.code if r.sub.unit else t('Project', '项目') }}</td>
+            <td>{{ level_badge(r.ob.code, r.ob.applies_from) }}</td>
+            <td class="nowrap">{% if r.ob.due %}{{ r.ob.due | day }}{% if r.ob.overdue %} <span class="badge badge-high">{{ t('overdue', '逾期') }}</span>{% endif %}{% elif r.ob.code == 'mandatory_now' %}<span class="xs">{{ t('before placing on the market', '投放市场前') }}</span>{% else %}—{% endif %}</td>
+            <td style="min-width:110px">{% if r.total %}{{ bar((100 * r.met / r.total) | round | int) }}<span class="xs muted">{{ r.met }}/{{ r.total }}</span>{% else %}—{% endif %}</td>
+            <td class="xs">{% for m in r.missing[:3] %}<div>• {{ t(m[0], m[1]) }}</div>{% endfor %}{% if r.missing | length > 3 %}<div class="muted">+{{ r.missing | length - 3 }}</div>{% endif %}</td>
+            <td>{{ status(r.sub.status) }}</td>
+        </tr>
+        {% else %}<tr><td colspan="7"><div class="empty-state"><b>{{ t('Nothing open at this level.', '该级别无待办。') }}</b></div></td></tr>{% endfor %}
+        </tbody>
+    </table></div>
+    <p class="xs muted">{{ t('Legal status combines the item’s legal level (seeds/guidance) with the applicability matrix and the article’s application date for this project. “Recommended” and “good practice” items help prove compliance but are not legal requirements.',
+        '法律地位由条目的法律级别、适用性矩阵及该条款对本项目的适用日期共同决定。“建议”和“良好实践”有助于证明符合，但并非法定要求。') }}</p>
+</section>
+{% endblock %}

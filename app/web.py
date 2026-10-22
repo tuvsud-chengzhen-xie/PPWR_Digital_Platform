@@ -11,7 +11,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from . import ai_review, applicability, catalogue, config, workflow
+from . import ai_review, applicability, catalogue, config, i18n, workflow
 
 templates = Jinja2Templates(directory=str(config.TEMPLATES_DIR))
 
@@ -84,8 +84,20 @@ templates.env.globals.update(
     EVIDENCE_TYPES=catalogue.EVIDENCE_TYPES, CERT_TYPES=catalogue.CERT_TYPES, CERT_SHORT=catalogue.CERT_SHORT,
     MATERIAL_GROUPS=catalogue.MATERIAL_GROUPS, UNIT_LEVELS=catalogue.UNIT_LEVELS,
     STRUCTURES=catalogue.STRUCTURES, catalogue=catalogue, EXPIRY_WINDOW=config.EXPIRY_WINDOW_DAYS,
-    today=dt.date.today,
+    today=dt.date.today, VERDICT_LABEL_ZH=ai_review.VERDICT_LABEL_ZH,
 )
+i18n.install(templates.env)
+
+
+def _kb_href(entry: dict) -> str:
+    from . import rag
+    return rag.entry_url(entry) if entry.get("src") else ""
+
+
+templates.env.globals.update(KB_KINDS={"regulation": ("Regulation", "法规"), "standard": ("Standard", "标准"),
+                                       "implementing": ("Implementing / delegated act", "实施 / 授权法案"),
+                                       "interpretation": ("Interpretation", "解释"), "practice": ("Good practice", "良好实践")},
+                             kb_href=_kb_href)
 
 
 def base_context(request: Request, session: Session, active: str, **extra) -> dict:
@@ -104,7 +116,9 @@ def base_context(request: Request, session: Session, active: str, **extra) -> di
             queue = session.query(Submission).filter(Submission.project_id.in_(pids),
                                                      Submission.status == "rejected").count()
         open_changes = auth.visible_changes(session, user).filter(ChangeEvent.status == "open").count()
-        ctx.update(nav_queue=queue, nav_changes=open_changes)
+        from . import monitor
+        ctx.update(nav_queue=queue, nav_changes=open_changes, nav_updates=monitor.unread_count(session, user))
+    ctx["lang"] = i18n.lang_of(request)
     ctx.update(extra)
     return ctx
 

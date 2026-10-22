@@ -1,35 +1,33 @@
 {% extends "base.html" %}
-{% block title %}Sign in{% endblock %}
+{% block title %}{{ tt('Sign in', '登录') }}{% endblock %}
 {% block page %}
 <main class="login-wrap">
     <section class="login-hero">
-        <span class="eyebrow">Regulation (EU) 2025/40 · applies from 12 Aug 2026</span>
-        <h1>PPWR Technical Documentation &amp; EU DoC — collected, reviewed and generated in one place.</h1>
-        <p>Clients register their packaging and BOM, upload evidence against the 69 items of the PPWR checklist,
-           and follow each item through AI pre-review and TÜV SÜD expert review. Approved data generates the
-           Annex VII technical documentation and the Annex VIII declaration of conformity — and any supplier
-           change shows exactly which documents it touches.</p>
+        <span class="eyebrow">Regulation (EU) 2025/40 · {{ t('applies from 12 Aug 2026', '2026-08-12 起适用') }}</span>
+        <h1>{{ t('PPWR Technical Documentation & EU DoC — collected, reviewed and generated in one place.', 'PPWR 技术文档与欧盟 DoC——一站式收集、审核与生成。') }}</h1>
+        <p>{{ tb('Clients register their packaging and BOM, upload evidence against the 73 items of the PPWR checklist, and follow each item through AI pre-review and TÜV SÜD expert review — guided step by step, with the legal status and the minimum evidence of every item. Approved data generates the Annex VII technical documentation and the Annex VIII declaration of conformity.',
+                 '客户登记包装与 BOM，按 PPWR 清单 73 项上传证据，并逐项经过 AI 初审与 TÜV SÜD 专家审核——每项均有法律地位与最低证据的分步指引。已批准数据自动生成 Annex VII 技术文档与 Annex VIII 符合性声明。') }}</p>
         <ul class="login-points">
-            {% for t in ['16 categories · 69 evidence items, mapped to the TD V1.5 structure',
-                         'Two-stage review: AI pre-review against the PPWR knowledge base → expert decision',
-                         'Auto-generated TD & DoC (Word), versioned; one-click authority dossier',
-                         'Supplier library with certificate expiry watch and change-impact tracing'] %}
-            <li><svg width="16" height="16" viewBox="0 0 120 120" fill="none"><polygon points="40,6 80,6 114,40 114,80 80,114 40,114 6,80 6,40" stroke="#0066cc" stroke-width="12"/></svg>{{ t }}</li>
+            {% for en, zh in [('16 categories · 73 evidence items, mapped to the TD V1.5 structure', '16 类 · 73 项证据，对应 TD V1.5 结构'),
+                              ('Guidance for every item: legal status, deadline, minimum evidence, examples, templates', '每项均有指引：法律地位、期限、最低证据、示例、模板'),
+                              ('One-click smart import with AI identification; cited AI answers from the PPWR knowledge base', '一键智能导入与 AI 识别；基于 PPWR 知识库的带引用 AI 回答'),
+                              ('Regulatory monitoring and supplier change impact traced to every document', '法规动态监控及供应商变更影响追溯至每份文件')] %}
+            <li><svg width="16" height="16" viewBox="0 0 120 120" fill="none"><polygon points="40,6 80,6 114,40 114,80 80,114 40,114 6,80 6,40" stroke="#0066cc" stroke-width="12"/></svg>{{ t(en, zh) }}</li>
             {% endfor %}
         </ul>
     </section>
     <section class="card">
-        <h2 class="card-title">Sign in</h2>
+        <h2 class="card-title">{{ t('Sign in', '登录') }}</h2>
         {% if error %}<div class="banner banner-error">{{ error }}</div>{% endif %}
         <form method="post" action="/login">
-            <label class="field" style="margin-bottom: 10px"><span class="field-label">User name</span>
+            <label class="field" style="margin-bottom: 10px"><span class="field-label">{{ t('User name', '用户名') }}</span>
                 <input name="username" id="username" autocomplete="username" required autofocus></label>
-            <label class="field" style="margin-bottom: 14px"><span class="field-label">Password</span>
+            <label class="field" style="margin-bottom: 14px"><span class="field-label">{{ t('Password', '密码') }}</span>
                 <input name="password" id="password" type="password" autocomplete="current-password" required></label>
-            <button class="btn btn-primary" type="submit" style="width: 100%; justify-content: center">Sign in</button>
+            <button class="btn btn-primary" type="submit" style="width: 100%; justify-content: center">{{ t('Sign in', '登录') }}</button>
         </form>
         <hr style="border: 0; border-top: 1px solid var(--neutral-75); margin: 18px 0 12px">
-        <div class="eyebrow" style="margin-bottom: 8px">Pilot demo accounts (password “demo”)</div>
+        <div class="eyebrow" style="margin-bottom: 8px">{{ t('Pilot demo accounts (password “demo”)', '试点演示账号（密码 “demo”）') }}</div>
         <div class="demo-accounts">
             {% for a in accounts %}
             <button type="button" class="btn" onclick="document.getElementById('username').value='{{ a.username }}';document.getElementById('password').value='{{ a.password }}';this.closest('.card').querySelector('form').submit()">

@@ -1,5 +1,5 @@
 {% extends "project/_layout.html" %}
-{% from "_macros.html" import progress_cell, octagon %}
+{% from "_macros.html" import progress_cell, octagon with context %}
 {% block content %}
 {% set outdated = current | selectattr('status', 'equalto', 'outdated') | list %}
 {% if outdated %}

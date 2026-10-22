@@ -5,6 +5,7 @@ import tempfile
 from pathlib import Path
 
 os.environ["PPWR_DATA_DIR"] = tempfile.mkdtemp(prefix="ppwr-test-")
+os.environ.setdefault("PPWR_RAG_CORPUS", "0")   # the full-text index takes ~1.5 min; the pool is always searched
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import pytest  # noqa: E402

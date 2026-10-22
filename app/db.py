@@ -361,6 +361,110 @@ class AuditEvent(Base):
 
 
 # ---------------------------------------------------------------------------
+# Regulatory monitoring — implementing acts, standards, guidance and their impact
+# ---------------------------------------------------------------------------
+
+class RegUpdate(Base):
+    __tablename__ = "reg_updates"
+    id = Column(Integer, primary_key=True)
+    code = Column(String, unique=True, nullable=False)    # REG-2026-001
+    kind = Column(String, default="interpretation")       # regulation | implementing | standard | interpretation | consultation
+    status = Column(String, default="published")          # adopted | published | corrigendum | draft | consultation | guidance
+    binding = Column(Boolean, default=False)
+    title = Column(String, nullable=False)
+    title_zh = Column(String, default="")
+    reference = Column(String, default="")
+    published = Column(Date, nullable=True)
+    date_label = Column(String, default="")
+    effective = Column(Date, nullable=True)
+    summary = Column(Text, default="")
+    summary_zh = Column(Text, default="")
+    impact = Column(Text, default="")
+    impact_zh = Column(Text, default="")
+    evidence_change = Column(Text, default="")
+    evidence_change_zh = Column(Text, default="")
+    severity = Column(String, default="info")             # high | medium | info
+    source_path = Column(String, default="")
+    origin = Column(String, default="seed")               # seed | scan | manual
+    reviewed = Column(Boolean, default=True)              # auto-detected updates need expert review
+    articles_json = Column(Text, nullable=True)
+    items_json = Column(Text, nullable=True)
+    detected_at = Column(DateTime, default=now)
+    created_by = Column(String, default="")
+
+    articles = JsonField("articles_json", [])
+    items = JsonField("items_json", [])
+
+
+class RegAck(Base):
+    __tablename__ = "reg_acks"
+    id = Column(Integer, primary_key=True)
+    update_id = Column(Integer, ForeignKey("reg_updates.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    at = Column(DateTime, default=now)
+
+
+# ---------------------------------------------------------------------------
+# Smart import (V4.2 one-click upload + AI identification), staged before it lands
+# ---------------------------------------------------------------------------
+
+class ImportBatch(Base):
+    __tablename__ = "import_batches"
+    id = Column(Integer, primary_key=True)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
+    status = Column(String, default="staged")             # staged | imported | discarded
+    created_by = Column(String, default="")
+    created_at = Column(DateTime, default=now)
+    imported_at = Column(DateTime, nullable=True)
+    table_json = Column(Text, nullable=True)
+    stats_json = Column(Text, nullable=True)
+
+    project = relationship("Project")
+    files = relationship("ImportFile", back_populates="batch", cascade="all, delete-orphan",
+                         order_by="ImportFile.id")
+    table = JsonField("table_json", {})
+    stats = JsonField("stats_json", {})
+
+
+class ImportFile(Base):
+    __tablename__ = "import_files"
+    id = Column(Integer, primary_key=True)
+    batch_id = Column(Integer, ForeignKey("import_batches.id"), nullable=False)
+    filename = Column(String, nullable=False)
+    folder = Column(String, default="")
+    stored_path = Column(String, nullable=True)
+    size = Column(Integer, default=0)
+    item_id = Column(String, nullable=True)               # proposed / corrected catalogue item (None = skip)
+    proposed_item = Column(String, nullable=True)         # what the AI proposed — a difference is a correction
+    unit_id = Column(Integer, nullable=True)
+    unit_ref = Column(String, default="")                 # PU-002 / PKG-02 / UPI found in the name
+    type_code = Column(String, default="DOC")
+    confidence = Column(Float, default=0)
+    rule = Column(Text, default="")
+    method = Column(String, default="")                   # filename | pdf-text | docx | xlsx | text | none
+    snippet = Column(Text, default="")
+    version = Column(String, default="")
+    found_date = Column(String, default="")
+    status = Column(String, default="staged")             # staged | imported | skipped
+    evidence_id = Column(Integer, nullable=True)
+    candidates_json = Column(Text, nullable=True)
+
+    batch = relationship("ImportBatch", back_populates="files")
+    candidates = JsonField("candidates_json", [])
+
+
+class ImportFeedback(Base):
+    """A human correction of the AI identification — weighted into the next identification."""
+    __tablename__ = "import_feedback"
+    id = Column(Integer, primary_key=True)
+    client_id = Column(Integer, ForeignKey("clients.id"), nullable=True)
+    stem = Column(String, nullable=False)
+    item_id = Column(String, nullable=False)
+    count = Column(Integer, default=1)
+    updated_at = Column(DateTime, default=now, onupdate=now)
+
+
+# ---------------------------------------------------------------------------
 
 def init_db() -> None:
     Base.metadata.create_all(engine)

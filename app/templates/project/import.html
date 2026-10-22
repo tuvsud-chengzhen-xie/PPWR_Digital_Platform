@@ -1,0 +1,107 @@
+{% extends "project/_layout.html" %}
+{% from "_macros.html" import octagon with context %}
+{% block content %}
+<p class="page-purpose">{{ t('Drop everything you have — single files, a whole folder or a ZIP. The AI identifies which of the 73 items each file evidences (file name, folder, content and what you corrected before), proposes the packaging unit, and stages it. Check the proposals, correct where needed, then import with one click.',
+    '拖入您已有的全部资料——单个文件、整个文件夹或 ZIP。AI 会识别每个文件对应 73 项中的哪一项（依据文件名、文件夹、内容及您以往的更正），建议所属包装单元并暂存。请核对建议、必要时更正，然后一键入库。') }}</p>
+
+<section class="card">
+    <div class="qi-bar import-drop" data-import-drop="/projects/{{ project.id }}/import/files" tabindex="0"
+         data-ai-stages="Uploading files · 上传文件…|Unpacking folders and ZIPs · 解包文件夹与 ZIP…|Reading content (PDF, Word, Excel) · 读取内容…|Matching 73 items · 匹配 73 项…|Locating packaging units · 定位包装单元…">
+        {{ octagon(22) }}
+        <div><b>{{ t('Drop files, a folder or a ZIP here', '将文件、文件夹或 ZIP 拖到此处') }}</b>
+            <div class="xs muted">PDF · DOCX · XLSX · CSV · {{ t('images', '图片') }} · ZIP · {{ t('up to', '最多') }} {{ max_mb }} MB · {{ t('file names like', '文件名如') }} <code>PU-001_C04-16_HM-report_R2.pdf</code> {{ t('are matched instantly', '可立即匹配') }}</div></div>
+        <span class="spacer"></span>
+        <button type="button" class="btn btn-sm" data-pick="impFiles">{{ t('Choose files', '选择文件') }}</button>
+        <button type="button" class="btn btn-sm" data-pick="impFolder">{{ t('Choose folder', '选择文件夹') }}</button>
+        <input type="file" id="impFiles" multiple hidden>
+        <input type="file" id="impFolder" webkitdirectory directory multiple hidden>
+    </div>
+    <p class="xs muted" style="margin:8px 0 0">{{ t('Tip: use the Appendix A folder names (e.g. 05_Article_5_Substances, 03_Design_and_Manufacturing) — the folder narrows the match. Scanned PDFs and images are matched by name only (no OCR in this pilot).',
+        '提示：使用附录 A 文件夹名称（如 05_Article_5_Substances、03_Design_and_Manufacturing）可缩小匹配范围。扫描版 PDF 和图片仅按文件名匹配（本试点无 OCR）。') }}</p>
+</section>
+
+{% if staged %}
+<section class="card">
+    <form method="post" action="/projects/{{ project.id }}/import/confirm" data-ai-post="/projects/{{ project.id }}/import/confirm"
+          data-ai-stages="Saving corrections · 保存更正…|Assigning evidence IDs · 分配证据编号…|Filing into the evidence vault · 入库…|Submitting items · 提交条目…|Running the AI pre-review · 运行 AI 初审…">
+    <div class="card-head">
+        <h2 class="card-title">{{ t('AI identification — please check', 'AI 识别结果——请核对') }} <span class="hint">{{ staged | length }} {{ t('file(s)', '个文件') }}</span></h2>
+        <div class="imp-stat">
+            <span class="conf c-hi">{{ t('high', '高') }} {{ stat.hi }}</span><span class="conf c-mid">{{ t('medium', '中') }} {{ stat.mid }}</span>
+            <span class="conf c-lo">{{ t('to confirm', '需确认') }} {{ stat.lo }}</span><span class="conf c-no">{{ t('not recognised', '未识别') }} {{ stat.none }}</span>
+        </div>
+    </div>
+    <div class="table-wrap"><table class="data imp-table">
+        <thead><tr><th>{{ t('File', '文件') }}</th><th>{{ t('Confidence', '置信度') }}</th><th>{{ t('Item (correct if wrong)', '条目（如有误请更正）') }}</th><th>{{ t('Unit', '单元') }}</th><th>{{ t('Type', '类型') }}</th><th>{{ t('Why', '依据') }}</th></tr></thead>
+        <tbody>
+        {% for f in staged %}
+        <tr class="{{ 'is-muted' if not f.item_id }}">
+            <td><b>{{ f.filename }}</b>{% if f.folder %}<div class="xs muted">📁 {{ f.folder }}</div>{% endif %}
+                <div class="xs muted">{{ f.size | size }}{{ ' · ' ~ f.version if f.version }}{{ ' · ' ~ f.found_date if f.found_date }}</div></td>
+            <td>{% if f.item_id %}<span class="conf {{ 'c-hi' if f.confidence >= 0.9 else 'c-mid' if f.confidence >= 0.7 else 'c-lo' }}">{{ (f.confidence * 100) | round | int }}%</span>{% else %}<span class="conf c-no">—</span>{% endif %}</td>
+            <td><select name="item_{{ f.id }}" class="input imp-select"><option value="skip">— {{ tt('skip (do not import)', '跳过（不入库）') }} —</option>
+                {% for c in cats %}<optgroup label="{{ '%02d' % c.id }} {{ tt(c.name, c.name_zh) }}">{% for it in items if it.cat == c.id %}<option value="{{ it.id }}" {{ 'selected' if it.id == f.item_id }}>{{ it.id }} {{ tt(it.name, it.name_zh) }}</option>{% endfor %}</optgroup>{% endfor %}
+            </select>{% if f.proposed_item and f.proposed_item != f.item_id %}<div class="xs muted">{{ t('AI proposed', 'AI 建议') }} {{ f.proposed_item }} · {{ t('your correction will be learned', '您的更正将被学习') }}</div>{% endif %}</td>
+            <td><select name="unit_{{ f.id }}" class="input"><option value="">{{ tt('default unit', '默认单元') }}</option>{% for u in project.units %}<option value="{{ u.id }}" {{ 'selected' if u.id == f.unit_id }}>{{ u.code }} {{ u.name[:18] }}</option>{% endfor %}</select>
+                {% if f.unit_ref and not f.unit_id %}<div class="xs muted">{{ f.unit_ref }} {{ t('not registered', '未登记') }}</div>{% endif %}</td>
+            <td><select name="type_{{ f.id }}" class="input">{% for k, v in EVIDENCE_TYPES.items() %}<option value="{{ k }}" {{ 'selected' if k == f.type_code }}>{{ k }}</option>{% endfor %}</select></td>
+            <td class="xs">{{ f.rule or '—' }}<div class="muted">{{ t('read', '读取') }}: {{ f.method }}</div>{% if f.snippet %}<details><summary class="muted">{{ t('content found', '内容摘录') }}</summary>{{ f.snippet }}</details>{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table></div>
+    <div class="form-row" style="margin-top:12px">
+        <label class="field"><span class="field-label">{{ t('Default packaging unit (when the file name names none)', '默认包装单元（文件名未指明时）') }}</span>
+            <select name="default_unit">{% for u in project.units %}<option value="{{ u.id }}">{{ u.code }} {{ u.name }}</option>{% endfor %}</select></label>
+        <label class="check"><input type="checkbox" name="auto_submit" value="1" checked><span><b>{{ t('Submit items for review', '自动提交审核') }}</b><span>{{ t('pending / rejected items go to the AI pre-review', '未收集 / 已退回的条目进入 AI 初审') }}</span></span></label>
+        <label class="check"><input type="checkbox" name="auto_ai" value="1" checked><span><b>{{ t('Run the AI pre-review now', '立即运行 AI 初审') }}</b><span>{{ t('the expert still decides', '仍由专家决定') }}</span></span></label>
+    </div>
+    <div class="form-actions">
+        <button class="btn btn-primary btn-lg ai-btn">{{ octagon(14, '#fff') }} {{ t('One-click import', '一键入库并流转') }}</button>
+        <button class="btn" formaction="/projects/{{ project.id }}/import/save" formnovalidate>{{ t('Save corrections only', '仅保存更正') }}</button>
+        <button class="btn btn-ghost" formaction="/projects/{{ project.id }}/import/discard" onclick="return confirm('{{ tt('Discard all staged files?', '丢弃所有待入库文件？') }}')">{{ t('Discard', '丢弃') }}</button>
+    </div>
+    </form>
+</section>
+{% endif %}
+
+<section class="card" id="table">
+    <div class="card-head"><h2 class="card-title">{{ t('Table data (paste or upload)', '表格数据（粘贴或上传）') }} <span class="hint">{{ t('packaging units · BOM lines · item fields', '包装单元 · BOM 行 · 条目字段') }}</span></h2></div>
+    {% if table and table.grid %}
+    <form method="post" action="/projects/{{ project.id }}/import/table/map">
+        <p class="small">{{ table.grid | length - table.head - 1 }} {{ t('data row(s); header = row', '行数据；表头 = 第') }} {{ table.head + 1 }} · <b>{{ table_rows | length }}</b> {{ t('row(s) will be imported', '行将入库') }}</p>
+        <div class="table-wrap"><table class="data">
+            <thead><tr><th>{{ t('Column', '列') }}</th><th>{{ t('Maps to', '映射到') }}</th><th>{{ t('First value', '首行值') }}</th></tr></thead>
+            <tbody>{% for h in table.header %}<tr><td>{{ h or '#' ~ loop.index }}</td>
+                <td><select name="col_{{ loop.index0 }}" class="input">{% set cur = table.map[loop.index0] %}{% for k, v in targets %}<option value="{{ k }}" {{ 'selected' if k == cur }}>{{ v }}</option>{% endfor %}</select></td>
+                <td class="xs">{{ (table.grid[table.head + 1] or [])[loop.index0] if table.grid | length > table.head + 1 and (table.grid[table.head + 1] | length) > loop.index0 else '—' }}</td></tr>{% endfor %}</tbody>
+        </table></div>
+        <div class="form-actions"><button class="btn btn-sm">{{ t('Save mapping', '保存映射') }}</button>
+            <button class="btn btn-sm btn-ghost" formaction="/projects/{{ project.id }}/import/table/clear">{{ t('Clear table', '清空表格') }}</button></div>
+        <p class="xs muted">{{ t('On import: unit columns create or update packaging units (UPI or name), BOM columns add components, field columns fill the matching items. Approved items are not overwritten.',
+            '入库时：单元列新建或更新包装单元（按 UPI 或名称），BOM 列新增组件，字段列填入对应条目。已批准条目不会被覆盖。') }}</p>
+    </form>
+    {% if not staged %}<form method="post" action="/projects/{{ project.id }}/import/confirm" data-ai-post="/projects/{{ project.id }}/import/confirm" data-ai-stages="Creating units · 创建单元…|Adding BOM lines · 添加 BOM…|Filling items · 填写条目…|Running the AI pre-review · 运行 AI 初审…">
+        <input type="hidden" name="auto_submit" value="1"><input type="hidden" name="auto_ai" value="1">
+        <button class="btn btn-primary ai-btn">{{ octagon(14, '#fff') }} {{ t('One-click import of the table', '一键导入表格') }}</button></form>{% endif %}
+    {% else %}
+    <form method="post" action="/projects/{{ project.id }}/import/table" enctype="multipart/form-data">
+        <label class="field"><span class="field-label">{{ t('Paste from Excel (tab-separated) or CSV', '从 Excel 粘贴（制表符分隔）或 CSV') }}</span>
+            <textarea name="text" id="impText" rows="5" placeholder="包装名称&#9;包装类型&#9;UPI&#9;质量(g)&#9;重金属检测结果 …"></textarea></label>
+        <div class="form-row">
+            <label class="field"><span class="field-label">{{ t('…or upload XLSX / CSV', '……或上传 XLSX / CSV') }}</span><input type="file" name="tablefile" accept=".xlsx,.csv,.txt"></label>
+        </div>
+        <div class="form-actions"><button class="btn btn-sm">{{ t('Parse table', '解析表格') }}</button>
+            <button type="button" class="btn btn-sm btn-ghost" data-sample-into="impText" data-sample="{{ sample }}">{{ t('Load demo table', '载入示例表格') }}</button></div>
+    </form>
+    {% endif %}
+</section>
+
+<section class="card">
+    <h2 class="card-title">{{ t('Import history', '导入记录') }}</h2>
+    <ul class="timeline">
+        {% for b in history %}<li><b>{{ b.imported_at | date }}</b> · {{ b.created_by }} — {{ b.stats.files or 0 }} {{ t('files', '文件') }}{% if b.stats.table_rows %} · {{ b.stats.table_rows }} {{ t('table rows', '表格行') }}{% endif %} · {{ b.stats.submitted or 0 }} {{ t('submitted', '已提交') }} · {{ b.stats.ai or 0 }} {{ t('AI-reviewed', 'AI 已审') }}{% if b.stats.corrections %} · {{ b.stats.corrections }} {{ t('corrections learned', '项更正已学习') }}{% endif %}</li>
+        {% else %}<li>{{ t('No imports yet.', '暂无导入记录。') }}</li>{% endfor %}
+    </ul>
+</section>
+{% endblock %}

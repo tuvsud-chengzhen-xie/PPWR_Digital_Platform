@@ -1,5 +1,5 @@
 {% extends "project/_layout.html" %}
-{% from "_macros.html" import status, verdict, stack, progress_cell %}
+{% from "_macros.html" import status, verdict, stack, progress_cell, level_badge with context %}
 {% block content %}
 <div class="unit-tabs">
     {% for t in unit_tabs %}
@@ -10,7 +10,7 @@
     </a>
     {% endfor %}
     <a class="unit-tab {{ 'is-active' if not current }}" href="?unit=project{{ '&status=' ~ status_filter if status_filter }}">
-        <b>Project-level items</b>
+        <b>{{ t('Project-level items', '项目级条目') }}</b>
         <small>Standards, risk analysis, DoC data, approval · {{ project_prog.done }}/{{ project_prog.total }}</small>
         {{ stack(project_prog) }}
     </a>
@@ -22,10 +22,10 @@
             <span class="hint">{{ subs_prog.total }} items · {{ subs_prog.pct }}% closed</span></h2>
         <form class="filterbar" method="get">
             <input type="hidden" name="unit" value="{{ unit_param }}">
-            <input type="search" name="q" value="{{ q }}" placeholder="Find item (ID or name)">
+            <input type="search" name="q" value="{{ q }}" placeholder="{{ tt('Find item (ID or name)', '查找条目（编号或名称）') }}">
             <select name="status" onchange="this.form.submit()">
-                <option value="">All statuses</option>
-                {% for k, label in STATUS_LABEL.items() %}<option value="{{ k }}" {{ 'selected' if status_filter == k }}>{{ label }} ({{ subs_prog.counts.get(k, 0) }})</option>{% endfor %}
+                <option value="">{{ tt('All statuses', '全部状态') }}</option>
+                {% for k, label in STATUS_LABEL.items() %}<option value="{{ k }}" {{ 'selected' if status_filter == k }}>{{ tt(label, STATUS_ZH[k]) }} ({{ subs_prog.counts.get(k, 0) }})</option>{% endfor %}
             </select>
             {% if status_filter or q %}<a class="pill" href="?unit={{ unit_param }}">Clear ✕</a>{% endif %}
         </form>
@@ -35,17 +35,18 @@
     <details class="cat" {{ 'open' if status_filter or q or (g.prog.open and loop.index <= 16 and g.prog.pending + g.prog.rejected) }}>
         <summary>
             <span class="cat-no">{{ g.cat.id }}</span>
-            <span class="cat-name"><b>{{ g.cat.name }} <span class="zh">{{ g.cat.name_zh }}</span></b><small>{{ g.cat.td }}</small></span>
+            <span class="cat-name"><b>{{ tf(g.cat, 'name') }}</b><small>{{ g.cat.td }}</small></span>
             <span class="hide-sm">{{ stack(g.prog) }}</span>
             <span class="hide-sm xs muted tabnum" style="text-align:right">{{ g.prog.done }}/{{ g.prog.total }} closed</span>
         </summary>
-        <p class="cat-logic">{{ g.cat.logic }}</p>
+        <p class="cat-logic">{{ tf(g.cat, 'logic', true) }}</p>
         {% for s in g.rows %}
         {% set it = catalogue.item(s.item_id) %}
         <a class="item-row" href="/projects/{{ project.id }}/items/{{ s.id }}">
             <span class="chip-id">{{ s.item_id }}</span>
-            <span class="nm"><b>{{ it.name }}</b> <span class="zh">{{ it.name_zh }}</span>
-                {% if it.system %}<span class="badge badge-outline" title="{{ it.system }}">platform</span>{% endif %}</span>
+            <span class="nm"><b>{{ tf(it, 'name') }}</b>
+                {% if it.system %}<span class="badge badge-outline" title="{{ it.system }}">{{ t('platform', '平台') }}</span>{% endif %}
+                {% if obs[s.id] and not s.is_done %}{{ level_badge(obs[s.id].code, obs[s.id].applies_from) }}{% endif %}</span>
             <span class="td">{{ it.td }}</span>
             <span>{{ status(s.status) }}</span>
             {% set n = ev_count.get((s.item_id, s.unit_id), 0) %}<span class="ev">{{ (n ~ ' file' ~ ('s' if n != 1 else '')) if n else '' }}</span>

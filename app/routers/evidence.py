@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, Uplo
 from fastapi.responses import FileResponse, HTMLResponse, Response
 from sqlalchemy.orm import Session
 
-from .. import auth, catalogue, config, excel_io, storage, workflow
+from .. import auth, catalogue, config, excel_io, guidance, importer, storage, workflow
 from ..db import Component, Evidence, Submission, User, get_session, log
 from ..web import project_context, redirect, render
 
@@ -80,7 +80,23 @@ async def upload(pid: int, file: UploadFile = File(...), title: str = Form(""), 
     log(session, "evidence uploaded", user.display_name, p.id, unit.id if unit else None,
         sub.item_id if sub else None, f"{code} {fname}")
     session.commit()
-    return redirect(back, f"{code} added to the evidence vault")
+    warnings = []
+    if sub:
+        g = guidance.item_guidance(sub.item_id)
+        ext = Path(fname).suffix.lower().lstrip(".")
+        if ext and ext not in g["formats"]:
+            warnings.append(f"unusual format .{ext} for {sub.item_id} (expected {', '.join(g['formats'][:5])}) · 文件格式不常见")
+        try:
+            r = importer.identify(session, p, Path(path), fname, "")
+        except Exception:
+            r = {}
+        if r.get("item_id") and r["item_id"] != sub.item_id and r.get("conf", 0) >= 0.8:
+            other = catalogue.item(r["item_id"])
+            warnings.append(f"the AI thinks this file belongs to {r['item_id']} {other['name']} ({r['conf']:.0%}) — "
+                            f"please check · AI 判断该文件可能属于 {r['item_id']} {other['name_zh']}")
+    if warnings:
+        return redirect(back, f"{code} added — " + "; ".join(warnings), "warn")
+    return redirect(back, f"{code} added to the evidence vault · 已加入证据库")
 
 
 @router.get("/evidence/{eid}/download")

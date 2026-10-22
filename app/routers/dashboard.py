@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
-from .. import auth, changes, workflow
+from .. import auth, changes, monitor, workflow
 from ..db import ChangeEvent, User, get_session
 from ..web import base_context, render
 
@@ -76,4 +76,6 @@ def dashboard(request: Request, session: Session = Depends(get_session), user: U
         ("Issue & maintain", f"{len(issued):,} issued · {len(outdated)} outdated", "Changes re-open what they touch"),
     ]
     return render("dashboard.html", base_context(request, session, "dashboard", rows=rows, todo=mine[:9],
-                                                 kpis=kpis, flow=flow, expiring=expiring[:6]))
+                                                 kpis=kpis, flow=flow, expiring=expiring[:6],
+                                                 reg_updates=monitor.visible_updates(session).limit(4).all(),
+                                                 reg_seen=monitor.acked_ids(session, user)))

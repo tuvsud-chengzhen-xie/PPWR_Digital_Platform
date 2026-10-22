@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status with context %}
+{% block title %}{{ u.code }}{% endblock %}
+{% block page %}
+<main class="page">
+    <nav class="breadcrumb"><a href="/updates">{{ t('Regulatory updates', '法规动态') }}</a><span class="breadcrumb-sep">›</span><strong>{{ u.code }}</strong></nav>
+    <div class="layout-2col">
+    <div class="layout-main">
+        <section class="card">
+            <div class="update-head">
+                <span class="badge {{ SEV[u.severity] }}">{{ t({'high': 'High impact', 'medium': 'Medium', 'info': 'Info'}[u.severity], {'high': '高影响', 'medium': '中', 'info': '信息'}[u.severity]) }}</span>
+                <span class="badge {{ 'badge-high' if u.binding else 'badge-outline' }}">{{ t('binding', '具约束力') if u.binding else t('not binding', '无约束力') }}</span>
+                <span class="badge badge-muted">{{ t(KIND[u.kind][0], KIND[u.kind][1]) }} · {{ t(STATUS[u.status][0], STATUS[u.status][1]) }}</span>
+                {% if not u.reviewed %}<span class="badge badge-warn">{{ t('auto-detected — expert review pending', '自动检测——待专家审核') }}</span>{% endif %}
+            </div>
+            <h1>{{ t(u.title, u.title_zh) }}</h1>
+            <p class="small muted">{{ u.reference }} · {{ u.date_label or (u.published | day) }}{% if src %} · <a href="{{ src }}" target="_blank" rel="noopener">{{ t('open source document', '查看原始文件') }}</a>{% endif %}</p>
+            <div class="why"><dl>
+                <dt>{{ t('What it is', '内容') }}</dt><dd>{{ tb(u.summary, u.summary_zh) }}</dd>
+                <dt>{{ t('Impact on compliance', '对合规的影响') }}</dt><dd>{{ tb(u.impact, u.impact_zh) }}</dd>
+                {% if u.evidence_change %}<dt>{{ t('Evidence that changes', '证据变化') }}</dt><dd>{{ tb(u.evidence_change, u.evidence_change_zh) }}</dd>{% endif %}
+                <dt>{{ t('Articles / items', '条款 / 条目') }}</dt><dd>{{ u.articles | join(', ') }}{% if u.items %} · {{ u.items | join(', ') }}{% endif %}</dd>
+            </dl></div>
+            {% if not u.binding %}<p class="xs muted">{{ t('Not legally binding: use it to interpret or prepare; it does not by itself add a legal requirement.', '无法律约束力：可用于解释或准备，其本身不增加法定要求。') }}</p>{% endif %}
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">{{ t('Impact on your projects', '对您项目的影响') }}</h2>
+            {% for row in impact %}
+            <div class="impact-block">
+                <h3><a href="/projects/{{ row.project.id }}/guide">{{ row.project.code }} · {{ row.project.title }}</a></h3>
+                {% if row.approved %}<p class="small"><b>{{ t('Approved items to re-check', '需复核的已批准条目') }} ({{ row.approved | length }})</b></p>
+                <ul class="small">{% for s in row.approved %}<li><a href="/projects/{{ row.project.id }}/items/{{ s.id }}"><span class="chip-id">{{ s.item_id }}</span> {{ tf(catalogue.item(s.item_id), 'name') }}</a> · {{ s.unit.code if s.unit else t('project', '项目') }}</li>{% endfor %}</ul>{% endif %}
+                {% if row.open %}<p class="small"><b>{{ t('Open items — collect against the update', '待收集条目——按新规收集') }} ({{ row.open | length }})</b></p>
+                <ul class="small">{% for s in row.open %}<li><a href="/projects/{{ row.project.id }}/items/{{ s.id }}"><span class="chip-id">{{ s.item_id }}</span> {{ tf(catalogue.item(s.item_id), 'name') }}</a> · {{ s.unit.code if s.unit else t('project', '项目') }} · {{ status(s.status) }}</li>{% endfor %}</ul>{% endif %}
+                {% if row.documents %}<p class="small banner banner-warn">{{ row.documents | length }} {{ t('issued document(s) may need an update (Art 39(2): the DoC is continuously updated).', '份已签发文件可能需要更新（Art 39(2)：DoC 须持续更新）。') }}</p>{% endif %}
+                {% if is_expert and row.approved %}
+                <form method="post" action="/updates/{{ u.id }}/recheck" data-confirm="{{ tt('Send the approved items back for re-assessment?', '将已批准条目退回重新评估？') }}">
+                    <input type="hidden" name="project_id" value="{{ row.project.id }}">
+                    <button class="btn btn-sm">{{ t('Re-open approved items for re-assessment (Art 15(4))', '重新打开已批准条目以重新评估（Art 15(4)）') }}</button></form>{% endif %}
+            </div>
+            {% else %}<p class="small muted">{{ t('None of your projects has an applicable item touched by this update.', '您的项目中没有受此动态影响的适用条目。') }}</p>{% endfor %}
+        </section>
+    </div>
+    <aside class="layout-rail">
+        {% if is_expert %}
+        <div class="rail-card">
+            <header class="rail-card-head"><span class="rail-card-eyebrow">{{ t('Expert review', '专家审核') }}</span></header>
+            <form method="post" action="/updates/{{ u.id }}/review" class="decision">
+                <label class="field"><span class="field-label">{{ t('Impact (EN)', '影响（英文）') }}</span><textarea name="impact">{{ u.impact }}</textarea></label>
+                <label class="field"><span class="field-label">{{ t('Impact (中文)', '影响（中文）') }}</span><textarea name="impact_zh">{{ u.impact_zh }}</textarea></label>
+                <label class="field"><span class="field-label">{{ t('Severity', '严重程度') }}</span><select name="severity">{% for k in ['high', 'medium', 'info'] %}<option {{ 'selected' if u.severity == k }}>{{ k }}</option>{% endfor %}</select></label>
+                <button class="btn btn-sm">{{ t('Save & mark reviewed', '保存并标为已审核') }}</button>
+            </form>
+        </div>
+        {% endif %}
+        <div class="rail-card"><p class="xs muted" style="margin:0">{{ t('Detected', '检测时间') }} {{ u.detected_at | date }} · {{ u.created_by }} · {{ u.origin }}</p></div>
+    </aside>
+    </div>
+</main>
+{% endblock %}

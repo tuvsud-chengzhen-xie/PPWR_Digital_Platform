@@ -43,31 +43,33 @@ def matrix(project: Project) -> list[Row]:
             "Heavy-metal test report or supplier declaration (C04-16, C15-59)"),
         Row("a5pfas", "Art 5 — PFAS in food-contact packaging",
             YES if project.food_contact else NA, "12 Aug 2026",
-            ("Art 5(5): food-contact packaging — PFAS limits 25 ppb (targeted), 250 ppb (sum), 50 ppm (total fluorine)."
+            ("Art 5(5): food-contact packaging — PFAS below 25 ppb (any PFAS, targeted analysis), 250 ppb (sum of targeted PFAS) and 50 ppm (total PFAS incl. polymeric)."
              if project.food_contact else
              "Art 5(5) applies to food-contact packaging only; this packaging is declared non food-contact."),
             "PFAS test / declaration (C04-17, C04-18)" if project.food_contact else "N/A rationale (C16-68)"),
         Row("a6", "Art 6 — Recyclable packaging (design for recycling)", YES, "12 Aug 2026",
-            "Art 6(1): all packaging shall be recyclable; assessed against Annex II categories. Until the "
-            "delegated acts apply, the EN 13430 / EN 18120 methods are used.",
+            "Art 6(1): all packaging shall be recyclable; compliance is documented in the TD (Art 6(9)). The "
+            "design-for-recycling condition applies from 1 Jan 2030 (or 24 months after the delegated acts), "
+            "recycled at scale from 1 Jan 2035. Until then record the method used — EN 13430 serves as guidance "
+            "only (no presumption of conformity under the PPWR).",
             "Recyclability assessment (C05-19–C05-21)"),
         Row("a6g", "Art 6 — Recyclability performance grades A/B/C", TRANSITIONAL, "1 Jan 2030",
-            "Grades by delegated act; grade C minimum from 2030, grade B from 2038. Record the expected grade now.",
+            "Art 6(3): grade A, B or C required from 1 Jan 2030 (or 24 months after the delegated acts); only A or B from 1 Jan 2038. Record the expected grade now.",
             "Grade estimate in the recyclability assessment"),
         Row("a7", "Art 7 — Minimum recycled content in plastic packaging",
             TRANSITIONAL if has_plastic else NA, "1 Jan 2030",
-            ("Plastic part present — minimum recycled-content targets (30 % / 10 % / 35 % by format) apply from 2030; "
+            ("Plastic part present — minimum recycled content (30 % contact-sensitive PET, 10 % other contact-sensitive, 30 % single-use beverage bottles, 35 % other) from 2030; "
              "collect the PCR baseline now." if has_plastic else
              "Art 7 covers the plastic part of packaging only; the BOM contains no plastic component."),
             "PCR data and chain-of-custody (C06-22, C06-23)" if has_plastic else "N/A rationale (C16-68)"),
         Row("a8", "Art 8 — Biobased feedstock in plastic packaging",
             YES if project.biobased_claim else NA, "Review 2028",
-            ("A biobased claim is made — biobased content must be substantiated (EN 16640)."
+            ("Art 8 sets no manufacturer obligation yet (Commission review by 12 Feb 2028). A biobased claim is made — keep evidence substantiating it."
              if project.biobased_claim else "No biobased feedstock claim is made for this packaging."),
             "Biobased content test (C07-24)" if project.biobased_claim else "N/A rationale (C16-68)"),
         Row("a9", "Art 9 — Compostable packaging",
             YES if project.compostable_type else NA, "12 Feb 2028",
-            ("Art 9(1) packaging (tea/coffee units, fruit stickers, very lightweight bags) — industrial "
+            ("Art 9(1) packaging (tea/coffee/beverage units, sticky labels on fruit and vegetables) — industrial "
              "compostability per Annex III / EN 13432." if project.compostable_type else
              "Not one of the packaging types listed in Art 9(1)."),
             "EN 13432 certificate (C08-26–C08-28)" if project.compostable_type else "N/A rationale (C16-68)"),

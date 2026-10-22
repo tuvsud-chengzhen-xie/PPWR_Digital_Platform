@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PPWR Digital Platform | 中英文用户操作手册 / Bilingual User Manual</title>
+<title>PPWR Digital Platform | 中英文用户操作手册 v2.0 / Bilingual User Manual v2.0</title>
 <style>
 @page { size: A4; margin: 0; }
 :root { --ink: #18252e; --blue: #075a98; --green: #157865; --muted: #53636e; --line: #d6dfe5; }
@@ -42,9 +42,11 @@ a { color: var(--blue); text-decoration: none; }
 .cover .subtitle { font-size: 18pt; color: var(--muted); margin-bottom: 10mm; }
 .cover .scope { margin-top: 13mm; border-top: 1px solid var(--line); padding-top: 6mm; }
 .meta { font-size: 9pt; margin-top: 8mm; }
-.toc td { padding: 2.5mm 1mm; }
+.toc td { padding: 2mm 1mm; }
 .toc td:last-child { width: 13mm; text-align: right; }
 #help td { padding-top: 1.5mm; padding-bottom: 1.5mm; }
+#checklist td { padding-top: 1.6mm; padding-bottom: 1.6mm; }
+.extension-index td { padding: 1.5mm 2mm; }
 .compact li { margin-bottom: 2mm; }
 .check { width: 6mm; color: var(--green); font-weight: 700; }
 @media print { body { background: white; } .page { margin: 0; } * { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
@@ -57,8 +59,8 @@ a { color: var(--blue); text-decoration: none; }
   <div class="eyebrow">USER OPERATIONS · 用户操作</div>
   <h1>中英文用户操作手册</h1>
   <div class="subtitle">Bilingual User Manual</div>
-  <p>从包装登记、证据采集与审核，到技术文件生成和变更追踪。</p>
-  <p class="en">From packaging registration, evidence collection and review to technical-document generation and change tracing.</p>
+  <p>双语合规指引、智能导入、知识库问答、法规动态与 TD/DoC 全流程。</p>
+  <p class="en">Bilingual guidance, smart import, grounded Q&amp;A, regulatory updates and the complete TD/DoC workflow.</p>
   <div class="flow">
     <div>01 登记与采集<small>Register &amp; collect</small></div>
     <div>02 预审与决策<small>Pre-review &amp; decide</small></div>
@@ -71,16 +73,17 @@ a { color: var(--blue); text-decoration: none; }
     <p class="en"><b>Scope:</b> The current pilot implementation; the deployed interface and organizational authorization take precedence.</p>
   </div>
   <div class="meta">
-    手册版本 / Manual version: 1.0<br>
+    手册版本 / Manual version: 2.0<br>
     平台版本 / Platform version: 0.1.0<br>
-    编制日期 / Prepared: 2026-10-08<br>
+    编制日期 / Prepared: 2026-10-21<br>
+    功能基线 / Feature baseline: 双语引导版 / Bilingual guided pilot · V4.2 import<br>
     法规参考 / Regulatory reference: Regulation (EU) 2025/40
   </div>
   <div class="note warn">
     本手册说明软件操作，不构成法律意见或符合性保证。AI 预审不替代专家判断；EU DoC 由制造商负责签署。
     <div class="en">This manual describes software operations, not legal advice or a guarantee of conformity. AI pre-review does not replace expert judgment; the manufacturer is responsible for signing the EU DoC.</div>
   </div>
-  <div class="foot"><span>PPWR · 用户操作手册 / User Manual</span><span>01 / 16</span></div>
+  <div class="foot"><span>PPWR · 用户操作手册 / User Manual · v2.0</span><span>01 / 25</span></div>
 </section>
 
 <section class="page" id="contents">
@@ -102,15 +105,16 @@ a { color: var(--blue); text-decoration: none; }
     <tr><td><a href="#trace">12 · 追溯、知识库与标识 / Traceability, knowledge &amp; IDs</a></td><td>14</td></tr>
     <tr><td><a href="#help">13 · 常见问题与安全提醒 / Troubleshooting &amp; safety</a></td><td>15</td></tr>
     <tr><td><a href="#checklist">14 · 交付检查单与术语 / Handover checklist &amp; glossary</a></td><td>16</td></tr>
+    <tr><td><a href="#new-features">15–23 · 新版功能操作 / New-feature workflows</a></td><td>17–25</td></tr>
   </table>
   <h3>首次使用的推荐顺序 / Recommended first-use sequence</h3>
-  <p>登录 → 创建项目 → 建立供应商材料 → 登记或导入 BOM → 核对适用性 → 填写并提交数据和证据 → AI 预审 → 专家审核 → 生成并签发文件。</p>
-  <p class="en">Sign in → create a project → register supplier materials → enter or import the BOM → check applicability → complete and submit data and evidence → AI pre-review → expert review → generate and issue documents.</p>
+  <p>登录并选语言 → 创建项目 → 建立供应商材料及 BOM → 查看合规指引 → 手工填写或智能导入 → 检查填写并提交 → AI 初审 → 专家审核 → 生成并签发 → 跟进变更和法规动态。</p>
+  <p class="en">Sign in and select language → create project → register suppliers/BOM → check compliance guide → enter or smart-import data → check and submit → AI pre-review → expert review → generate/issue → track changes and regulatory updates.</p>
   <div class="note">
-    页面英文按钮名称在本手册中保留原文，中文用于解释操作。每个中文步骤下方均提供对应英文说明。
-    <div class="en">English button labels are retained to match the interface. Each Chinese instruction is paired with its English equivalent.</div>
+    平台支持“中 / EN”“EN”“中文”三种显示模式。基础章节保留英文按钮便于定位；新增功能附中英文名称，扩展目录见第 17 页。
+    <div class="en">The platform supports bilingual, English-only and Chinese-only display. Core chapters retain English labels; new-feature instructions include paired labels. See page 17 for the extension index.</div>
   </div>
-  <div class="foot"><span>v1.0 · 2026-10-08</span><span>02 / 16</span></div>
+  <div class="foot"><span>v2.0 · 2026-10-21</span><span>02 / 25</span></div>
 </section>
 
 <section class="page" id="start">
@@ -131,10 +135,10 @@ a { color: var(--blue); text-decoration: none; }
     <tr><td style="width:35%"><b>Dashboard / Projects</b></td><td>总览、提醒；项目列表与项目入口。<div class="en">Overview and alerts; project list and access.</div></td></tr>
     <tr><td><b>My actions / Review queue</b></td><td>客户的修改待办 / 专家的两阶段审核队列。<div class="en">Client rework actions / expert two-stage review queue.</div></td></tr>
     <tr><td><b>Suppliers / Change impact</b></td><td>供应商材料和证书；变更事件及影响范围。<div class="en">Supplier materials and certificates; change events and impact.</div></td></tr>
-    <tr><td><b>Knowledge base</b></td><td>法规来源、要求目录及可用模板。<div class="en">Regulatory sources, requirement catalogue and available templates.</div></td></tr>
+    <tr><td><b>Reg. updates / Knowledge &amp; AI</b></td><td>法规动态、知识问答、来源及模板；专家另有齿轮设置入口。<div class="en">Regulatory updates, grounded Q&amp;A, sources and templates; experts also have a gear settings entry.</div></td></tr>
   </table>
   <div class="note warn">演示账号仅用于试点：<code>expert</code>、<code>lumen</code>、<code>aurora</code>，演示密码均为 <code>demo</code>。不要在公开生产环境继续使用演示凭据。<div class="en">Pilot demo accounts: <code>expert</code>, <code>lumen</code>, <code>aurora</code>; password: <code>demo</code>. Do not retain demo credentials in a public production environment.</div></div>
-  <div class="foot"><span>访问与权限 / Access &amp; Permissions</span><span>03 / 16</span></div>
+  <div class="foot"><span>访问与权限 / Access &amp; Permissions</span><span>03 / 25</span></div>
 </section>
 
 <section class="page" id="project">
@@ -156,7 +160,7 @@ a { color: var(--blue); text-decoration: none; }
   <p>进入项目 <b>Overview</b> 查看 <b>Applicability matrix</b> 的状态、适用日期和依据。矩阵由项目属性及 BOM 材料组推导；自动 N/A 的理由会写入 TD。</p>
   <p class="en">In project <b>Overview</b>, inspect each requirement's status, application date and basis in the <b>Applicability matrix</b>. It is derived from project flags and BOM material groups; automatic N/A rationales feed the TD.</p>
   <div class="note">如判断不符，通过 <b>Edit the project profile → Save profile</b> 修正用途属性，并检查 BOM 材料组。修改后重新查看条目状态和文件完成度。<div class="en">If applicability is incorrect, use <b>Edit the project profile → Save profile</b> and check BOM material groups. Recheck item statuses and document readiness afterward.</div></div>
-  <div class="foot"><span>项目设置 / Project Setup</span><span>04 / 16</span></div>
+  <div class="foot"><span>项目设置 / Project Setup</span><span>04 / 25</span></div>
 </section>
 
 <section class="page" id="packaging">
@@ -179,7 +183,7 @@ a { color: var(--blue); text-decoration: none; }
   <p>核对组件重量合计与声明的包装重量；检查材料组、SKU 和供应商关联。C01 类字段来自包装登记，应在本页修改，而非在采集条目内修改。</p>
   <p class="en">Compare component mass totals with declared unit mass; check material groups, SKUs and supplier links. C01 fields originate in the packaging register and should be edited here, not in collection items.</p>
   <div class="note warn">修改已批准的登记值可能重开相关条目。删除包装单元会同时移除其组件和采集条目；操作前应导出并确认影响。<div class="en">Changing approved register values may reopen related items. Removing a unit also removes its components and collection items; export and confirm the impact first.</div></div>
-  <div class="foot"><span>包装与组件 / Units &amp; Components</span><span>05 / 16</span></div>
+  <div class="foot"><span>包装与组件 / Units &amp; Components</span><span>05 / 25</span></div>
 </section>
 
 <section class="page" id="bom">
@@ -201,7 +205,7 @@ a { color: var(--blue); text-decoration: none; }
   <h3>导入失败时 / If import fails</h3>
   <p>如出现 <b>No 'Component ID' header found</b>，检查是否使用正确模板以及表头是否被修改。若材料或供应商未正确关联，先补齐供应商材料，再检查或编辑组件。</p>
   <p class="en">For <b>No 'Component ID' header found</b>, check that the correct template is used and its headers are unchanged. If materials or suppliers are not linked correctly, register the supplier materials and inspect or edit the components.</p>
-  <div class="foot"><span>批量录入 / Batch Entry</span><span>06 / 16</span></div>
+  <div class="foot"><span>标准 BOM 模板 / Standard BOM Template · 其他表格见 / Other tables: p.21</span><span>06 / 25</span></div>
 </section>
 
 <section class="page" id="supplier">
@@ -221,7 +225,7 @@ a { color: var(--blue); text-decoration: none; }
   <h3>报告材料或供应商变更 / Report a material or supplier change</h3>
   <p>展开 <b>Report a material / supplier change</b>，填写变更标题、类别和详情（建议包括生效日期及供应商通知），点击 <b>Trace the impact</b>，按第 13 页处理。</p>
   <p class="en">Expand <b>Report a material / supplier change</b>. Enter title, kind and details, preferably including effective date and supplier notice; select <b>Trace the impact</b> and follow page 13.</p>
-  <div class="foot"><span>共享材料证据 / Shared Material Evidence</span><span>07 / 16</span></div>
+  <div class="foot"><span>共享材料证据 / Shared Material Evidence</span><span>07 / 25</span></div>
 </section>
 
 <section class="page" id="collect">
@@ -230,8 +234,8 @@ a { color: var(--blue); text-decoration: none; }
   <div class="path">Project → Data collection → 包装单元或 / Unit or Project-level items</div>
   <ol>
     <li>选择包装单元标签，或 <b>Project-level items</b>。项目级条目（如标准、风险分析及 DoC 数据）只采集一次，不要只完成包装单元而遗漏项目级数据。<span class="en">Select a unit tab or <b>Project-level items</b>. Project-level data such as standards, risk analysis and DoC data is collected once; do not overlook it when completing unit data.</span></li>
-    <li>按条目编号/名称搜索，或按状态筛选；展开类别，打开条目。目录含 16 类、69 个要求，项目实际条目数随单元数量及范围变化。<span class="en">Search by item ID/name or filter by status. Expand a category and open an item. The catalogue contains 16 categories and 69 requirements; project item counts vary with unit numbers and scope.</span></li>
-    <li>阅读 <b>Legal basis</b>、<b>Why it is needed</b>、<b>Feeds</b>、<b>Typical form</b> 和示例，填写 <b>Your entry</b>；表格可用 <b>+ Row</b> 增行。<span class="en">Read the legal basis, purpose, TD destination, typical evidence form and example. Complete <b>Your entry</b>; use <b>+ Row</b> for additional table rows.</span></li>
+    <li>按条目编号/名称搜索，或按状态筛选；展开类别，打开条目。目录含 16 类、73 个要求，含新增 C04-70 至 C04-73（见第 25 页）。<span class="en">Search by item ID/name or filter by status. Open a category/item. The catalogue has 16 categories and 73 requirements, including C04-70 to C04-73 (page 25).</span></li>
+    <li>阅读 <b>Evidence requirements / 证据要求</b> 和五组填写指引（第 19 页），填写 <b>Your entry</b>；点击 <b>Check my entry / 检查我的填写</b> 排查缺漏，表格可用 <b>+ Row</b> 增行。<span class="en">Read <b>Evidence requirements</b> and the five guidance folds (page 19). Complete <b>Your entry</b> and use <b>Check my entry</b> to find gaps; use <b>+ Row</b> for table rows.</span></li>
     <li>上传关联证据（见第 9 页），点击 <b>Save draft</b> 暂存，或 <b>Submit for review</b> 提交；可用 <b>Submit &amp; next open item</b> 连续处理。<span class="en">Upload linked evidence (page 9). Select <b>Save draft</b> to save, or <b>Submit for review</b> to submit; <b>Submit &amp; next open item</b> supports consecutive entry.</span></li>
   </ol>
   <h3>不适用申请 / Requesting N/A</h3>
@@ -241,7 +245,7 @@ a { color: var(--blue); text-decoration: none; }
   <h3>平台组装条目 / Platform-assembled items</h3>
   <p>显示 <b>Assembled by the platform</b> 的条目由 BOM、矩阵或证据登记等来源组装；通过页面提供的入口修改源数据，不寻找不存在的手工输入框。</p>
   <p class="en">Items marked <b>Assembled by the platform</b> are built from sources such as the BOM, matrix or evidence register. Follow the source-editing links instead of looking for manual entry fields.</p>
-  <div class="foot"><span>保存不是提交 / Saving Is Not Submission</span><span>08 / 16</span></div>
+  <div class="foot"><span>保存不是提交 / Saving Is Not Submission</span><span>08 / 25</span></div>
 </section>
 
 <section class="page" id="evidence">
@@ -249,7 +253,7 @@ a { color: var(--blue); text-decoration: none; }
   <h2>上传与管理证据<br>Upload &amp; Manage Evidence</h2>
   <h3>首选：从采集条目上传 / Preferred: upload from an item</h3>
   <ol>
-    <li>在条目的 <b>Evidence</b> 区域选择文件；界面提示支持 PDF、图片、Office、DWG，每个文件最大 25 MB。<span class="en">Choose a file in the item's <b>Evidence</b> area. The interface lists PDF, images, Office and DWG; each file must be no larger than 25 MB.</span></li>
+    <li>在条目的 <b>Evidence / 证据文件</b> 区域选择文件，按该条目显示的格式要求准备附件，每个文件最大 25 MB。格式或条目匹配异常时会出现提醒。<span class="en">Choose a file in <b>Evidence</b> using the formats displayed for that item; the limit is 25 MB per file. Unusual formats or possible item mismatches trigger warnings.</span></li>
     <li>填写标题、证据类型、组件（或 whole unit）、报告编号、签发机构、签发日期及 <b>Conformity</b>。选择实际结果，不要将不符合报告标为符合。<span class="en">Enter title, evidence type, component (or whole unit), report number, issuer, issue date and <b>Conformity</b>. Record the actual result; never label non-conforming evidence as conforming.</span></li>
     <li>点击 <b>Upload to the vault</b>，核对生成的证据编号和链接，点击标题验证文件能下载，然后提交条目。<span class="en">Select <b>Upload to the vault</b>. Check the generated evidence ID and link, verify the file downloads from its title, then submit the item.</span></li>
   </ol>
@@ -263,7 +267,7 @@ a { color: var(--blue); text-decoration: none; }
     <tr><td><b>Non-conform</b></td><td>提交真实结果并处理不符合，不得通过修改元数据隐藏问题。<div class="en">Record the actual result and resolve the non-conformity; do not hide it by editing metadata.</div></td></tr>
     <tr><td>组件缺证据提示<br>Missing evidence</td><td>为组件上传至少一份相关证据，或建立有效的供应商材料关联。<div class="en">Upload relevant component evidence or establish a valid supplier-material link.</div></td></tr>
   </table>
-  <div class="foot"><span>证据与元数据 / Evidence &amp; Metadata</span><span>09 / 16</span></div>
+  <div class="foot"><span>证据与元数据 / Evidence &amp; Metadata</span><span>09 / 25</span></div>
 </section>
 
 <section class="page" id="ai">
@@ -284,8 +288,8 @@ a { color: var(--blue); text-decoration: none; }
   <h3>客户处理退回 / Client rework</h3>
   <p>进入顶部 <b>My actions</b>，打开退回条目；阅读 <b>Sent back by</b> 的审核意见。若显示 <b>Re-opened</b>，核对重开原因。修正字段和附件后点击 <b>Submit for review</b>，不要仅保存草稿。</p>
   <p class="en">Open a returned item from <b>My actions</b> and read <b>Sent back by</b>. If <b>Re-opened</b> appears, check its reason. Correct fields/attachments and select <b>Submit for review</b>, not merely draft save.</p>
-  <div class="note">当前“AI”预审由确定性规则引擎实现，不是自主作出最终决策的 LLM。预审结果仅供参考，专家拥有最终审核权。<div class="en">The current “AI” pre-review uses a deterministic rule engine, not an LLM making autonomous final decisions. Its output is advisory; the expert decides.</div></div>
-  <div class="foot"><span>两阶段审核 / Two-stage Review</span><span>10 / 16</span></div>
+  <div class="note">AI 初审仍为双语确定性规则检查；新增知识问答使用来源检索，可选接入大模型。问答、录入预检查和初审是不同功能，均不替代专家决定。<div class="en">AI pre-review remains a bilingual deterministic rule check. Grounded Q&amp;A uses retrieval and an optional LLM. Q&amp;A, entry pre-check and pre-review are distinct; none replaces the expert.</div></div>
+  <div class="foot"><span>两阶段审核 / Two-stage Review</span><span>10 / 25</span></div>
 </section>
 
 <section class="page" id="expert">
@@ -308,7 +312,7 @@ a { color: var(--blue); text-decoration: none; }
   <p>选择具体项目后，如存在预审无问题条目，队列显示 <b>Approve … AI-clear items</b>。先检查本批次的范围和依据，再确认；批量操作不免除专家责任。</p>
   <p class="en">After selecting a project, <b>Approve … AI-clear items</b> appears when eligible items exist. Check batch scope and evidence before confirming; batch approval does not remove expert responsibility.</p>
   <div class="note warn">提交、预审、批准是不同状态。只有批准或确认 N/A 才算关闭要求；客户提交成功或 AI 通过不能替代专家批准。<div class="en">Submission, pre-review and approval are distinct states. Only approval or confirmed N/A closes a requirement; submission or AI pass does not replace expert approval.</div></div>
-  <div class="foot"><span>专家专用流程 / Expert-only Workflow</span><span>11 / 16</span></div>
+  <div class="foot"><span>专家专用流程 / Expert-only Workflow</span><span>11 / 25</span></div>
 </section>
 
 <section class="page" id="documents">
@@ -331,7 +335,7 @@ a { color: var(--blue); text-decoration: none; }
   <p>点击 <b>Authority dossier (.zip)</b> 下载 TD、DoC 和证据附件资料包；解压后检查完整性和版本。<b>Version history</b> 可查看旧版本。该下载不自动提交给机关，也不自动保证资料已符合要求。</p>
   <p class="en">Download <b>Authority dossier (.zip)</b> containing TD, DoC and evidence attachments. Extract and check completeness/versioning; inspect older versions under <b>Version history</b>. Download does not submit to an authority or guarantee compliance.</p>
   <div class="note warn">平台签发不是制造商签名。DoC 签署责任保留在制造商；资料包可含草稿，提供给外部前必须核对状态。<div class="en">Platform issuance is not a manufacturer signature. Signing remains the manufacturer's responsibility; a dossier may contain drafts, so verify status before external delivery.</div></div>
-  <div class="foot"><span>生成、签发、签署须区分 / Generate, Issue &amp; Sign Are Distinct</span><span>12 / 16</span></div>
+  <div class="foot"><span>生成、签发、签署须区分 / Generate, Issue &amp; Sign Are Distinct</span><span>12 / 25</span></div>
 </section>
 
 <section class="page" id="change">
@@ -357,7 +361,7 @@ a { color: var(--blue); text-decoration: none; }
     <tr><td><code>dismissed</code></td><td>专家驳回；保留判断理由。<div class="en">Dismissed by an expert; retain the rationale.</div></td></tr>
   </table>
   <div class="note">应用变更会重开相关条目、保留原数据并更新预审，对相关文件标记更新需求；不会替你自动完成专家审核、修改所有技术内容或制造商签署。<div class="en">Applying a change reopens related items, retains their data, refreshes pre-review and flags documents. It does not complete expert review, revise every technical statement or sign for the manufacturer.</div></div>
-  <div class="foot"><span>持续更新 / Continuous Updating</span><span>13 / 16</span></div>
+  <div class="foot"><span>供应商变更 / Supplier Changes · 法规动态另见 / Regulatory updates: p.23</span><span>13 / 25</span></div>
 </section>
 
 <section class="page" id="trace">
@@ -379,10 +383,10 @@ a { color: var(--blue); text-decoration: none; }
     <tr><td><code>PU-001-C001-TST-001</code></td><td>组件测试证据编号 / Component test-evidence ID</td></tr>
   </table>
   <h3>知识库与模板 / Knowledge base &amp; templates</h3>
-  <p>顶部 <b>Knowledge base</b> 包含 <b>Key dates</b>、条款与证据对应、<b>Regulation library</b>、<b>Client template kit</b> 和 <b>Requirement catalogue</b>。点击库中文件查看来源，展开目录查看要求及 TD 章节映射。</p>
-  <p class="en"><b>Knowledge base</b> contains key dates, article-to-evidence mapping, the regulation library, client template kit and requirement catalogue. Open library files to inspect sources and expand the catalogue to see requirements and TD mappings.</p>
+  <p>顶部 <b>Knowledge &amp; AI / 知识库与 AI</b> 包含问答、结构化知识池、关键日期、法规资料库、客户模板包和 73 项要求目录。查看原文、法律级别及 TD 映射；问答详见第 22 页。</p>
+  <p class="en"><b>Knowledge &amp; AI</b> contains Q&amp;A, a structured knowledge pool, key dates, source library, templates and the 73-item catalogue. Inspect sources, legal levels and TD mappings; see page 22 for Q&amp;A.</p>
   <div class="note warn">部分离线模板指南引用草案编号。当前平台按已通过法规：TD 对应 Annex VII；DoC 对应 Art 39 / Annex VIII；可回收性对应 Annex II；最小化对应 Annex IV。知识库和模板目录可能为空，应联系管理员补齐。<div class="en">Some offline guides use draft numbering. The platform follows the adopted text: TD → Annex VII; DoC → Art 39 / Annex VIII; recyclability → Annex II; minimisation → Annex IV. Libraries or template folders may be empty; request missing content from the administrator.</div></div>
-  <div class="foot"><span>来源与记录 / Sources &amp; Records</span><span>14 / 16</span></div>
+  <div class="foot"><span>来源与记录 / Sources &amp; Records</span><span>14 / 25</span></div>
 </section>
 
 <section class="page" id="help">
@@ -402,7 +406,7 @@ a { color: var(--blue); text-decoration: none; }
   <p>专家页脚的 <b>reset demo data</b> 会恢复演示种子数据、替换当前试点改动并退出登录。该功能不是刷新，也不是普通故障排除手段。</p>
   <p class="en">The expert footer's <b>reset demo data</b> restores seed data, replaces current pilot changes and signs you out. It is not a page refresh or a routine troubleshooting action.</p>
   <div class="note warn">当前试点使用本地账号、SQLite 和磁盘文件；PDF/Excel 导出不是完整系统备份。生产使用前应由管理员配置访问控制、持久化存储、备份及保留策略；上传敏感资料须符合组织政策。<div class="en">The pilot uses local accounts, SQLite and disk files. PDF/Excel exports are not full system backups. Administrators should establish access control, persistent storage, backups and retention before production use. Sensitive uploads must follow organizational policy.</div></div>
-  <div class="foot"><span>遇到问题请保留编号与错误信息 / Retain IDs &amp; Error Messages</span><span>15 / 16</span></div>
+  <div class="foot"><span>遇到问题请保留编号与错误信息 / Retain IDs &amp; Error Messages</span><span>15 / 25</span></div>
 </section>
 
 <section class="page" id="checklist">
@@ -414,7 +418,7 @@ a { color: var(--blue); text-decoration: none; }
     <tr><td class="check">□</td><td>全部包装单元、组件、重量、SKU 及供应商材料关联完整。<div class="en">All units, components, masses, SKUs and supplier-material links are complete.</div></td></tr>
     <tr><td class="check">□</td><td>单元级与项目级要求均已批准或确认 N/A，理由可审核。<div class="en">Unit/project-level requirements are approved or confirmed N/A with auditable rationales.</div></td></tr>
     <tr><td class="check">□</td><td>证据可下载、信息与原件相符；证书到期和不符合项已处理。<div class="en">Evidence downloads correctly and metadata matches originals; expiry/non-conformity issues are resolved.</div></td></tr>
-    <tr><td class="check">□</td><td>影响本次交付的变更已处理，重开条目已重新审核。<div class="en">Changes affecting delivery are handled and reopened items are re-reviewed.</div></td></tr>
+    <tr><td class="check">□</td><td>导入映射及元数据已检查，供应商变更和法规动态已评估；重开项已复核。<div class="en">Import mappings/metadata are checked, supplier changes and regulatory updates assessed, and reopened items re-reviewed.</div></td></tr>
     <tr><td class="check">□</td><td>已生成最新 TD/DoC，核对 100% 完成度和专家签发状态。<div class="en">Fresh TD/DoC are generated; 100% readiness and expert issuance are verified.</div></td></tr>
     <tr><td class="check">□</td><td>制造商完成 DoC 内容核实及必要签署；最终版本与资料包已留存。<div class="en">The manufacturer verifies and signs the DoC as required; final versions and dossier are retained.</div></td></tr>
   </table>
@@ -427,9 +431,199 @@ a { color: var(--blue); text-decoration: none; }
     <tr><td>BOM / UPI</td><td>物料清单 / 唯一包装标识</td><td>Bill of Materials / Unique Packaging Identifier</td></tr>
     <tr><td>N/A / PCR</td><td>不适用 / 消费后再生材料</td><td>Not Applicable / Post-consumer Recycled material</td></tr>
   </table>
-  <p class="en">Basis: current project README, page templates and workflow implementation. This manual covers the pilot interface as inspected on 2026-10-08; deployments may differ.</p>
-  <p>编制依据：当前项目说明、页面模板及工作流实现。操作说明以 2026-10-08 核对的试点界面为准，不同部署可能存在差异。</p>
-  <div class="foot"><span>手册结束 / End of Manual</span><span>16 / 16</span></div>
+  <p class="en">Basis: the working-tree README, templates and workflow implementation inspected on 2026-10-21. Deployment may differ. New-feature instructions continue on pages 17–25.</p>
+  <p>编制依据：2026-10-21 工作区说明、页面及流程实现（含未提交更新），实际部署可能不同。新版功能操作续见第 17–25 页。</p>
+  <div class="foot"><span>基础流程结束 / End of Core Workflows · 扩展功能续后 / Extensions Follow</span><span>16 / 25</span></div>
+</section>
+
+<section class="page" id="new-features">
+  <div class="running"><span>PPWR Digital Platform · v2.0 Manual</span><span>15 · 新版导览 / New-feature Guide</span></div>
+  <h2>新版导航与语言切换<br>New Navigation &amp; Language</h2>
+  <p>本版依据当前工作区新增功能修订；平台配置版本仍为 0.1.0，手册 2.0 并不表示平台软件版本已改号。基础操作见第 3–16 页。</p>
+  <p class="en">This revision covers new working-tree features. The configured platform version remains 0.1.0; manual version 2.0 is not a software version change. Core operations are on pages 3–16.</p>
+  <h3>选择显示语言 / Select a display language</h3>
+  <p>点击顶部 <b>中 / EN</b>（默认中英同显）、<b>EN</b>（英文）或 <b>中文</b>（简体中文）。选择按浏览器会话保存；无中文译文时可能保留英文。不会自动翻译你输入的项目名称、意见或原始文件。</p>
+  <p class="en">Use the top-bar <b>中 / EN</b> (default bilingual), <b>EN</b> (English) or <b>中文</b> (Simplified Chinese) selector. The choice is stored per browser session; missing translations may remain English. User entries, comments and source files are not automatically translated.</p>
+  <h3>扩展目录 / Extension index</h3>
+  <table class="extension-index">
+    <tr><th>章节与入口 / Section &amp; entry</th><th style="width:15mm">页 / Page</th></tr>
+    <tr><td><a href="#compliance">16 · 合规指引 / Compliance guide</a></td><td>18</td></tr>
+    <tr><td><a href="#guided-entry">17 · 填写指引、模板与预检查 / Guidance, templates &amp; pre-check</a></td><td>19</td></tr>
+    <tr><td><a href="#smart-files">18 · 智能文件导入 / Smart file import</a></td><td>20</td></tr>
+    <tr><td><a href="#smart-tables">19 · 表格解析与列映射 / Table parsing &amp; column mapping</a></td><td>21</td></tr>
+    <tr><td><a href="#grounded-qa">20 · 知识库问答与来源 / Grounded Q&amp;A &amp; sources</a></td><td>22</td></tr>
+    <tr><td><a href="#reg-updates">21 · 法规动态与项目复核 / Regulatory updates &amp; re-assessment</a></td><td>23</td></tr>
+    <tr><td><a href="#ai-settings">22 · 专家 AI 设置与索引 / Expert AI settings &amp; index</a></td><td>24</td></tr>
+    <tr><td><a href="#art5">23 · 新增 Art 5 证据与排错 / New Art 5 evidence &amp; troubleshooting</a></td><td>25</td></tr>
+  </table>
+  <div class="note">项目内新增 <b>Compliance guide / 合规指引</b> 和 <b>Smart import / 智能导入</b>；顶部新增 <b>Reg. updates / 法规动态</b>，原知识入口更名为 <b>Knowledge &amp; AI / 知识库与 AI</b>。专家通过齿轮进入 AI 设置。<div class="en">Projects add <b>Compliance guide</b> and <b>Smart import</b>. The top bar adds <b>Reg. updates</b> and renames the knowledge entry <b>Knowledge &amp; AI</b>. Experts access AI settings through the gear icon.</div></div>
+  <div class="foot"><span>2026-10-21 · 新增功能 / New Features</span><span>17 / 25</span></div>
+</section>
+
+<section class="page" id="compliance">
+  <div class="running"><span>PPWR Digital Platform</span><span>16 · 合规指引 / Compliance Guide</span></div>
+  <h2>识别法律优先级与证据缺口<br>Legal Priority &amp; Evidence Gaps</h2>
+  <div class="path">Project / 项目 → Compliance guide / 合规指引</div>
+  <ol>
+    <li>先确认项目用途和 BOM 准确，再打开合规指引。顶部指标展示各级别未完成项；点击指标或筛选标签缩小范围。<span class="en">Verify the profile and BOM before opening the guide. Top indicators show open items by legal priority; select a tile/filter to narrow the list.</span></li>
+    <li>查看实施时间表及项目目标日期，注意现行要求和未来适用要求的区别。条目截止字段可能使用项目目标日期，不应当作法规原文的统一期限。<span class="en">Review the timeline and project target date. Distinguish current from future obligations. An item's due field may use the project target date, not a universal statutory deadline.</span></li>
+    <li>在 <b>Open evidence, by legal priority / 待完成证据</b> 中核对单元、法律地位、最低证据和仍缺少内容；点击行进入条目证据要求区。<span class="en">In <b>Open evidence, by legal priority</b>, check unit, legal status, minimum evidence and gaps; select a row to open the item's evidence requirements.</span></li>
+  </ol>
+  <table>
+    <tr><th style="width:35%">显示级别 / Displayed level</th><th>如何理解 / Interpretation</th></tr>
+    <tr><td>现行法定必需<br>Legally required now</td><td>平台依据条目级别、适用性和日期判断当前义务；阅读其引用条款。<div class="en">A current obligation derived from item level, applicability and date; read the cited provision.</div></td></tr>
+    <tr><td>将于日后法定必需<br>Required from a later date</td><td>关注适用日期，提前准备；不是当前已生效的同等义务。<div class="en">Prepare for the indicated date; not the same as a present obligation.</div></td></tr>
+    <tr><td>建议证据<br>Recommended evidence</td><td>证明法律要求的支持方式，并非每份具体文件都被 PPWR 单独强制。<div class="en">Supporting ways to prove compliance; PPWR does not independently mandate every named document.</div></td></tr>
+    <tr><td>良好实践 / 不需要<br>Good practice / Not required</td><td>前者为建议做法；后者由本包装适用性判断。须分别理解，不要混同。<div class="en">Good practice is advisory; not required reflects this packaging's applicability. They are different.</div></td></tr>
+  </table>
+  <div class="note warn">最低证据完成度、项目条目关闭率、TD 完成度是不同指标。证据齐全不等于专家批准；“良好实践”也不是自动 N/A。当前签发门槛仍按全部要求的关闭状态检查，需按实际界面与专家决策完成流程。<div class="en">Evidence readiness, item closure and TD readiness are different metrics. Complete evidence is not approval; good practice is not automatic N/A. Issuance still checks closure of all requirements; follow the interface and expert decisions.</div></div>
+  <div class="foot"><span>法律分类不等于审核状态 / Legal Classification Is Not Review Status</span><span>18 / 25</span></div>
+</section>
+
+<section class="page" id="guided-entry">
+  <div class="running"><span>PPWR Digital Platform</span><span>17 · 交互指引 / Interactive Guidance</span></div>
+  <h2>填写指引、模板与预检查<br>Guidance, Templates &amp; Pre-check</h2>
+  <div class="path">Data collection / 资料收集 → Item / 条目 → How to complete this item / 如何完成本项</div>
+  <table>
+    <tr><th style="width:40%">五组指引 / Five folds</th><th>操作 / Action</th></tr>
+    <tr><td>① 法规、术语与逻辑<br>Regulation, terms &amp; logic</td><td>阅读要求目的及适用条件，先判断自己的材料和用途。<div class="en">Understand purpose and applicability for your material/use.</div></td></tr>
+    <tr><td>② 信息与文件<br>Information &amp; documents</td><td>确认文件类型、格式、应含信息及验收标准。<div class="en">Check types, formats, expected content and acceptance criteria.</div></td></tr>
+    <tr><td>③ 分步说明与示例<br>Steps &amp; examples</td><td>对照合格示例和典型退回原因准备资料。<div class="en">Use acceptable examples and common rejection reasons.</div></td></tr>
+    <tr><td>④ 样本、模板与校验<br>Samples, templates &amp; rules</td><td>点击 <b>Download fill-in template (Word) / 下载填写模板</b>，离线填写后上传。<div class="en">Download the Word fill-in template, complete it offline and upload.</div></td></tr>
+    <tr><td>⑤ 法规来源<br>Regulatory sources</td><td>查看引用来源与页码，区别法规和建议性来源。<div class="en">Inspect sources/page references and distinguish law from advice.</div></td></tr>
+  </table>
+  <h3>填写并检查 / Enter &amp; check</h3>
+  <ol>
+    <li>按字段格式和示例填写；格式错误会在字段附近提示。显示通用指引时，不应将其当作针对该产品的专门法律意见。<span class="en">Follow field formats and examples; errors appear near fields. Generic evidence-type guidance is not product-specific legal advice.</span></li>
+    <li>上传证据后点击 <b>Check my entry / 检查我的填写</b>。查看缺漏、格式及规则检查，修正后可重复检查。<span class="en">After uploading evidence, select <b>Check my entry</b>. Review gaps, format and rule checks; correct and repeat as needed.</span></li>
+    <li>随后点击 <b>Save draft / 保存草稿</b> 或 <b>Submit for review / 提交审核</b>。如出现“已提交但仍有缺失”，按提示补正；提交成功并不证明内容齐全。<span class="en">Then save a draft or submit for review. If submitted with open points, resolve them; successful submission is not proof of completeness.</span></li>
+  </ol>
+  <div class="note warn"><b>预检查是模拟检查，不保存也不提交。</b>最低证据的完成提示不等于批准；部分要求仍显示“由专家核实”。模板也不是已签署的测试报告或符合性证明。<div class="en"><b>Pre-check is a dry run: it neither saves nor submits.</b> Minimum-evidence completion is not approval; some checks require expert verification. A template is not a signed test report or proof of conformity.</div></div>
+  <div class="foot"><span>检查 → 保存/提交 → 审核 / Check → Save/Submit → Review</span><span>19 / 25</span></div>
+</section>
+
+<section class="page" id="smart-files">
+  <div class="running"><span>PPWR Digital Platform</span><span>18 · 智能文件导入 / Smart File Import</span></div>
+  <h2>批量识别与证据入库<br>Batch Identification &amp; Filing</h2>
+  <div class="path">Project / 项目 → Smart import / 智能导入</div>
+  <ol>
+    <li>先登记目标包装单元。拖入文件、文件夹或 ZIP，或用 <b>Choose files / 选择文件</b>、<b>Choose folder / 选择文件夹</b>。批处理上限为 200 MB、最多 300 个文件；单份证据按 25 MB 限制准备。<span class="en">Register target units first. Drop files, a folder or ZIP, or choose files/folder. Batch limits are 200 MB and 300 files; prepare each evidence file within 25 MB.</span></li>
+    <li>建议文件名包含单元和条目编号，如 <code>PU-001_C04-70_HM-report_R2.pdf</code>；附录 A 目录有助分类。扫描 PDF 和图片无 OCR，只能依名称等信息匹配。<span class="en">Include unit/item IDs, e.g. <code>PU-001_C04-70_HM-report_R2.pdf</code>; Appendix-A folders help classification. Scans/images have no OCR and rely on naming and related cues.</span></li>
+    <li>在 <b>AI identification — please check / AI 识别结果——请核对</b> 逐行检查文件、条目、单元、类型及识别依据。高置信度也要核实；未识别文件需手动选条目或选择 <b>skip / 跳过</b>。<span class="en">Check each file, item, unit, type and reason in the identification table. Verify even high-confidence matches; manually assign unrecognized files or select skip.</span></li>
+    <li>核对 <b>Default packaging unit / 默认包装单元</b>。多单元项目须逐行指定，不能假定文件自动分配正确。可用 <b>Save corrections only / 仅保存更正</b> 暂存；<b>Discard / 丢弃</b> 丢弃本批待入库内容。<span class="en">Check the default unit and assign each file explicitly in multi-unit projects. Save corrections without importing or discard the staged batch.</span></li>
+    <li>确认默认勾选的 <b>Submit items for review / 自动提交审核</b> 和 <b>Run the AI pre-review now / 立即运行 AI 初审</b> 是否符合需要，再点击 <b>One-click import / 一键入库并流转</b>。<span class="en">Review the default-on auto-submit and immediate pre-review options before clicking <b>One-click import</b>.</span></li>
+  </ol>
+  <h3>入库后检查 / Verify after import</h3>
+  <p>核对 <b>Import history / 导入记录</b> 中的文件数、提交数及预审数；到证据库检查文件能下载、条目和单元正确。自动推断的日期、版本及标题需复核，签发方、报告编号、符合性和组件关联可能仍须补齐。</p>
+  <p class="en">Check file/submission/pre-review counts in import history. Verify downloads and item/unit assignment in the vault. Review inferred dates, versions and titles; issuer, report number, conformity and component linkage may need completion.</p>
+  <div class="note warn">向已批准条目补入文件会重开并进入重新审核，即使取消自动提交。N/A 或找不到对应条目的文件可能跳过；对比实际入库数量。识别置信度是分类参考，不是证据有效性或合规判断。<div class="en">New files on approved items reopen them for re-review even with auto-submit off. N/A or unmatched submissions may be skipped; reconcile actual counts. Confidence concerns classification, not evidence validity or compliance.</div></div>
+  <div class="foot"><span>先核对再入库 / Check Before Importing</span><span>20 / 25</span></div>
+</section>
+
+<section class="page" id="smart-tables">
+  <div class="running"><span>PPWR Digital Platform</span><span>19 · 表格映射 / Table Mapping</span></div>
+  <h2>表格解析与列映射<br>Table Parsing &amp; Column Mapping</h2>
+  <div class="path">Smart import / 智能导入 → Table data (paste or upload) / 表格数据</div>
+  <ol>
+    <li>从 Excel 复制带表头的数据到文本框，或上传 XLSX / CSV / TXT。至少需要一行表头和一行数据；点击 <b>Parse table / 解析表格</b>。<b>Load demo table / 载入示例表格</b> 只用于演示，真实项目勿直接入库。<span class="en">Paste Excel data with headers or upload XLSX/CSV/TXT. Include a header and at least one data row, then parse. Demo table loading is for practice, not direct import into a real project.</span></li>
+    <li>检查识别出的表头、行数及首行值。在 <b>Maps to / 映射到</b> 为每列选择包装单元、BOM 或条目字段；无关列不要映射到业务字段。<span class="en">Check the detected header, row count and first values. Map each column to a unit, BOM or item field; do not map unrelated columns into business fields.</span></li>
+    <li>点击 <b>Save mapping / 保存映射</b>；如数据错误，用 <b>Clear table / 清空表格</b> 后重新解析。保存映射不是正式入库。<span class="en">Save mapping, or clear and parse again if the data is wrong. Saving a mapping does not import the data.</span></li>
+    <li>无待入库文件时，点击 <b>One-click import of the table / 一键导入表格</b>；同时有文件时，复核整批数据后用文件区的入库按钮。<span class="en">When no files are staged, use <b>One-click import of the table</b>. With staged files, review the whole batch and use the file-section import button.</span></li>
+    <li>到 <b>Packaging &amp; BOM</b> 及相关采集条目核对结果，检查重量单位、材料组、供应商材料关联和字段含义；核实是否已提交和预审。<span class="en">Verify results in Packaging &amp; BOM and collection items. Check mass units, groups, supplier-material links and field meanings, and confirm submission/pre-review status.</span></li>
+  </ol>
+  <table>
+    <tr><th style="width:32%">数据列 / Column type</th><th>当前入库行为 / Current behavior</th></tr>
+    <tr><td>包装单元 / Unit</td><td>按 UPI 或名称创建或更新；登记变化可能重开源数据条目。<div class="en">Creates/updates by UPI or name; register changes may reopen source items.</div></td></tr>
+    <tr><td>BOM 组件 / Component</td><td>新增组件行；重复导入可能重复新增，不等同于标准 BOM 模板按组件编号更新。<div class="en">Adds component rows; repeat imports may duplicate them, unlike ID-based updates in the standard BOM template.</div></td></tr>
+    <tr><td>条目字段 / Item field</td><td>填入匹配条目；已批准字段不直接覆盖。表格单独入库会自动提交/预审符合条件的条目。<div class="en">Fills matched items without directly overwriting approved fields. Table-only import automatically submits/pre-reviews eligible items.</div></td></tr>
+  </table>
+  <div class="note warn">标准 BOM 导入（第 6 页）与智能表格导入的更新逻辑不同。先导出当前 BOM 留存；不要反复点击入库，也不要在真实项目中以试导入代替预览核对。<div class="en">Standard BOM import (page 6) and smart table import have different update behavior. Export the current BOM first. Avoid repeated import clicks or using live imports as previews.</div></div>
+  <div class="foot"><span>列映射需要人工确认 / Column Mappings Need Human Confirmation</span><span>21 / 25</span></div>
+</section>
+
+<section class="page" id="grounded-qa">
+  <div class="running"><span>PPWR Digital Platform</span><span>20 · 知识问答 / Grounded Q&amp;A</span></div>
+  <h2>知识库问答与来源核实<br>Knowledge Q&amp;A &amp; Source Checks</h2>
+  <div class="path">Knowledge &amp; AI / 知识库与 AI · Item rail / 条目侧栏 → Ask about this item / 就本项提问</div>
+  <ol>
+    <li>一般问题从知识页的 <b>Ask the PPWR knowledge base / 向 PPWR 知识库提问</b> 发起；条目相关问题在侧栏提问，以带入当前条目上下文。<span class="en">Use the knowledge-page question box for general questions. Ask from an item's rail to include its context.</span></li>
+    <li>用中文或英文描述条款、包装材料及用途，也可点击建议问题；点击 <b>Ask / 提问</b>。建议一次提出一个具体问题，例如“食品接触包装的 PFAS 证据应包含什么？”<span class="en">Ask in Chinese or English, specifying article, material and use, or choose a suggestion. Submit one focused question at a time, such as what PFAS evidence should contain for food-contact packaging.</span></li>
+    <li>查看回答中的 <b>[S1]、[S2]</b> 等来源引用，打开对应来源文件和页码，核对约束力、适用范围与日期。不要仅凭摘要决定合规。<span class="en">Follow source citations such as <b>[S1]</b> and <b>[S2]</b> to the source file/page. Check binding status, scope and dates; do not decide compliance from a summary alone.</span></li>
+    <li>如提示知识库未覆盖，缩小或改写问题，或请管理员补充正式来源并重建索引；不要把“未找到”解释为“不存在义务”。<span class="en">If coverage is insufficient, narrow/rephrase the question or request official sources and reindexing. “Not found” does not mean no obligation exists.</span></li>
+  </ol>
+  <h3>来源与索引状态 / Sources &amp; index status</h3>
+  <p>页面显示精选条目、索引文件和段落数。首次启动会后台构建全文索引，完成前主要依赖精选知识池。知识池可按法规、实施/授权文件、标准、官方解释、良好实践等类别筛选。</p>
+  <p class="en">The page shows curated-entry, indexed-document and passage counts. Initial full-text indexing runs in the background; curated entries remain available meanwhile. Filter the pool by regulation, implementing/delegated sources, standards, interpretations or practice.</p>
+  <table>
+    <tr><th style="width:31%">来源类型 / Source</th><th>使用原则 / Use</th></tr>
+    <tr><td>具有约束力 / Binding</td><td>仍须核对正式原文、适用条件及日期。<div class="en">Check the official text, conditions and application dates.</div></td></tr>
+    <tr><td>解释 / 良好实践<br>Interpretation / Practice</td><td>辅助理解和准备，不能独立升级为法律义务。<div class="en">Helps interpretation/preparation; not an independent legal obligation.</div></td></tr>
+    <tr><td>受版权保护的标准<br>Copyrighted standards</td><td>可能仅索引标题；需通过组织授权渠道取得标准正文。<div class="en">May be title-only; obtain the text through authorized channels.</div></td></tr>
+  </table>
+  <div class="note">未配置大模型时也可本地检索回答；启用模型后仍受来源约束，失败可回退本地模式。问答不是正式审核决定，也不会自动替你填写、批准或签发。<div class="en">Local retrieval answers work without an LLM. Model-assisted answers remain source-constrained and can fall back locally. Q&amp;A does not enter data, approve items or issue documents for you.</div></div>
+  <div class="foot"><span>回答须回到原始来源 / Verify Answers Against Original Sources</span><span>22 / 25</span></div>
+</section>
+
+<section class="page" id="reg-updates">
+  <div class="running"><span>PPWR Digital Platform</span><span>21 · 法规动态 / Regulatory Updates</span></div>
+  <h2>法规动态与项目复核<br>Updates &amp; Project Re-assessment</h2>
+  <div class="path">Reg. updates / 法规动态 → Update / 动态详情 → Impact on your projects / 对您项目的影响</div>
+  <ol>
+    <li>按 <b>Unread / 未读</b> 或类别筛选，打开动态；核对原始来源、日期、严重程度、法律约束力及“待专家审核”标记。打开详情会记录已读，也可 <b>Mark all read / 全部标为已读</b>。<span class="en">Filter by unread/type and open an update. Check source, date, severity, binding status and pending expert review. Opening records it as read; mark all read is also available.</span></li>
+    <li>阅读影响和证据变化，查看自己可访问项目中的未完成条目、需复核的已批准条目及可能受影响的签发文件。<span class="en">Read the impact/evidence changes and inspect open items, approved items needing re-check and potentially affected issued documents within accessible projects.</span></li>
+    <li>专家对自动检测内容先核实原文，编辑中英文影响和严重程度，点击 <b>Save &amp; mark reviewed / 保存并标为已审核</b>。此操作只确认动态说明，不会完成项目重新审核。<span class="en">Experts verify automatically detected sources, edit bilingual impact/severity and save as reviewed. This reviews the update description, not the project's compliance.</span></li>
+    <li>需要复核时，专家在相应项目点击 <b>Re-open approved items for re-assessment / 重新打开已批准条目以重新评估</b> 并确认；客户补充资料，专家重新审核，必要时重新生成和签发文件。<span class="en">When needed, the expert reopens approved items for the affected project. Clients supply updated evidence, experts review again, and documents are regenerated/re-issued as required.</span></li>
+  </ol>
+  <h3>专家扫描更新 / Expert update scanning</h3>
+  <p>点击 <b>Scan for updates / 扫描更新</b> 比对知识库新增或变更文件；首次扫描可能仅建立基线。可选网络监测依赖管理员配置的 URL，不等于默认实时监控全部欧盟法规。</p>
+  <p class="en"><b>Scan for updates</b> compares new/changed knowledge-base files; the first scan may only establish a baseline. Optional web monitoring requires administrator-configured URLs and is not default real-time monitoring of all EU law.</p>
+  <div class="note warn">“已读”“动态已审核”“项目已复核”是三件事。自动检测与摘要须由专家核实，未读角标清零不代表风险清零；未列出影响也不保证不存在合规影响。<div class="en">Read, update reviewed and project reassessed are three distinct actions. Experts must verify detection/summaries. Clearing unread badges does not clear risk, and no listed impact is not a guarantee of no compliance impact.</div></div>
+  <div class="note">供应商/材料变更使用 <b>Change impact / 变更影响</b>（第 13 页）；法规更新使用 <b>Reg. updates / 法规动态</b>。两类来源不同，但都可能触发条目复核和文件更新。<div class="en">Use Change impact (page 13) for supplier/material changes and Reg. updates for legal developments. Different sources can both require re-review and document updates.</div></div>
+  <div class="foot"><span>来源确认 → 影响评估 → 复核 / Verify → Assess → Re-review</span><span>23 / 25</span></div>
+</section>
+
+<section class="page" id="ai-settings">
+  <div class="running"><span>PPWR Digital Platform</span><span>22 · 专家设置 / Expert Settings</span></div>
+  <h2>专家 AI 设置与索引<br>Expert AI Settings &amp; Index</h2>
+  <div class="path">Expert / 专家 → 顶部齿轮 / Top-bar gear → AI &amp; knowledge base / AI 与知识库</div>
+  <h3>可选模型连接 / Optional model connection</h3>
+  <ol>
+    <li>经组织授权后选择 <b>Provider / 提供方</b>：Azure OpenAI 或 OpenAI-compatible。按管理员提供的信息填写部署/模型、端点、API 版本及密钥。<span class="en">With organizational authorization, choose Azure OpenAI or an OpenAI-compatible provider and enter the administrator-approved deployment/model, endpoint, API version and key.</span></li>
+    <li>勾选 <b>Use the model for answers and update summaries / 使用模型生成回答与动态摘要</b>，点击 <b>Save / 保存</b>，再 <b>Test connection / 测试连接</b>。如环境变量配置已生效，其优先于表单。<span class="en">Enable model use for answers/update summaries, save, then test the connection. Environment-variable configuration takes precedence over this form.</span></li>
+    <li>修改其他设置时密钥留空会保持原密钥；取消启用可停用模型使用，但不表示已删除保存的密钥。失败时可回退本地回答，应检查连接结果。<span class="en">A blank key preserves the stored key. Disabling model use does not delete it. Errors may fall back to local answers; inspect connection results.</span></li>
+  </ol>
+  <div class="note warn">密钥由授权人员在页面直接输入，勿发到聊天、邮件或截图。当前密钥保存在数据目录中的配置文件，git 忽略不等于加密存储；目录、备份和端点访问须受控。启用外部模型前确认数据处理政策。<div class="en">Authorized staff should enter keys directly, not in chat, email or screenshots. Current keys reside in a data-folder configuration file; git-ignore is not encryption. Control folder/backup/endpoint access and approve data handling before enabling an external model.</div></div>
+  <h3>知识库索引 / Knowledge-base index</h3>
+  <ol>
+    <li>在 <b>Knowledge-base index (RAG) / 知识库索引</b> 查看状态、精选条目数、已索引文件/总文件、段落数和文件清单。<span class="en">Inspect index state, curated entries, indexed/total documents, passage count and the document list.</span></li>
+    <li>管理员增补或替换来源后，按需要点击 <b>Rebuild index / 重建索引</b>。完成后核对状态和文件计数，再用带明确条款的问题验证来源可检索。<span class="en">After source changes, rebuild when needed. Check completion/counts, then verify retrieval with a specific article-based question.</span></li>
+    <li>出现“未安装 pypdf——PDF 未被索引”时联系管理员安装依赖；扫描文件无 OCR，受版权保护的标准可能只提供标题。重建索引不能补足不存在的文本。<span class="en">If PDF support is missing, ask the administrator to install dependencies. There is no OCR for scans and protected standards may be title-only; reindexing cannot create missing text.</span></li>
+  </ol>
+  <div class="foot"><span>仅专家可配置 / Expert-only Configuration</span><span>24 / 25</span></div>
+</section>
+
+<section class="page" id="art5">
+  <div class="running"><span>PPWR Digital Platform</span><span>23 · Art 5 与排错 / Art 5 &amp; Troubleshooting</span></div>
+  <h2>新增 Art 5 证据与排错<br>New Art 5 Evidence &amp; Help</h2>
+  <p>第 4 类新增四个证据条目，目录现为 73 项。结论字段与原始支持文件应一致，不能用填写结论替代原始报告；按项目适用性和专家要求准备。</p>
+  <p class="en">Category 4 adds four evidence items, bringing the catalogue to 73. Conclusions must match original supporting files; a populated conclusion is not a substitute for a report. Follow project applicability and expert requirements.</p>
+  <table>
+    <tr><th style="width:19%">条目 / Item</th><th>用途与法律级别 / Purpose &amp; legal level</th></tr>
+    <tr><td><b>C04-70</b></td><td>重金属 CoC / 检测报告；支持 C04-16，平台分类为建议证据。<div class="en">Heavy-metal CoC/test report supporting C04-16; classified as recommended evidence.</div></td></tr>
+    <tr><td><b>C04-71</b></td><td>PFAS 报告；支持 C04-17，结合食品接触属性判断；分类为建议证据。<div class="en">PFAS report supporting C04-17, subject to food-contact applicability; recommended evidence.</div></td></tr>
+    <tr><td><b>C04-72</b></td><td>食品接触声明；关联食品接触法规框架，不应表述成 PPWR 单独新增的声明义务。<div class="en">Food-contact declaration under the food-contact regulatory framework, not a new standalone PPWR declaration obligation.</div></td></tr>
+    <tr><td><b>C04-73</b></td><td>Art 5 声明；平台分类为良好实践，不是独立法定文件；EU DoC 已含符合性声明。<div class="en">Article 5 statement; good practice, not an independent mandatory document. The EU DoC already declares conformity.</div></td></tr>
+  </table>
+  <h3>新增功能常见问题 / New-feature troubleshooting</h3>
+  <table>
+    <tr><th style="width:31%">现象 / Symptom</th><th>处理 / Action</th></tr>
+    <tr><td>识别错误或遗漏<br>Wrong/missing match</td><td>更正条目、单元及类型；用明确文件名，核对超限/跳过文件。<div class="en">Correct item/unit/type, use explicit filenames and reconcile oversized/skipped files.</div></td></tr>
+    <tr><td>问答无结果<br>No grounded answer</td><td>缩小问题，检查来源及索引；无覆盖不等于无义务。<div class="en">Narrow the query and check sources/index; no coverage does not mean no obligation.</div></td></tr>
+    <tr><td>检查后数据未保存<br>Pre-check did not save</td><td>这是预期行为；另点保存草稿或提交审核。<div class="en">Expected: separately save a draft or submit for review.</div></td></tr>
+    <tr><td>导入后出现重复组件<br>Duplicate BOM lines</td><td>停止重复导入，核对表格导入方式并人工修正；不要重置整个演示库。<div class="en">Stop repeat imports, inspect the import method and correct manually; do not reset all demo data.</div></td></tr>
+  </table>
+  <div class="note">交付前使用第 16 页检查单，并确认新增条目、导入附件、法规复核和最终版本均已覆盖。软件指引不是法律意见或符合性保证；DoC 仍由制造商核实和签署。<div class="en">Use the page-16 checklist and verify new items, imported evidence, regulatory re-assessment and final versions. Guidance is not legal advice or a conformity guarantee; the manufacturer verifies and signs the DoC.</div></div>
+  <div class="foot"><span>手册结束 / End of Manual · v2.0 · 2026-10-21</span><span>25 / 25</span></div>
 </section>
 </body>
 </html>

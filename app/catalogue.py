@@ -1,4 +1,4 @@
-"""The data-item catalogue: 16 categories · 69 items · TD V1.5 section map.
+"""The data-item catalogue: 16 categories · 73 items (69 + 4 Art 5 evidence items of V4.2) · TD V1.5 section map.
 
 Source: the V3.1 bilingual prototype and Checklist V1.5 (built by tools/build_catalogue.py).
 Read-only at runtime — the catalogue is the service definition, not client data.
@@ -41,12 +41,12 @@ CERT_SHORT = {"hm": "Heavy metals", "pf": "PFAS", "rc": "Recyclability", "doc": 
               "oth": "Other"}
 # Which catalogue items a supplier certificate evidences — the edges the change engine walks.
 CERT_ITEMS = {
-    "hm": ["C04-16", "C15-59"], "pf": ["C04-17", "C15-60"], "rc": ["C05-19", "C15-63"],
+    "hm": ["C04-16", "C04-70", "C15-59"], "pf": ["C04-17", "C04-71", "C15-60"], "rc": ["C05-19", "C15-63"],
     "doc": ["C15-56"], "td": ["C02-07", "C15-57"], "comp": ["C02-08", "C15-58"],
     "pcr": ["C06-22", "C06-23", "C15-62"], "iso": ["C13-52"], "fsc": ["C15-56"], "oth": [],
 }
 # A material/formulation change re-opens the substance, recyclability and BOM items.
-MATERIAL_CHANGE_ITEMS = ["C02-06", "C02-07", "C02-08", "C04-16", "C05-19", "C06-22",
+MATERIAL_CHANGE_ITEMS = ["C02-06", "C02-07", "C02-08", "C04-16", "C04-70", "C05-19", "C06-22",
                          "C12-48", "C15-57", "C15-58", "C15-59", "C15-63"]
 
 MATERIAL_GROUPS = ["paper", "plastic", "glass", "metal", "wood", "textile", "other"]

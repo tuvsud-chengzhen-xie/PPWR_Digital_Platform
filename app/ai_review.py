@@ -181,7 +181,7 @@ def _r_recyclability(ctx):
     m = (method.data.get("method") if method else "") or ""
     return [check("Recyclability conclusion written (Art 6(1), Annex II)", _filled(ctx, "concl"),
                   "" if _filled(ctx, "concl") else "Conclusion missing", KB["a6"]),
-            check("Assessment method stated (C05-21, e.g. EN 13430 / EN 18120)", bool(m.strip()),
+            check("Assessment method stated (C05-21, e.g. EN 13430 used as guidance)", bool(m.strip()),
                   m or "Method not stated on C05-21", KB["en13430"]),
             *_supplier_certs(ctx, "rc", "Recyclability declarations for key components", soft=True)]
 
@@ -303,6 +303,67 @@ def _supplier_item(doc_type: str):
     return rule
 
 
+def _iso_date(text) -> dt.date | None:
+    m = re.search(r"(\d{4})-(\d{2})-(\d{2})", str(text or ""))
+    try:
+        return dt.date(int(m.group(1)), int(m.group(2)), int(m.group(3))) if m else None
+    except ValueError:
+        return None
+
+
+def _r_hm_report(ctx):
+    v = _number(ctx.data.get("res"))
+    out = [check("Report / CoC file attached (Annex VII 2(f) test reports)", bool(ctx.evidence),
+                 f"{len(ctx.evidence)} file(s)" if ctx.evidence else "No file", KB["annex7"]),
+           check("Report number and laboratory registered", _filled(ctx, "cocno") and _filled(ctx, "lab"),
+                 f"{ctx.data.get('cocno', '')} · {ctx.data.get('lab', '')}".strip(" ·") or "Missing", KB["checklist"]),
+           check("Art 5(4) limit: Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg", None if v is None else v <= 100,
+                 "No numeric result" if v is None else f"{v:g} mg/kg", KB["a5"]),
+           check("Scope covers all components incl. inks and adhesives", _filled(ctx, "scope") or None,
+                 ctx.data.get("scope") or "Scope not stated", KB["a5"])]
+    main = ctx.sibling("C04-16")
+    mv = _number(main.data.get("res")) if main and main.data else None
+    if v is not None and mv is not None:
+        out.append(check("Result agrees with C04-16", abs(v - mv) < 0.5, f"{v:g} vs {mv:g} mg/kg", KB["a5"]))
+    d = _iso_date(ctx.data.get("rdate"))
+    if d:
+        age = _months_old(d)
+        out.append(check(f"Report within {config.REPORT_MAX_AGE_MONTHS} months", age <= config.REPORT_MAX_AGE_MONTHS,
+                         f"{d:%d %b %Y} ({age:.0f} months)", KB["checklist"]))
+    return out
+
+
+def _r_pfas_report(ctx):
+    app = str(ctx.data.get("app", ""))
+    out = [check("Applicability selected", bool(app), app or "Not selected", KB["a5pfas"]),
+           check("Report / declaration attached", bool(ctx.evidence), f"{len(ctx.evidence)} file(s)" if ctx.evidence
+                 else "No file", KB["a5pfas"])]
+    if app.startswith("Applicable"):
+        out.append(check("Number and issuer registered", _filled(ctx, "rno") and _filled(ctx, "lab"),
+                         ctx.data.get("rno") or "Missing", KB["checklist"]))
+        out.append(check("Method and values stated (targeted PFAS / total fluorine)",
+                         _filled(ctx, "method") and _filled(ctx, "val"), ctx.data.get("val") or "Missing", KB["a5pfas"]))
+    return out
+
+
+def _r_fcm_doc(ctx):
+    return [check("Food-contact declaration attached", bool(ctx.evidence),
+                  f"{len(ctx.evidence)} file(s)" if ctx.evidence else "No file", KB["a5pfas"]),
+            check("Number and issuer registered", _filled(ctx, "declno") and _filled(ctx, "issuer"),
+                  ctx.data.get("declno") or "Missing", KB["checklist"]),
+            check("Materials / conditions of use stated", _filled(ctx, "scope") or None,
+                  ctx.data.get("scope") or "Not stated", KB["a5pfas"])]
+
+
+def _r_art5_statement(ctx):
+    return [check("Statement number, issuer and date registered",
+                  all(_filled(ctx, k) for k in ("stno", "issuer", "date")), ctx.data.get("stno") or "Missing",
+                  KB["checklist"]),
+            check("Basis cites the Art 5 evidence", _filled(ctx, "basis"), "" if _filled(ctx, "basis") else "Missing",
+                  KB["a5"]),
+            check("Conclusion written", _filled(ctx, "concl"), "" if _filled(ctx, "concl") else "Missing", KB["a5"])]
+
+
 RULES = {
     "C01-01": _r_upi, "C01-02": _r_sku, "C01-03": _r_supplier_site, "C01-04": _r_mass,
     "C01-05": _r_photos, "C04-16": _r_heavy_metals, "C04-17": _r_pfas, "C04-18": _r_food_contact,
@@ -312,6 +373,7 @@ RULES = {
     "C15-57": _supplier_item("td"), "C15-58": _supplier_item("comp"), "C15-59": _supplier_item("hm"),
     "C15-60": _supplier_item("pf"), "C15-56": _supplier_item("doc"), "C15-63": _supplier_item("rc"),
     "C15-62": _supplier_item("pcr"),
+    "C04-70": _r_hm_report, "C04-71": _r_pfas_report, "C04-72": _r_fcm_doc, "C04-73": _r_art5_statement,
 }
 
 
@@ -362,9 +424,115 @@ def review(sub: Submission, project: Project, unit: PackagingUnit | None,
                         KB["annex7"])]
     else:
         checks = (RULES.get(sub.item_id, _generic))(ctx) + _evidence_checks(ctx)
+    for c in checks:
+        c["desc_zh"], c["msg_zh"] = desc_zh(c["desc"]), msg_zh(c.get("msg", ""))
     oks = [c["ok"] for c in checks]
     verdict = "fail" if False in oks else "warn" if None in oks else "pass"
     return verdict, checks
+
+
+# ---------------------------------------------------------------------------
+# Bilingual output — every check is shown in English and Chinese
+# ---------------------------------------------------------------------------
+
+DESC_ZH = {
+    "UPI filled — the single index of the packaging in the TD and DoC": "已填写 UPI——包装在技术文档与 DoC 中的唯一索引",
+    "Packaging name and level given": "已填写包装名称与层级",
+    "Product / SKU scope stated (DoC object of declaration)": "已注明产品 / SKU 范围（DoC 声明对象）",
+    "Packaging supplier and country of manufacture given": "已填写包装供应商与生产国",
+    "Packaging mass (g) given — Art 10 minimisation baseline": "已填写包装质量（g）——Art 10 最小化基线",
+    "Dimensions (mm) given — Art 24 empty-space input": "已填写尺寸（mm）——Art 24 空隙率输入",
+    "Unit mass agrees with the BOM (sum of component masses, ±10 %)": "单元质量与 BOM 一致（组件质量之和，±10%）",
+    "Photo / artwork reference or photo files present": "已有照片 / Artwork 引用或照片文件",
+    "Art 5(4) limit: Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg": "Art 5(4) 限值：Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg",
+    "Recognised test method (ICP-OES/MS, AAS, EN 13657, IEC 62321)": "公认检测方法（ICP-OES/MS、AAS、EN 13657、IEC 62321）",
+    "Heavy-metal evidence for every component (supplier library)": "每个组件均有重金属证据（供应商库）",
+    "PFAS applicability decided": "已判断 PFAS 适用性",
+    "N/A rationale recorded": "已记录 N/A 理由",
+    "PFAS test report / declaration attached": "已附 PFAS 检测报告 / 声明",
+    "PFAS evidence for every component (supplier library)": "每个组件均有 PFAS 证据（供应商库）",
+    "Food-contact status stated": "已注明食品接触属性",
+    "Recyclability conclusion written (Art 6(1), Annex II)": "已填写可回收性结论（Art 6(1)、Annex II）",
+    "Assessment method stated (C05-21, e.g. EN 13430 used as guidance)": "已注明评估方法（C05-21，如以 EN 13430 为指引）",
+    "Recyclability declarations for key components": "关键组件的可回收性声明",
+    "Transitional assessment method stated": "已注明过渡期评估方法",
+    "PCR % recorded for the plastic part": "已记录塑料部分的 PCR %",
+    "PCR % agrees with the BOM": "PCR % 与 BOM 一致",
+    "Minimisation conclusion written (Art 10(1))": "已填写最小化结论（Art 10(1)）",
+    "Annex IV performance criteria addressed": "已涉及 Annex IV 性能准则",
+    "Empty-space ratio (Art 24) — sales unit: record applicability": "空隙率（Art 24）——销售单元：记录适用性",
+    "Empty-space ratio ≤ 50 % (Art 24, from 2030)": "空隙率 ≤ 50%（Art 24，2030 年起）",
+    "Single-use / reusable consistent with the project profile": "一次性 / 可重复使用与项目概况一致",
+    "Position of manufacturer / identification information on the artwork": "制造商 / 识别信息在 Artwork 上的位置",
+    "Standards list has at least one entry (Annex VII 2(d))": "标准清单至少一项（Annex VII 2(d)）",
+    "EU DoC number": "欧盟 DoC 编号", "TD number / version referenced": "已引用技术文档编号 / 版本",
+    "Signatory (name, function)": "签署人（姓名、职务）", "Place of issue": "签发地点",
+    "Prepared / Reviewed / Approved all named (TD §21)": "编制 / 审核 / 批准人均已填写（TD §21）",
+    "Supplier evidence attached": "已附供应商证据", "Evidence file attached": "已附证据文件",
+    "N/A reason given (≥ 20 characters)": "已给出 N/A 理由（≥ 20 字符）",
+    "N/A consistent with the applicability matrix": "N/A 与适用性矩阵一致",
+    "Report / CoC file attached (Annex VII 2(f) test reports)": "已附报告 / CoC 文件（Annex VII 2(f) 测试报告）",
+    "Report number and laboratory registered": "已登记报告编号与实验室",
+    "Scope covers all components incl. inks and adhesives": "覆盖范围含全部组件（含油墨、胶黏剂）",
+    "Result agrees with C04-16": "结果与 C04-16 一致", "Applicability selected": "已选择适用性",
+    "Report / declaration attached": "已附报告 / 声明", "Number and issuer registered": "已登记编号与签发方",
+    "Method and values stated (targeted PFAS / total fluorine)": "已注明方法与数值（靶向 PFAS / 总氟）",
+    "Food-contact declaration attached": "已附食品接触声明", "Materials / conditions of use stated": "已注明材料 / 使用条件",
+    "Statement number, issuer and date registered": "已登记声明编号、出具方与日期",
+    "Basis cites the Art 5 evidence": "依据引用了 Art 5 证据", "Conclusion written": "已填写结论",
+}
+DESC_ZH_RE = [
+    (re.compile(r"^PFAS applicability consistent with the profile \(food contact expected: (.+)\)$"),
+     lambda m: "PFAS 适用性与项目概况一致（预期食品接触：" + {"yes": "是", "no": "否"}.get(m.group(1), "视单元而定") + "）"),
+    (re.compile(r"^Food-contact status consistent with the project profile(.*)$"),
+     lambda m: "食品接触属性与项目概况一致" + ("（外包装——专家确认）" if m.group(1) else "")),
+    (re.compile(r"^Applicability consistent with the BOM \(plastic components: (\d+)\)$"),
+     lambda m: f"适用性与 BOM 一致（塑料组件：{m.group(1)}）"),
+    (re.compile(r"^(.+) certificate valid for every supplied component$"), lambda m: f"{m.group(1)} 证书对每个供货组件均有效"),
+    (re.compile(r"^“(.+)” completed$"), lambda m: f"“{m.group(1)}”已填写"),
+    (re.compile(r"^(.+): test report within (\d+) months$"), lambda m: f"{m.group(1)}：检测报告在 {m.group(2)} 个月内"),
+    (re.compile(r"^(.+): evidence states conformity$"), lambda m: f"{m.group(1)}：证据声明符合"),
+    (re.compile(r"^Report within (\d+) months$"), lambda m: f"报告在 {m.group(1)} 个月内"),
+]
+MSG_ZH = [
+    ("No file — acceptable only if the entry itself is the evidence", "无文件——仅当填写内容本身即为证据时可接受"),
+    ("No file — confirm with the supplier", "无文件——请与供应商确认"), ("No file uploaded", "未上传文件"),
+    ("No numeric result — expert to read the report", "无数值结果——由专家阅读报告"),
+    ("No numeric result", "无数值结果"), ("Add the reason for N/A", "请补充 N/A 理由"),
+    ("Record why Art 24 does not apply to this level", "请记录 Art 24 为何不适用于该层级"),
+    ("No ratio found in the note", "说明中未找到比例"), ("Approval chain incomplete", "审批链不完整"),
+    ("Marked non-conform — explain or replace", "标记为不符合——请说明或替换"),
+    ("Supplier or country missing", "缺少供应商或国家"), ("Packaging level missing", "缺少包装层级"),
+    ("Conclusion missing", "缺少结论"), ("Method not stated", "未注明方法"), ("UPI missing", "缺少 UPI"),
+    ("Mass missing", "缺少质量"), ("Dimensions missing", "缺少尺寸"), ("No SKU mapping", "无 SKU 对应"),
+    ("PCR % missing", "缺少 PCR %"), ("Scope not stated", "未注明范围"), ("Not selected", "未选择"),
+    ("Not stated", "未注明"), ("Missing", "缺失"), ("Empty", "空"), ("No file", "无文件"), ("file(s)", "个文件"),
+    ("exceeds 100 mg/kg — may not be placed on the market", "超过 100 mg/kg——不得投放市场"),
+    ("covered by uploaded evidence", "由已上传证据覆盖"), ("No certificate for", "无证书："),
+    ("components covered by valid", "个组件有有效"), ("certificates", "证书"), ("months", "个月"),
+    ("deviation", "偏差"), ("declared", "申报"), ("expired", "已过期"), ("of 7 criteria mentioned", "/7 项准则已提及"),
+    ("expert to confirm the exception", "由专家确认例外"), ("Matrix", "矩阵"), ("standard(s)", "项标准"),
+    ("photo file(s)", "个照片文件"),
+]
+
+
+def desc_zh(desc: str) -> str:
+    if desc in DESC_ZH:
+        return DESC_ZH[desc]
+    for rx, fn in DESC_ZH_RE:
+        m = rx.match(desc)
+        if m:
+            return fn(m)
+    return ""
+
+
+def msg_zh(msg: str) -> str:
+    if not msg:
+        return ""
+    out = msg
+    for en, zh in MSG_ZH:
+        out = out.replace(en, zh)
+    return out if out != msg else ""
 
 
 def apply(sub: Submission, project: Project, unit, evidence) -> None:
@@ -374,4 +542,5 @@ def apply(sub: Submission, project: Project, unit, evidence) -> None:
 
 
 VERDICT_LABEL = {"pass": "AI: no issues found", "warn": "AI: check needed", "fail": "AI: issues found"}
+VERDICT_LABEL_ZH = {"pass": "AI：未发现问题", "warn": "AI：需核查", "fail": "AI：发现问题"}
 VERDICT_BADGE = {"pass": "badge-ok", "warn": "badge-warn", "fail": "badge-high"}

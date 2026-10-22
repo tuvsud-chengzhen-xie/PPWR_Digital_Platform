@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import stage, progress_cell, stack, legend %}
+{% from "_macros.html" import stage, progress_cell, stack, legend with context %}
 {% block title %}Dashboard{% endblock %}
 {% block page %}
 <main class="page">
@@ -47,7 +47,7 @@
 
     <section class="card">
         <div class="card-head">
-            <h2 class="card-title">How the service flows <span class="hint">live counts</span></h2>
+            <h2 class="card-title">{{ t('How the service flows', '服务流程') }} <span class="hint">{{ t('live counts', '实时数量') }}</span></h2>
         </div>
         <div class="flow">
             {% for name, count, note in flow %}
@@ -58,6 +58,20 @@
             {% if not loop.last %}<span class="flow-arrow">→</span>{% endif %}
             {% endfor %}
         </div>
+    </section>
+
+    <section class="card">
+        <div class="card-head">
+            <h2 class="card-title">{{ t('Regulatory updates', '法规动态') }} <span class="hint">{{ t('implementing acts · standards · guidance — impact on your evidence', '实施法案 · 标准 · 指南——对证据的影响') }}</span></h2>
+            <a class="btn btn-sm" href="/updates">{{ t('All updates', '全部动态') }} →</a>
+        </div>
+        <ul class="todo">
+            {% for u in reg_updates %}
+            <li><a href="/updates/{{ u.id }}"><span><span class="todo-title"><span class="chip-id">{{ u.code }}</span> {{ t(u.title, u.title_zh) }}
+                {% if u.id not in reg_seen %}<span class="badge badge-info">{{ t('new', '新') }}</span>{% endif %}</span>
+                <span class="todo-sub">{{ u.date_label }} · {{ tt(u.impact, u.impact_zh) | truncate(200) }}</span></span><span class="go">→</span></a></li>
+            {% else %}<li class="muted small">{{ t('No updates tracked.', '暂无动态。') }}</li>{% endfor %}
+        </ul>
     </section>
 
     <div class="grid-2">

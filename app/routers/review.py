@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
-from .. import ai_review, applicability, auth, catalogue, workflow
+from .. import ai_review, applicability, assistant, auth, catalogue, guidance, workflow
 from ..db import AuditEvent, Project, Submission, User, get_session
 from ..web import base_context, project_context, redirect, render
 
@@ -62,7 +62,8 @@ def collect(pid: int, request: Request, unit: Optional[str] = None, status: Opti
     return render("project/collect.html", project_context(
         request, session, p, "collect", current=current, groups=groups, unit_tabs=unit_tabs,
         project_prog=project_prog, unit_param=unit or (str(current.id) if current else "project"),
-        status_filter=status or "", q=q or "", ev_count=ev_count, subs_prog=workflow.progress(subs)))
+        status_filter=status or "", q=q or "", ev_count=ev_count, subs_prog=workflow.progress(subs),
+        obs={s.id: guidance.obligation(p, s.unit, s.item_id, s.is_done) for s in shown}))
 
 
 # ---------------------------------------------------------------------------
@@ -91,7 +92,8 @@ def item_page(pid: int, sid: int, request: Request, session: Session = Depends(g
         evidence=_evidence_for(p, s), art_status=art_status, art_basis=art_basis, history=history,
         prev=peers[idx - 1] if idx > 0 else None, next=peers[idx + 1] if idx + 1 < len(peers) else None,
         next_open=open_peers[0] if open_peers else None, comps=unit_comps, table=table,
-        locked=s.status in ("approved", "na") and not user.is_expert))
+        locked=s.status in ("approved", "na") and not user.is_expert,
+        ev=guidance.evaluate(p, s, evidence=_evidence_for(p, s)), suggestions=assistant.suggestions_for(s.item_id)))
 
 
 @router.post("/projects/{pid}/items/{sid}/save")
@@ -116,17 +118,23 @@ async def item_save(pid: int, sid: int, request: Request, session: Session = Dep
                 rows.append(row)
         s.table = rows
     action = form.get("action", "save")
+    kind = "success"
     if action == "submit":
         workflow.submit(session, s, user.display_name)
-        msg = "Submitted — the AI pre-review runs next."
+        msg = "Submitted — the AI pre-review runs next. · 已提交，接下来进行 AI 初审。"
+        gaps = guidance.evaluate(p, s)["gaps"]
+        if gaps:
+            msg = (f"Submitted with {len(gaps)} open point(s) — the expert may send it back: {gaps[0]['en']} · "
+                   f"已提交，但仍有 {len(gaps)} 处缺失，专家可能退回。")
+            kind = "warn"
     else:
-        msg = "Saved as draft"
+        msg = "Saved as draft · 已保存草稿"
     session.commit()
     if action == "submit" and form.get("then") == "next":
         nxt = form.get("next_id")
         if nxt:
-            return redirect(f"/projects/{pid}/items/{nxt}", msg)
-    return redirect(f"/projects/{pid}/items/{sid}", msg)
+            return redirect(f"/projects/{pid}/items/{nxt}", msg, kind)
+    return redirect(f"/projects/{pid}/items/{sid}", msg, kind)
 
 
 @router.post("/projects/{pid}/items/{sid}/na")

@@ -1,11 +1,23 @@
 {% extends "project/_layout.html" %}
-{% from "_macros.html" import stack, legend, progress_cell %}
+{% from "_macros.html" import stack, legend, progress_cell with context %}
 {% block content %}
 <div class="layout-2col">
     <div class="layout-main">
+        <section class="card guide-summary">
+            <div class="card-head">
+                <h2 class="card-title">{{ t('Compliance status', '合规状态') }} <span class="hint">{{ t('legal priority of what is still open', '未完成事项的法律优先级') }}</span></h2>
+                <a class="btn btn-sm" href="/projects/{{ project.id }}/guide">{{ t('Open the compliance guide', '打开合规指引') }} →</a>
+            </div>
+            <div class="kpi-strip">
+                <a class="kpi-tile is-headline" href="/projects/{{ project.id }}/guide?level=mandatory_now"><span class="kpi-label">{{ t('Legally required now — open', '现行法定必需——未完成') }}</span><span class="kpi-value {{ 'is-alert' if gaps.counts.mandatory_now }}">{{ gaps.counts.mandatory_now }}</span><span class="kpi-sub">{{ gaps.overdue }} {{ t('overdue', '逾期') }}</span></a>
+                <a class="kpi-tile" href="/projects/{{ project.id }}/guide?level=mandatory_from"><span class="kpi-label">{{ t('Required later', '日后必需') }}</span><span class="kpi-value">{{ gaps.counts.mandatory_from }}</span></a>
+                <a class="kpi-tile" href="/projects/{{ project.id }}/guide?level=supporting"><span class="kpi-label">{{ t('Recommended evidence', '建议证据') }}</span><span class="kpi-value">{{ gaps.counts.supporting }}</span></a>
+            </div>
+            {% for a in alerts[:3] %}<div class="banner banner-info small" style="margin-top:8px"><b>{{ t('Regulatory update', '法规动态') }} <a href="/updates/{{ a.u.id }}">{{ a.u.code }}</a>:</b>&nbsp;{{ t(a.u.title, a.u.title_zh) }} — {{ a.open }} {{ t('open', '待收集') }} / {{ a.approved }} {{ t('approved to re-check', '已批准待复核') }}</div>{% endfor %}
+        </section>
         <section class="card">
             <div class="card-head">
-                <h2 class="card-title">Applicability matrix <span class="hint">TD §5 · from the profile and the BOM</span></h2>
+                <h2 class="card-title">{{ t('Applicability matrix', '适用性矩阵') }} <span class="hint">TD §5 · from the profile and the BOM</span></h2>
                 <span class="xs muted">Materials in BOM: {{ groups | join(', ') or '— add components' }}</span>
             </div>
             <div class="table-wrap">

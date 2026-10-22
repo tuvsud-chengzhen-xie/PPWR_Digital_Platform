@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
-from .. import auth, catalogue, config
+from .. import assistant, auth, catalogue, config, guidance, rag
 from ..db import User, get_session
 from ..web import base_context, render
 
@@ -57,7 +57,13 @@ def knowledge(request: Request, session: Session = Depends(get_session), user: U
             if f.suffix.lower() in (".xlsx", ".png"):
                 kit.append({"name": f.name, "href": f"/kit/{quote(f.name)}", "ext": f.suffix.lstrip(".").upper(),
                             "size": f.stat().st_size})
+    pool = rag.pool()
+    st = rag.status()
+    st.pop("doc_list", None)
     return render("knowledge.html", base_context(request, session, "knowledge", folders=folders, kit=kit,
                                                  dates=KEY_DATES, article_map=ARTICLE_MAP,
                                                  cats=catalogue.categories(), items=catalogue.items(),
-                                                 sections=catalogue.td_sections()))
+                                                 sections=catalogue.td_sections(), pool=pool["entries"],
+                                                 kinds=pool["kinds"], kb_status=st,
+                                                 suggestions=assistant.suggestions_for(None),
+                                                 levels={i["id"]: guidance.level_of(i["id"]) for i in catalogue.items()}))

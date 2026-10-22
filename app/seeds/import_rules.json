@@ -1,0 +1,1504 @@
+{
+"_about": "Ported verbatim from the V4.2 prototype (PPWR_资料收集与批复系统_V4.2_Art5证明文件专项目版): filename / content keyword library per item (ITEM_KEYWORDS), table-header aliases (TH_ALIAS) and the Appendix-A folder map (ANNEX_FOLDERS). Extended after porting: C03-11 'dieline' terms.",
+"keywords": {
+"C01-01": [
+"upi",
+"唯一标识",
+"包装识别",
+"包装信息表",
+"包装编号",
+"identification",
+"unique packaging identifier",
+"包装基本",
+"包装注册",
+"包装描述",
+"description of packaging",
+"包装识别码"
+],
+"C01-02": [
+"sku",
+"产品对应",
+"型号范围",
+"产品-sku",
+"product/sku",
+"sku列表",
+"product reference",
+"适用产品",
+"型号对应",
+"sku 范围",
+"产品列表",
+"product list"
+],
+"C01-03": [
+"供应商信息",
+"生产地点",
+"供应商资料",
+"supplier info",
+"工厂信息",
+"供应商及生产",
+"manufacturer",
+"supplier",
+"vendor",
+"生产商",
+"代工厂",
+"制造厂",
+"manufacturer information",
+"economic operator",
+"供应商名称"
+],
+"C01-04": [
+"质量尺寸",
+"质量及尺寸",
+"规格记录",
+"mass",
+"dimension",
+"重量尺寸",
+"包装质量",
+"总质量",
+"净重",
+"weight",
+"gross weight",
+"net weight",
+"尺寸",
+"长宽高",
+"size"
+],
+"C01-05": [
+"照片",
+"实物图",
+"外观图",
+"photo",
+"picture",
+"效果图",
+"实物照",
+"product image",
+"packaging photo",
+"成品图",
+"外观照片",
+"product photo"
+],
+"C02-06": [
+"bom",
+"物料清单",
+"材料清单",
+"结构清单",
+"bill of material",
+"组件清单",
+"component list",
+"结构与材料",
+"bom list",
+"物料分解",
+"零件清单",
+"parts list"
+],
+"C02-07": [
+"tds",
+"材料规格",
+"技术数据表",
+"material spec",
+"datasheet",
+"technical data sheet",
+"technical specification",
+"材料规格书",
+"材料物性",
+"材料技术参数",
+"材料参数表"
+],
+"C02-08": [
+"材料组成",
+"完整成分",
+"composition",
+"成分表",
+"配方表",
+"material composition",
+"chemical composition",
+"full composition",
+"配方组成",
+"material breakdown",
+"配方成分"
+],
+"C02-09": [
+"油墨",
+"ink",
+"胶黏剂",
+"粘合剂",
+"adhesive",
+"涂层",
+"coating",
+"脱墨",
+"deinking",
+"印刷油墨",
+"油墨涂层",
+"ink coating",
+"胶水",
+"glue"
+],
+"C03-10": [
+"设计图",
+"包装图纸",
+"drawing",
+"design",
+"包装设计图",
+"结构设计",
+"结构图纸",
+"construction drawing",
+"设计稿",
+"工程图",
+"engineering drawing"
+],
+"C03-11": [
+"刀模",
+"die-cut",
+"diecut",
+"模切",
+"结构图",
+"箱型图",
+"die cut",
+"刀版图",
+"模切图",
+"box design",
+"die cutting",
+"盒型图",
+"dieline",
+"die-line",
+"die line",
+"cutting die",
+"blank layout"
+],
+"C03-12": [
+"artwork",
+"标签设计",
+"label design",
+"印刷文件",
+"版面稿",
+"菲林",
+"graphic design",
+"artwork file",
+"印刷文件稿",
+"label artwork",
+"印刷设计",
+"彩稿"
+],
+"C03-13": [
+"制造规格",
+"manufacturing spec",
+"工艺规格",
+"生产规格",
+"production specification",
+"process specification",
+"工艺标准",
+"production standard",
+"工艺要求",
+"specification of production"
+],
+"C03-14": [
+"控制计划",
+"control plan",
+"工艺流程",
+"作业指导",
+"work instruction",
+"process flow",
+"作业指导书",
+"sop",
+"production control",
+"工艺控制计划"
+],
+"C03-15": [
+"设计理由",
+"设计说明",
+"rationale",
+"justification",
+"技术依据",
+"design rationale",
+"design justification",
+"technical justification",
+"技术理由",
+"design statement",
+"符合性说明"
+],
+"C04-16": [
+"重金属",
+"heavy metal",
+"pb+cd",
+"铅",
+"镉",
+"汞",
+"六价铬",
+"icp",
+"heavy-metal",
+"pb",
+"cd",
+"hg",
+"cr6+",
+"cr(vi)",
+"四项总和",
+"4 heavy metals",
+"重金属总量",
+"heavy metals content",
+"94/62/ec",
+"rohs",
+"icp-oes",
+"xrf",
+"en 71-3",
+"lead",
+"cadmium",
+"mercury",
+"chromium vi"
+],
+"C04-17": [
+"pfas",
+"全氟",
+"多氟",
+"总氟",
+"perfluoroalkyl",
+"polyfluoroalkyl",
+"pfas content",
+"pfas 检测",
+"pfas 声明",
+"pfoa",
+"pfos",
+"genx",
+"perfluorinated",
+"有机氟化物",
+"氟化物检测"
+],
+"C04-18": [
+"食品接触",
+"food contact",
+"fcm",
+"1935",
+"1935/2004",
+"food contact material",
+"fcm regulation",
+"食品级",
+"食品包装",
+"food grade",
+"接触材料",
+"food safe"
+],
+"C04-70": [
+"重金属 coc",
+"heavy metal coc",
+"coc certificate",
+"coc 证书",
+"重金属检测报告",
+"heavy metal test report",
+"heavy metal report",
+"heavy metal certificate",
+"hm report",
+"hm cert",
+"icp-oes report",
+"icp-ms report",
+"重金属报告",
+"coc-hm",
+"hm coc",
+"第三方检测",
+"第三方报告",
+"third-party test",
+"lab report",
+"laboratory report",
+"sgs",
+"eurofins",
+"intertek",
+"tuv",
+"bv",
+"bureau veritas",
+"rohs test",
+"rohs report",
+"rohs certificate",
+"rohs coc",
+"94/62/ec coc",
+"94/62/ec test",
+"重金属符合性",
+"heavy metal conformity"
+],
+"C04-71": [
+"pfas coc",
+"pfas certificate",
+"pfas declaration",
+"pfas 声明",
+"pfas 检测报告",
+"pfas test report",
+"total fluorine",
+"total-fluorine",
+"总氟法",
+"总氟检测",
+"总氟报告",
+"pfas report",
+"pfas conformity",
+"pfas compliance",
+"coc-pf",
+"coc-pfas",
+"pfas statement",
+"pfas 检测",
+"pfas 报告",
+"fluorine test",
+"pfas-declaration",
+"pfas 包含者声明",
+"食品级 pfas",
+"food contact pfas",
+"pfas free",
+"no pfas",
+"pfas-free"
+],
+"C04-72": [
+"food contact coc",
+"fcm coc",
+"fcm declaration",
+"fcm do",
+"fcm doc",
+"1935/2004 coc",
+"1935/2004 do",
+"食品接触声明",
+"食品接触 coc",
+"食品接触 do",
+"食品接触 doc",
+"fcm statement",
+"fcm declaration",
+"food contact declaration",
+"fcm compliance",
+"food contact compliance",
+"1935 coc",
+"1935 do",
+"10/2011",
+"eu 10/2011",
+"1935/2004",
+"fcm certificate",
+"fcm conformity",
+"fcm 合规声明",
+"食品接触合规声明"
+],
+"C04-73": [
+"art 5 coc",
+"article 5 coc",
+"art 5 statement",
+"article 5 statement",
+"art 5 declaration",
+"article 5 declaration",
+"art 5 合规声明",
+"article 5 合规",
+"soc coc",
+"soc statement",
+"soc declaration",
+"substances of concern coc",
+"substances of concern statement",
+"art 5 conformity",
+"art 5 compliance",
+"art 5 so",
+"art 5 符合性声明",
+"art 5 declaration of conformity",
+"art 5 do",
+"art5 coc",
+"art5 statement",
+"art 5",
+"article 5",
+"soc",
+"soc 合规",
+"soc 声明",
+"substances of concern",
+"物质要求声明",
+"art 5 certificate",
+"soc certificate",
+"soc conformity",
+"article 5 conformity",
+"article 5 certificate",
+"soc 合规声明",
+"物质要求 coc",
+"art 5 合规陈述",
+"art5",
+"soc-statement",
+"soc-conformity",
+"soc-certificate"
+],
+"C05-19": [
+"可回收",
+"回收性",
+"recyclab",
+"13430",
+"回收评估",
+"recyclability",
+"recycling assessment",
+"可回收设计",
+"recyclable design",
+"recyclable",
+"en 13430",
+"回收评价",
+"回收能力"
+],
+"C05-20": [
+"相容性",
+"兼容性",
+"compatib",
+"deink",
+"可分离性",
+"compatibility",
+"separation",
+"脱墨性",
+"deinkability",
+"material compatibility",
+"分离性",
+"sortability"
+],
+"C05-21": [
+"评估方法",
+"方法标准",
+"methodology",
+"评估依据",
+"标准依据",
+"assessment method",
+"evaluation method",
+"method standard",
+"参考标准",
+"applied standard",
+"依据标准"
+],
+"C06-22": [
+"再生料",
+"再生含量",
+"回收料",
+"pcr",
+"recycled content",
+"post-consumer",
+"post-consumer recycled",
+"pcr content",
+"再生材料",
+"recycled material",
+"再生比例",
+"回收料含量"
+],
+"C06-23": [
+"再生验证",
+"pcr验证",
+"再生证明",
+"recycled verification",
+"pcr verification",
+"recycled certification",
+"再生料验证",
+"回收料验证",
+"pcr certificate"
+],
+"C07-24": [
+"生物基",
+"bio-based",
+"biobased",
+"生物质基",
+"bio based",
+"生物基含量",
+"biobased content",
+"生物基材料",
+"bio material",
+"renewable carbon",
+"生物来源"
+],
+"C07-25": [
+"生物基标签",
+"biobased label",
+"bio-based label",
+"生物基标识",
+"生物基声明",
+"biobased certification",
+"生物基证书",
+"生物基 mark",
+"bio based mark",
+"生物基符号"
+],
+"C08-26": [
+"堆肥",
+"compost",
+"可降解",
+"降解性",
+"compostable",
+"biodegradable",
+"可堆肥",
+"可降解包装",
+"compostable packaging",
+"home compost",
+"industrial compost",
+"家庭堆肥",
+"工业堆肥"
+],
+"C08-27": [
+"堆肥测试",
+"13432",
+"compost test",
+"en 13432",
+"compostability test",
+"堆肥认证",
+"compostability certification",
+"生物降解测试",
+"biodegradation test"
+],
+"C08-28": [
+"堆肥标签",
+"compostable label",
+"可堆肥标识",
+"ok compost",
+"home compost label",
+"seedling logo",
+"堆肥标识",
+"compostable mark",
+"compost certification mark",
+"可堆肥标签"
+],
+"C09-29": [
+"最小化",
+"减量化",
+"minimi",
+"减量评估",
+"minimisation",
+"minimization",
+"packaging minimisation",
+"轻量化",
+"lightweighting",
+"减重设计",
+"reduction",
+"最小化评估"
+],
+"C09-30": [
+"跌落",
+"压缩测试",
+"堆码",
+"运输测试",
+"保护测试",
+"drop test",
+"compression",
+"stacking",
+"ista",
+"产品保护",
+"drop",
+"compression test",
+"stacking test",
+"运输包装测试",
+"performance test",
+"防护性能"
+],
+"C09-31": [
+"制造过程",
+"工艺限制",
+"制造证据",
+"manufacturing process",
+"production process",
+"process limitation",
+"工艺证据",
+"process evidence",
+"manufacturing evidence"
+],
+"C09-32": [
+"物流",
+"运输证据",
+"logistics",
+"distribution",
+"运输",
+"shipping",
+"运输条件",
+"transport condition",
+"物流证据",
+"distribution evidence"
+],
+"C09-33": [
+"功能性",
+"开启测试",
+"function",
+"functionality",
+"易开启",
+"easy open",
+"opening test",
+"function test",
+"功能测试"
+],
+"C09-34": [
+"卫生",
+"安全要求",
+"信息要求",
+"hygiene",
+"safety",
+"information requirement",
+"卫生要求",
+"safety requirement",
+"健康信息"
+],
+"C09-35": [
+"空隙",
+"void",
+"空隙率",
+"void fill",
+"空隙填充",
+"empty space",
+"void ratio",
+"space efficiency"
+],
+"C09-36": [
+"双层壁",
+"假底",
+"double wall",
+"false bottom",
+"double walled",
+"双层",
+"false bottom packaging",
+"双层结构",
+"dual wall",
+"duplicate wall design"
+],
+"C10-37": [
+"重复使用",
+"可重复",
+"reuse",
+"循环使用",
+"reusable",
+"reuse packaging",
+"可重复使用",
+"refill",
+"重复灌装",
+"reusable packaging"
+],
+"C10-38": [
+"重复使用性能",
+"reuse test",
+"reuse performance",
+"reuse assessment",
+"重复使用测试",
+"重复灌装测试",
+"refill test",
+"reuse evaluation",
+"reuse criteria",
+"reuse durability"
+],
+"C10-39": [
+"回收系统",
+"返回系统",
+"清洗系统",
+"return system",
+"collection system",
+"reverse logistics",
+"清运系统",
+"washing system",
+"returnable"
+],
+"C11-40": [
+"制造商信息",
+"经济运营者",
+"manufacturer info",
+"producer information",
+"manufacturer identification",
+"economic operator",
+"manufacturer declaration",
+"生产商信息"
+],
+"C11-41": [
+"追溯信息",
+"追溯码",
+"traceab",
+"批次编码",
+"traceability",
+"batch code",
+"lot number",
+"traceability code",
+"批次号",
+"serial number"
+],
+"C11-42": [
+"材料标识",
+"分选信息",
+"处置信息",
+"sorting",
+"回收标志",
+"pap标识",
+"material identification",
+"sorting instruction",
+"disposal information",
+"resin code",
+"pap",
+"pe",
+"pp",
+"pet",
+"材料分选",
+"material marking"
+],
+"C11-43": [
+"二维码",
+"qr",
+"数据载体",
+"data carrier",
+"qr code",
+"barcode",
+"data matrix",
+"二维码标识",
+"rfid",
+"digital watermark"
+],
+"C11-44": [
+"押金",
+"drs",
+"deposit",
+"deposit return",
+"押金返还",
+"deposit refund",
+"drs scheme",
+"deposit return scheme"
+],
+"C11-45": [
+"成员国",
+"member state",
+"eu member",
+"member state info",
+"欧盟成员国",
+"eu country",
+"market identification",
+"上市国",
+"first placing on market",
+"putting on the market",
+"market member"
+],
+"C12-46": [
+"风险分析",
+"风险评估",
+"risk assessment",
+"fmea",
+"hazard analysis",
+"risk analysis",
+"risk evaluation",
+"haccp",
+"risk identification"
+],
+"C12-47": [
+"变更控制",
+"change control",
+"变更通知",
+"变更承诺",
+"change notification",
+"change commitment",
+"change procedure",
+"变更程序",
+"版本变更"
+],
+"C12-48": [
+"变更评估",
+"change impact",
+"变更影响",
+"change evaluation",
+"impact assessment",
+"change assessment",
+"合规变更评估",
+"impact evaluation",
+"change effect assessment",
+"significance of change"
+],
+"C12-49": [
+"重量变更",
+"厚度变更",
+"尺寸变更",
+"规格变更",
+"weight change",
+"thickness change",
+"dimension change",
+"specification change",
+"规格调整"
+],
+"C12-50": [
+"artwork变更",
+"标签变更",
+"修订记录",
+"artwork change",
+"label revision",
+"revision record",
+"修订历史",
+"revision history"
+],
+"C13-51": [
+"来料",
+"iqc",
+"进料检验",
+"incoming inspection",
+"incoming quality",
+"来料质量",
+"收料检验",
+"incoming test"
+],
+"C13-52": [
+"首件",
+"日常qc",
+"生产检验",
+"qc记录",
+"质量检验",
+"first article",
+"in-process qc",
+"ipqc",
+"首件检验",
+"process inspection",
+"production qc"
+],
+"C13-53": [
+"放行",
+"release",
+"出厂检验",
+"final inspection",
+"release decision",
+"出厂放行",
+"出货检验",
+"oqc",
+"outgoing quality",
+"放行记录",
+"release record",
+"product release",
+"final qc"
+],
+"C14-54": [
+"标准清单",
+"适用标准",
+"standard list",
+"standards list",
+"applicable standards",
+"harmonised standards",
+"适用标准清单",
+"harmonized standards",
+"referenced standards",
+"参考标准清单"
+],
+"C14-55": [
+"evidence register",
+"证据登记",
+"证据清单",
+"evidence index",
+"evidence mapping",
+"证据索引",
+"证据目录",
+"evidence catalogue"
+],
+"C15-56": [
+"供应商符合性声明",
+"supplier declaration",
+"供应商声明",
+"supplier statement",
+"supplier certificate",
+"供应商合规声明",
+"manufacturer declaration",
+"supplier conformity",
+"declaration of conformity",
+"conformity declaration",
+"declaration of compliance",
+"eu declaration",
+"doctype",
+"供应商盖章声明",
+"供应商签字声明",
+"声明书"
+],
+"C15-57": [
+"供应商tds",
+"供应商规格",
+"supplier tds",
+"supplier specification",
+"supplier datasheet",
+"供应商技术规格",
+"technical data sheet",
+"material spec supplier",
+"供应商技术参数",
+"supplier technical spec"
+],
+"C15-58": [
+"供应商成分",
+"供应商组成",
+"supplier composition",
+"supplier material declaration",
+"供应商材料成分",
+"composition declaration",
+"material declaration",
+"supplier material statement",
+"composition statement"
+],
+"C15-59": [
+"供应商重金属",
+"供应商重金属声明",
+"supplier heavy metal",
+"heavy metal declaration",
+"重金属 supplier statement",
+"heavy metal supplier",
+"supplier hm declaration",
+"supplier heavy metal declaration",
+"supplier heavy metals"
+],
+"C15-60": [
+"供应商pfas",
+"pfas供应商声明",
+"supplier pfas",
+"pfas declaration",
+"pfas supplier statement",
+"supplier pfas declaration",
+"pfas supplier",
+"pfas material declaration"
+],
+"C15-61": [
+"供应商食品接触",
+"supplier fcm",
+"supplier food contact",
+"fcm declaration",
+"食品接触供应商声明",
+"food contact declaration",
+"fcm statement",
+"food contact supplier statement"
+],
+"C15-62": [
+"供应商再生",
+"再生证明",
+"supplier recycled",
+"pcr declaration",
+"recycled content declaration",
+"再生料声明",
+"supplier pcr",
+"recycled declaration",
+"supplier pcr declaration"
+],
+"C15-63": [
+"供应商可回收",
+"回收声明",
+"supplier recyclability",
+"recyclability declaration",
+"recyclability statement",
+"可回收性声明",
+"supplier recyclable",
+"recyclable statement"
+],
+"C15-64": [
+"油墨声明",
+"胶黏剂声明",
+"涂层声明",
+"ink declaration",
+"adhesive declaration",
+"coating declaration",
+"ink statement",
+"油墨合规声明",
+"油墨 supplier"
+],
+"C15-65": [
+"变更通知承诺",
+"供应商变更",
+"change notification commitment",
+"supplier change",
+"supplier change commitment",
+"change commitment",
+"change notification",
+"supplier change notification"
+],
+"C16-66": [
+"declaration of conformity",
+"doc编号",
+"doc资料",
+"doc信息",
+"签署信息",
+"conformity declaration",
+"eu declaration",
+"declaration of compliance",
+"doc number",
+"签署人",
+"signatory",
+"doc reference"
+],
+"C16-67": [
+"交叉引用",
+"cross-reference",
+"cross reference",
+"xref",
+"互相引用",
+"reference link",
+"reference mapping",
+"引用关系"
+],
+"C16-68": [
+"不适用依据",
+"适用性矩阵",
+"applicability",
+"applicability matrix",
+"justification of non-applicability",
+"applicable / not applicable",
+"适用性",
+"申请/不申请依据"
+],
+"C16-69": [
+"三级审批",
+"审批记录",
+"approval record",
+"签署记录",
+"approval workflow",
+"sign-off",
+"approval signature",
+"审批流程",
+"approver",
+"审批人",
+"release approval"
+]
+},
+"aliases": {
+"pkg.name": [
+"包装名称",
+"包装描述",
+"名称",
+"描述",
+"package name",
+"packaging name",
+"package",
+"name"
+],
+"pkg.type": [
+"包装类型",
+"类型",
+"type",
+"层级"
+],
+"pkg.upi": [
+"upi",
+"唯一标识",
+"包装编号",
+"包装id",
+"包装唯一",
+"unique packaging"
+],
+"pkg.skus": [
+"sku",
+"产品",
+"型号",
+"适用产品",
+"产品型号",
+"product",
+"包装产品"
+],
+"pkg.mass": [
+"包装质量",
+"总质量",
+"质量",
+"重量",
+"克重",
+"净重",
+"单位质量",
+"mass",
+"weight"
+],
+"pkg.dims": [
+"尺寸",
+"规格尺寸",
+"长宽高",
+"外形尺寸",
+"dimension",
+"size"
+],
+"pkg.sup": [
+"包装供应商",
+"供应商",
+"厂商",
+"supplier",
+"vendor",
+"供应商名称"
+],
+"pkg.site": [
+"生产地点",
+"生产工厂",
+"工厂",
+"site",
+"plant",
+"factory"
+],
+"pkg.country": [
+"生产国",
+"国家",
+"country",
+"origin"
+],
+"pkg.ref": [
+"照片",
+"参考编号",
+"photo",
+"artwork"
+],
+"bom.0": [
+"组件",
+"部件",
+"零件",
+"component",
+"part",
+"组件名称"
+],
+"bom.1": [
+"材料",
+"材质",
+"材料/结构",
+"材料结构",
+"material"
+],
+"bom.3": [
+"组件质量",
+"部件质量",
+"组件重量",
+"质量",
+"重量",
+"质量(g)",
+"重量(g)",
+"单件质量",
+"克重(g)"
+],
+"bom.4": [
+"组件尺寸",
+"部件尺寸"
+],
+"bom.5": [
+"组件供应商",
+"供应商",
+"来源",
+"source",
+"供应商/来源"
+],
+"f.C04-16.res": [
+"重金属",
+"重金属检测",
+"重金属结果",
+"重金属检测结果",
+"heavy metal",
+"四项总和",
+"pb+cd+hg+cr"
+],
+"f.C04-16.method": [
+"检测方法",
+"方法",
+"method"
+],
+"f.C04-17.note": [
+"pfas",
+"氟含量"
+],
+"f.C04-17.app": [
+"pfas适用",
+"pfas 适用",
+"pfas 适用性",
+"是否 pfas",
+"是否 pfas 适用",
+"pfas applicable"
+],
+"f.C04-18.app": [
+"食品接触",
+"food contact"
+],
+"f.C04-18.note": [
+"食品接触依据",
+"fcm 依据",
+"fcm reason",
+"food contact basis"
+],
+"f.C04-70.cocno": [
+"coc编号",
+"证书编号",
+"报告编号",
+"证书号",
+"报告号",
+"coc no",
+"certificate no",
+"report no",
+"cert no",
+"lab report no",
+"test report no",
+"coc#",
+"cert#"
+],
+"f.C04-70.lab": [
+"检测机构",
+"实验室",
+"签发方",
+"签发机构",
+"lab",
+"laboratory",
+"issuer",
+"tested by"
+],
+"f.C04-70.rdate": [
+"报告日期",
+"有效期",
+"签发日期",
+"report date",
+"issue date",
+"validity",
+"valid until",
+"expire"
+],
+"f.C04-70.scope": [
+"覆盖范围",
+"适用范围",
+"scope",
+"coverage"
+],
+"f.C04-70.res": [
+"检测结果",
+"四项结果",
+"coc 结果",
+"report result",
+"result"
+],
+"f.C04-71.app": [
+"pfas适用性",
+"pfas 适用",
+"是否适用 pfas"
+],
+"f.C04-71.rno": [
+"pfas报告号",
+"pfas 报告编号",
+"pfas 声明编号",
+"pfas report no",
+"pfas declaration no"
+],
+"f.C04-71.lab": [
+"pfas 检测机构",
+"pfas 签发方",
+"pfas lab",
+"pfas issuer"
+],
+"f.C04-71.method": [
+"pfas 检测方法",
+"检测方法",
+"method"
+],
+"f.C04-71.val": [
+"pfas 检测值",
+"pfas 数值",
+"pfas value",
+"pfas 限值",
+"pfas 检测结果"
+],
+"f.C04-72.declno": [
+"fcm声明编号",
+"fcm 编号",
+"食品接触声明编号",
+"fcm do 编号",
+"fcm doc 编号",
+"fcm declaration no",
+"fcm do no"
+],
+"f.C04-72.issuer": [
+"fcm 签发方",
+"食品接触声明签发方",
+"fcm issuer"
+],
+"f.C04-72.scope": [
+"fcm 范围",
+"食品接触范围",
+"fcm scope",
+"fcm coverage"
+],
+"f.C04-73.stno": [
+"art 5 声明编号",
+"soc 声明编号",
+"art5 declaration no",
+"art 5 soc no"
+],
+"f.C04-73.issuer": [
+"art 5 签发方",
+"soc 签发方",
+"art 5 issuer"
+],
+"f.C04-73.date": [
+"art 5 签发日期",
+"soc 签发日期",
+"art 5 date"
+],
+"f.C04-73.basis": [
+"art 5 依据",
+"soc 依据",
+"art 5 basis",
+"soc basis"
+],
+"f.C04-73.concl": [
+"art 5 结论",
+"soc 结论",
+"art 5 符合性结论",
+"soc 符合性结论"
+],
+"f.C05-19.concl": [
+"可回收性",
+"可回收",
+"回收性",
+"recyclability"
+],
+"f.C05-21.method": [
+"评估方法",
+"评估标准",
+"标准依据",
+"采用标准"
+],
+"f.C06-22.app": [
+"再生料",
+"再生含量",
+"pcr",
+"recycled"
+],
+"f.C09-29.concl": [
+"最小化",
+"减量化",
+"minimisation",
+"minimization"
+],
+"f.C10-37.app": [
+"重复使用",
+"可重复使用",
+"reuse"
+],
+"remark": [
+"备注",
+"说明",
+"remark",
+"note",
+"comment",
+"意见",
+"评估意见",
+"报告号",
+"证书号",
+"report no",
+"certificate no",
+"检测机构",
+"lab",
+"laboratory",
+"标准号",
+"standard no",
+"签字人",
+"签发日期",
+"issuer",
+"issue date",
+"test condition",
+"备注说明"
+]
+},
+"folders": [
+{
+"folder": "00_Document_Control",
+"zh": "文档控制",
+"cats": [
+16
+]
+},
+{
+"folder": "01_Packaging_Identification",
+"zh": "包装识别",
+"cats": [
+1
+]
+},
+{
+"folder": "02_BOM_and_Material_Specifications",
+"zh": "BOM与材料规格",
+"cats": [
+2
+]
+},
+{
+"folder": "03_Design_and_Manufacturing",
+"zh": "设计与制造",
+"cats": [
+3
+]
+},
+{
+"folder": "04_Applicability_Matrix",
+"zh": "适用性矩阵",
+"cats": [
+16
+]
+},
+{
+"folder": "05_Article_5_Substances",
+"zh": "物质要求 / SOC Evidence",
+"cats": [
+4
+]
+},
+{
+"folder": "06_Article_6_Recyclability",
+"zh": "可回收性",
+"cats": [
+5
+]
+},
+{
+"folder": "07_Article_7_Recycled_Content",
+"zh": "再生料",
+"cats": [
+6
+]
+},
+{
+"folder": "08_Article_8_Biobased",
+"zh": "生物基",
+"cats": [
+7
+]
+},
+{
+"folder": "09_Article_9_Compostability",
+"zh": "可堆肥性",
+"cats": [
+8
+]
+},
+{
+"folder": "10_Article_10_Minimisation",
+"zh": "最小化",
+"cats": [
+9
+]
+},
+{
+"folder": "11_Article_11_Reusability",
+"zh": "可重复使用",
+"cats": [
+10
+]
+},
+{
+"folder": "12_Article_12_Labelling",
+"zh": "标识追溯",
+"cats": [
+11
+]
+},
+{
+"folder": "13_Risk_Assessment",
+"zh": "风险分析",
+"cats": [
+12
+]
+},
+{
+"folder": "14_Manufacturing_and_Change",
+"zh": "制造与变更",
+"cats": [
+12,
+13
+]
+},
+{
+"folder": "15_Standards",
+"zh": "标准清单",
+"cats": [
+14
+]
+},
+{
+"folder": "16_Test_Reports",
+"zh": "测试报告",
+"cats": []
+},
+{
+"folder": "17_Supplier_Evidence",
+"zh": "供应商证据",
+"cats": [
+15
+]
+},
+{
+"folder": "18_Evidence_Register",
+"zh": "证据登记册",
+"cats": [
+14
+]
+},
+{
+"folder": "19_EU_DoC",
+"zh": "EU DoC",
+"cats": [
+16
+]
+}
+]
+}

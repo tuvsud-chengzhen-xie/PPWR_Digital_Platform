@@ -20,7 +20,7 @@ def _sub(project, item_id, unit_code=None):
 
 def test_catalogue_shape():
     assert len(catalogue.categories()) == 16
-    assert len(catalogue.items()) == 69
+    assert len(catalogue.items()) == 73
     ids = {i["id"] for i in catalogue.items()}
     for sec in catalogue.td_sections():
         assert set(sec["items"]) <= ids, sec["no"]

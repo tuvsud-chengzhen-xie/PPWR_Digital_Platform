@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ tt('AI settings', 'AI 设置') }}{% endblock %}
+{% block page %}
+<main class="page">
+    <div class="page-head"><div><span class="eyebrow">{{ t('Expert settings', '专家设置') }}</span><h1>{{ t('AI & knowledge base', 'AI 与知识库') }}</h1></div></div>
+    <p class="page-purpose">{{ t('All AI features work without a language model: retrieval over the knowledge base and deterministic, cited answers. Configure an Azure OpenAI or OpenAI-compatible endpoint to let a model write the answers — it still only sees retrieved sources and must cite them.',
+        '所有 AI 功能在没有大模型时均可运行：基于知识库检索并生成带引用的确定性回答。配置 Azure OpenAI 或兼容 OpenAI 的端点后，可由模型撰写回答——模型仍只能看到检索到的来源并须引用。') }}</p>
+    <div class="grid-2">
+        <section class="card">
+            <h2 class="card-title">{{ t('Language model (optional)', '大模型（可选）') }}
+                <span class="badge {{ 'badge-ok' if configured else 'badge-muted' }}">{{ t('active', '已启用') if configured else t('not configured — local mode', '未配置——本地模式') }}</span></h2>
+            {% if s.source == 'environment' %}<div class="banner banner-info small">{{ t('Configured from environment variables (PPWR_LLM_*); they override this form.', '已通过环境变量（PPWR_LLM_*）配置，优先于此表单。') }}</div>{% endif %}
+            <form method="post" action="/settings/ai">
+                <div class="form-row">
+                    <label class="field"><span class="field-label">{{ t('Provider', '提供方') }}</span><select name="provider">
+                        <option value="azure" {{ 'selected' if s.provider == 'azure' }}>Azure OpenAI</option>
+                        <option value="openai" {{ 'selected' if s.provider == 'openai' }}>OpenAI-compatible</option></select></label>
+                    <label class="field"><span class="field-label">{{ t('Deployment / model', '部署 / 模型') }}</span><input name="model" value="{{ s.model }}" placeholder="gpt-4o"></label>
+                </div>
+                <label class="field"><span class="field-label">{{ t('Endpoint', '端点') }}</span><input name="endpoint" value="{{ s.endpoint }}" placeholder="https://<resource>.openai.azure.com"></label>
+                <div class="form-row">
+                    <label class="field"><span class="field-label">{{ t('API key', 'API 密钥') }} {% if key %}<span class="xs muted">({{ t('stored', '已保存') }}: {{ key }})</span>{% endif %}</span><input name="api_key" type="password" autocomplete="off" placeholder="{{ tt('leave empty to keep', '留空则保持不变') }}"></label>
+                    <label class="field"><span class="field-label">API version (Azure)</span><input name="api_version" value="{{ s.api_version }}"></label>
+                </div>
+                <label class="check"><input type="checkbox" name="enabled" value="1" {{ 'checked' if s.enabled }}><span><b>{{ t('Use the model for answers and update summaries', '使用模型生成回答与动态摘要') }}</b><span>{{ t('falls back to local mode on any error', '出错时自动回退到本地模式') }}</span></span></label>
+                <div class="form-actions"><button class="btn btn-primary btn-sm">{{ t('Save', '保存') }}</button>
+                    <button type="button" class="btn btn-sm" data-ai-post="/settings/ai/test" data-ai-stages="Calling the endpoint · 调用端点…">{{ t('Test connection', '测试连接') }}</button></div>
+                <p class="xs muted">{{ t('The key is stored in the data folder (git-ignored), never in the repository.', '密钥保存在数据目录（已被 git 忽略），不会进入代码库。') }}</p>
+            </form>
+        </section>
+        <section class="card">
+            <h2 class="card-title">{{ t('Knowledge-base index (RAG)', '知识库索引（RAG）') }} <span class="badge {{ 'badge-ok' if kb.state == 'ready' else 'badge-warn' }}">{{ kb.state }}</span></h2>
+            <p class="small">{{ kb.pool }} {{ t('curated knowledge entries', '条精选知识条目') }} · {{ kb.indexed }}/{{ kb.docs }} {{ t('documents indexed', '份文件已索引') }} · {{ kb.chunks }} {{ t('passages', '段落') }}{% if not kb.pdf_support %} · <b>{{ t('pypdf not installed — PDFs are not indexed', '未安装 pypdf——PDF 未被索引') }}</b>{% endif %}</p>
+            <button class="btn btn-sm ai-btn" data-ai-post="/settings/kb/reindex" data-ai-stages="Reading PDFs and HTML · 读取 PDF 与 HTML…|Splitting into passages · 切分段落…|Building the index · 构建索引…">{{ t('Rebuild index', '重建索引') }}</button>
+            {% if kb.doc_list %}
+            <div class="table-wrap" style="margin-top:10px"><table class="data"><thead><tr><th>{{ t('Document', '文件') }}</th><th>{{ t('Kind', '类别') }}</th><th class="num">{{ t('Pages', '页') }}</th><th>{{ t('Indexed', '索引') }}</th></tr></thead>
+                <tbody>{% for d in kb.doc_list %}<tr><td class="xs">{{ d.title }}</td><td class="xs">{{ d.kind }}</td><td class="num">{{ d.pages }}</td><td class="xs">{{ '✓' if d.indexed else d.note }}</td></tr>{% endfor %}</tbody></table></div>
+            {% endif %}
+            <p class="xs muted">{{ t('Copyrighted standards (DIN EN) have no extractable text and are indexed by title only; their content is not reproduced.', '受版权保护的标准（DIN EN）无可提取文本，仅按标题索引，不复制其内容。') }}</p>
+        </section>
+    </div>
+</main>
+{% endblock %}
