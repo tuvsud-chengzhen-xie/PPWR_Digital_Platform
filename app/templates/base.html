@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="{{ 'zh' if lang == 'zh' else 'en' }}" data-lang="{{ lang }}">
+<html lang="en" data-lang="{{ lang }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script>document.documentElement.classList.add("js");</script>
     <title>{% block title %}{{ APP_NAME }}{% endblock %} — {{ APP_SUB }}</title>
     <link rel="icon" type="image/png" href="/static/logo.png">
     <link rel="stylesheet" href="/ds/tokens.css">
     <link rel="stylesheet" href="/ds/shell.css">
     <link rel="stylesheet" href="/ds/nudges.css">
     <link rel="stylesheet" href="/ds/ai-overlay.css">
-    <link rel="stylesheet" href="/static/style.css?v=2.1">
+    <link rel="stylesheet" href="/static/style.css?v=2.4">
 </head>
 <body>
 
-<header class="topbar">
+<header class="topbar{{ ' has-menu' if user }}">
     <div class="topbar-inner">
         <a class="brand" href="/">
             <img src="/static/logo.png" alt="TÜV SÜD" class="brand-logo">
@@ -22,36 +23,46 @@
                 <span class="brand-sub">{{ APP_SUB }}</span>
             </div>
         </a>
+        {# The top bar is English-only in every language mode. #}
         {% if user %}
-        <nav class="topnav" aria-label="Main">
-            <a href="/" class="{{ 'is-active' if active == 'dashboard' }}">{{ t('Dashboard', '概览') }}</a>
-            <a href="/projects" class="{{ 'is-active' if active == 'projects' }}">{{ t('Projects', '项目') }}</a>
-            <a href="/review" class="{{ 'is-active' if active == 'review' }}"
-               title="{{ tt('Submissions waiting for AI pre-review or your decision', '等待 AI 初审或您决定的提交') if is_expert else tt('Items sent back to you for rework', '退回给您返工的条目') }}">
-                {{ t('Review queue', '审核队列') if is_expert else t('My actions', '我的待办') }}
-                {% if nav_queue %}<span class="nav-count">{{ nav_queue }}</span>{% endif %}</a>
-            <a href="/suppliers" class="{{ 'is-active' if active == 'suppliers' }}">{{ t('Suppliers', '供应商') }}</a>
-            <a href="/changes" class="{{ 'is-active' if active == 'changes' }}" title="{{ tt('Supplier and material changes and where they land', '供应商与材料变更及其影响') }}">
-                {{ t('Change impact', '变更影响') }} {% if nav_changes %}<span class="nav-count">{{ nav_changes }}</span>{% endif %}</a>
-            <a href="/updates" class="{{ 'is-active' if active == 'updates' }}" title="{{ tt('Regulatory monitoring: implementing acts, standards, guidance', '法规监控：实施法案、标准、指南') }}">
-                {{ t('Reg. updates', '法规动态') }} {% if nav_updates %}<span class="nav-count is-info">{{ nav_updates }}</span>{% endif %}</a>
-            <a href="/knowledge" class="{{ 'is-active' if active == 'knowledge' }}">{{ t('Knowledge & AI', '知识库与 AI') }}</a>
-            {% if is_expert %}<a href="/settings/ai" class="{{ 'is-active' if active == 'settings' }}" title="{{ tt('AI / LLM settings and knowledge-base index', 'AI / 大模型设置与知识库索引') }}">⚙</a>{% endif %}
-        </nav>
+        <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="topbar-menu" aria-label="Open menu">
+            <span class="nav-toggle-bars" aria-hidden="true"></span><span class="nav-toggle-text">Menu</span>
+        </button>
         {% endif %}
-        <span class="spacer"></span>
-        <span class="lang-switch" role="group" aria-label="Language / 语言">
-            {% for code, label in LANGS.items() %}<a href="/lang/{{ code }}" class="{{ 'is-active' if lang == code }}">{{ label }}</a>{% endfor %}
-        </span>
-        {% if user %}
-        <span class="who" title="{{ user.display_name }} — {{ 'TÜV SÜD expert: reviews, approves and issues across all clients' if is_expert else 'client account: sees only its own projects and suppliers' }}">
-            <span class="badge">{{ t('Expert', '专家') if is_expert else t('Client', '客户') }}</span>
-            <span class="who-name">{{ user.client.name if user.client else user.display_name }}</span>
-        </span>
-        <form method="post" action="/logout" style="display:inline">
-            <button type="submit" class="topnav-setup signout">{{ t('Sign out', '退出') }}</button>
-        </form>
-        {% endif %}
+        <div class="topbar-menu" id="topbar-menu">
+            {% if user %}
+            <nav class="topnav" aria-label="Main">
+                <a href="/" class="{{ 'is-active' if active == 'dashboard' }}">Dashboard</a>
+                <a href="/projects" class="{{ 'is-active' if active == 'projects' }}">Projects</a>
+                <a href="/review" class="{{ 'is-active' if active == 'review' }}"
+                   title="{{ 'Submissions waiting for AI pre-review or your decision' if is_expert else 'Items sent back to you for rework' }}">
+                    {{ 'Review queue' if is_expert else 'My actions' }}
+                    {% if nav_queue %}<span class="nav-count">{{ nav_queue }}</span>{% endif %}</a>
+                <a href="/suppliers" class="{{ 'is-active' if active == 'suppliers' }}">Suppliers</a>
+                <a href="/changes" class="{{ 'is-active' if active == 'changes' }}" title="Supplier and material changes and where they land">
+                    Change impact {% if nav_changes %}<span class="nav-count">{{ nav_changes }}</span>{% endif %}</a>
+                <a href="/updates" class="{{ 'is-active' if active == 'updates' }}" title="Regulatory monitoring: implementing acts, standards, guidance">
+                    Reg. updates {% if nav_updates %}<span class="nav-count is-info">{{ nav_updates }}</span>{% endif %}</a>
+                <a href="/knowledge" class="{{ 'is-active' if active == 'knowledge' }}">Knowledge &amp; AI</a>
+                {% if is_expert %}<a href="/settings/ai" class="nav-settings {{ 'is-active' if active == 'settings' }}" title="AI / LLM settings and knowledge-base index" aria-label="AI settings">
+                    <span aria-hidden="true">⚙</span><span class="nav-settings-text">AI settings</span></a>{% endif %}
+            </nav>
+            {% endif %}
+            <div class="topbar-actions">
+                <span class="lang-switch" role="group" aria-label="Display language">
+                    {% for code, label in LANGS.items() %}<a href="/lang/{{ code }}" class="{{ 'is-active' if lang == code }}" title="{{ LANG_TITLES[code] }}"{% if lang == code %} aria-current="true"{% endif %}>{{ label }}</a>{% endfor %}
+                </span>
+                {% if user %}
+                <span class="who" title="{{ user.display_name }} — {{ 'TÜV SÜD expert: reviews, approves and issues across all clients' if is_expert else 'client account: sees only its own projects and suppliers' }}">
+                    <span class="badge">{{ 'Expert' if is_expert else 'Client' }}</span>
+                    <span class="who-name">{{ user.client.name if user.client else user.display_name }}</span>
+                </span>
+                <form method="post" action="/logout" class="signout-form">
+                    <button type="submit" class="topnav-setup signout">Sign out</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </header>
 
@@ -67,7 +78,7 @@
 
 <script src="/ds/nudges.js"></script>
 <script src="/ds/ai-overlay.js"></script>
-<script src="/static/app.js?v=2.0"></script>
+<script src="/static/app.js?v=2.3"></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

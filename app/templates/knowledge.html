@@ -12,7 +12,7 @@
             <span class="xs muted">{{ kb_status.pool }} {{ t('curated entries', '条精选条目') }} · {{ kb_status.indexed }} {{ t('documents', '份文件') }} / {{ kb_status.chunks }} {{ t('passages', '段落') }} · {{ kb_status.state }}</span></div>
         <form class="ask" data-ask="/assistant/ask">
             <textarea name="q" rows="2" class="input" placeholder="{{ tt('e.g. Which evidence must be in the technical documentation for recyclability?', '例：可回收性需要在技术文档中提供哪些证据？') }}"></textarea>
-            <div class="sugg">{% for q in suggestions %}<button type="button" class="pill" data-q="{{ q[1] if lang == 'zh' else q[0] }}">{{ t(q[0], q[1]) }}</button>{% endfor %}</div>
+            <div class="sugg">{% for q in suggestions %}<button type="button" class="pill" data-q="{{ q[0] }}">{{ t(q[0], q[1]) }}</button>{% endfor %}</div>
             <button class="btn btn-primary btn-sm ai-btn">{{ t('Ask', '提问') }}</button>
             <div class="ask-out" hidden></div>
         </form>

@@ -6,6 +6,38 @@
    - confirm prompts, clickable table rows */
 
 (function () {
+    const topbar = document.querySelector(".topbar");
+    if (topbar) {
+        const toggle = topbar.querySelector(".nav-toggle");
+        const mobile = window.matchMedia("(max-width: 880px)");
+        const setOpen = (open) => {
+            topbar.classList.toggle("is-open", open);
+            if (toggle) {
+                toggle.setAttribute("aria-expanded", open ? "true" : "false");
+                toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+            }
+        };
+        if (toggle) {
+            toggle.addEventListener("click", () => setOpen(!topbar.classList.contains("is-open")));
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && topbar.classList.contains("is-open")) { setOpen(false); toggle.focus(); }
+            });
+            document.addEventListener("click", (e) => {
+                if (topbar.classList.contains("is-open") && !topbar.contains(e.target)) setOpen(false);
+            });
+            const onChange = () => { if (!mobile.matches) setOpen(false); };
+            if (mobile.addEventListener) mobile.addEventListener("change", onChange); else mobile.addListener(onChange);
+        }
+        // Sticky side rails stop below the top bar, whose height changes as the nav wraps.
+        const syncOffset = () => {
+            if (topbar.classList.contains("is-open")) return;
+            document.documentElement.style.setProperty("--sticky-top-offset", (topbar.offsetHeight + 8) + "px");
+        };
+        syncOffset();
+        if (window.ResizeObserver) new ResizeObserver(syncOffset).observe(topbar);
+        else window.addEventListener("resize", syncOffset);
+    }
+
     const params = new URLSearchParams(location.search);
     const toast = params.get("toast");
     if (toast && typeof showToast === "function") {
@@ -130,7 +162,6 @@
     const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
     function bi(en, zh) {
         if (!zh || zh === en || LANG === "en") return esc(en);
-        if (LANG === "zh") return esc(zh);
         return esc(en) + ' <span class="zh">' + esc(zh) + "</span>";
     }
     const mark = (ok) => ok === true ? '<span class="ai-mark ok">✓</span>' : ok === false ? '<span class="ai-mark no">!</span>' : '<span class="ai-mark maybe">?</span>';
@@ -201,7 +232,7 @@
         if (data.ok === false) { out.innerHTML = `<p class="small">${esc(data.message || "Error")}</p>`; out.hidden = false; return; }
         const text = (s) => esc(s).replace(/\[S(\d+)\]/g, '<a class="cite" href="#src-$1">[S$1]</a>').replace(/\n/g, "<br>");
         let h = "";
-        if (LANG !== "zh") h += `<div class="ans-en">${text(data.en)}</div>`;
+        h += `<div class="ans-en">${text(data.en)}</div>`;
         if (LANG !== "en" && data.zh) h += `<div class="ans-zh" lang="zh">${text(data.zh)}</div>`;
         if (data.sources && data.sources.length) {
             h += `<ol class="ans-src">` + data.sources.map((s, i) =>

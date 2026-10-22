@@ -93,15 +93,28 @@ def test_new_pages_render_in_all_languages(client, session):
     urls = ["/updates", "/settings/ai", "/knowledge", f"/projects/{p.id}/guide", f"/projects/{p.id}/import",
             f"/projects/{p.id}/guide?level=mandatory_now", f"/updates/{session.query(RegUpdate).first().id}"]
     urls += [f"/projects/{p.id}/items/{s.id}" for s in p.submissions]
-    for lang in ("bi", "en", "zh"):
+    for lang in ("bi", "en"):
         client.get(f"/lang/{lang}")
         for url in (urls if lang == "bi" else urls[:8]):
             r = client.get(url)
             assert r.status_code == 200, (lang, url)
-    client.get("/lang/zh")
-    assert "法规动态" in client.get("/").text
+
+
+def test_language_selector_has_two_modes_and_english_nav(client):
+    import re
+    login(client, "expert")
+    client.get("/lang/bi")
+    page = client.get("/").text
+    header = page[page.index("<header"):page.index("</header>")]
+    assert re.findall(r'href="/lang/(\w+)"', header) == ["bi", "en"]
+    assert not re.search(r"[\u4e00-\u9fff]", header), "top bar must be English-only"
+    assert "Reg. updates" in header and "Sign out" in header
+    assert '<span class="zh"' in page          # bilingual content still rendered below the bar
+    client.get("/lang/zh")                      # removed mode is ignored
+    assert 'href="/lang/bi" class="is-active"' in client.get("/").text
     client.get("/lang/en")
-    assert "法规动态" not in client.get("/").text
+    page = client.get("/").text
+    assert 'href="/lang/en" class="is-active"' in page and '<span class="zh"' not in page
 
 
 def test_client_cannot_open_ai_settings(client):

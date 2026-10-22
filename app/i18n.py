@@ -1,9 +1,9 @@
 """Bilingual (English / 简体中文) presentation.
 
-Three display modes, chosen per browser session from the top bar:
+Two display modes, chosen per browser session from the top bar:
     bi  – English with Chinese alongside (default; the service is used by EU experts and Chinese clients)
     en  – English only
-    zh  – Chinese only (English shown where no translation exists)
+The top navigation bar is always English, whatever the mode.
 
 Templates call `t(en, zh)` for markup and `tt(en, zh)` for plain text (attributes,
 placeholders). Catalogue / knowledge objects carry `x` and `x_zh` pairs; `tf(obj, "name")`
@@ -14,7 +14,8 @@ from __future__ import annotations
 import markupsafe
 from jinja2 import pass_context
 
-LANGS = {"bi": "中 / EN", "en": "EN", "zh": "中文"}
+LANGS = {"bi": "Bilingual", "en": "English"}
+LANG_TITLES = {"bi": "English with Chinese translations alongside", "en": "English only"}
 DEFAULT = "bi"
 
 
@@ -38,8 +39,6 @@ def render_pair(lang: str, en, zh) -> markupsafe.Markup:
         return markupsafe.escape(en)
     if lang == "en":
         return markupsafe.escape(en)
-    if lang == "zh":
-        return markupsafe.Markup('<span lang="zh">{}</span>').format(zh)
     return markupsafe.Markup('{} <span class="zh" lang="zh">{}</span>').format(en, zh)
 
 
@@ -48,8 +47,6 @@ def text_pair(lang: str, en, zh, sep: str = " / ") -> str:
     zh = "" if zh is None else str(zh)
     if not zh or zh == en or lang == "en":
         return en
-    if lang == "zh":
-        return zh
     return f"{en}{sep}{zh}"
 
 
@@ -59,8 +56,6 @@ def block_pair(lang: str, en, zh) -> markupsafe.Markup:
     zh = "" if zh is None else str(zh)
     if not zh or lang == "en":
         return markupsafe.escape(en)
-    if lang == "zh":
-        return markupsafe.Markup('<span lang="zh">{}</span>').format(zh)
     return markupsafe.Markup('{}<span class="zh-block" lang="zh">{}</span>').format(en, zh)
 
 
@@ -119,5 +114,5 @@ LEVEL = {
 
 
 def install(env) -> None:
-    env.globals.update(t=t, tt=tt, tb=tb, tp=tp, tf=tf, cur_lang=cur_lang, LANGS=LANGS,
+    env.globals.update(t=t, tt=tt, tb=tb, tp=tp, tf=tf, cur_lang=cur_lang, LANGS=LANGS, LANG_TITLES=LANG_TITLES,
                        STATUS_ZH=STATUS_ZH, VERDICT_ZH=VERDICT_ZH, STAGE_ZH=STAGE_ZH, LEVEL=LEVEL)
