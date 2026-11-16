@@ -208,13 +208,17 @@ def watch_online(session: Session, actor: str) -> list[RegUpdate]:
 # ---------------------------------------------------------------------------
 
 def impact(update: RegUpdate, projects: list[Project]) -> list[dict]:
+    from . import kb_rules
     rows = []
     items = set(update.items or [])
+    scope = kb_rules.scope_for_update(update.id) if update.origin == "manual" else None
     for p in projects:
         approved, open_, docs = [], [], []
         for s in p.submissions:
             if s.item_id not in items:
                 continue
+            if scope and not kb_rules.terms_found(scope, kb_rules.scope_text(p, s.unit)):
+                continue   # a scoped rule (e.g. crystal glass only) does not touch this packaging
             it = catalogue.item(s.item_id)
             if it is None or applicability.is_na(p, it["article"]) or s.status == "na":
                 continue

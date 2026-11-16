@@ -16,8 +16,10 @@ from app.db import Base, SessionLocal, engine, init_db  # noqa: E402
 
 @pytest.fixture()
 def session():
+    from app import kb_rules
     Base.metadata.drop_all(engine)
     init_db()
+    kb_rules.invalidate()
     s = SessionLocal()
     seed.seed(s)
     yield s

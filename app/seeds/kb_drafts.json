@@ -1,0 +1,51 @@
+{
+ "_about": "TÜV SÜD regulatory-desk drafts for acts the desk has already read. When an expert uploads one of these acts on Knowledge → Manual update, the form is pre-filled from the draft (matched on the 'match' text in the document); the expert still reviews, edits and publishes it. Every statement paraphrases the act itself (page given). Acts without a draft are pre-filled by extraction from the text (or by the configured LLM).",
+ "drafts": [
+  {
+   "match": "2026/1948",
+   "kind": "implementing",
+   "binding": true,
+   "ref": "Commission Delegated Decision (EU) 2026/1948",
+   "page": 3,
+   "published": "2026-10-28",
+   "applies_from": "2026-10-29",
+   "title": "Time-bound derogation from the Art 5(4) heavy-metal limit for crystal glass packaging",
+   "title_zh": "水晶玻璃包装 Art 5(4) 重金属限值的限时豁免",
+   "text": "Adopted under Art 5(8) PPWR, it amends Decision 2001/171/EC (new Arts 5a–5c). Crystal glass packaging — packaging made entirely or partially of the crystal glass categories of Annex I to Directive 69/493/EEC — may exceed the Art 5(4) limit (Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg) until 31 December 2029. Packaging containing lead (intentionally introduced or from residual contamination) may only be manufactured, i.e. melted, until 31 December 2028; packaging made by then may still be finished (incl. cold working), filled, labelled, distributed and placed on the market until 31 December 2029. Conditions: lead only insofar as necessary; dealkalisation or an equivalent surface barrier against lead release; a permanent marking identifying the crystal glass producer; end users informed that the packaging can be returned for recycling free of charge; returned packaging goes back to the originating producer (closed and controlled loop), whose records are available to authorities and the Commission on request. In force since 29 October 2026 (OJ L 28.10.2026).",
+   "text_zh": "依据 PPWR Art 5(8) 通过，修订 2001/171/EC 决定（新增 Art 5a–5c）。水晶玻璃包装——全部或部分由 69/493/EEC 指令附件 I 所列水晶玻璃类别制成的包装——在 2029 年 12 月 31 日前可超过 Art 5(4) 限值（Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg）。含铅（有意添加或因残留污染）的水晶玻璃包装只能在 2028 年 12 月 31 日前制造（即熔制）；此前制造的包装可在 2029 年 12 月 31 日前继续进行后加工（含冷加工）、灌装、贴标、分销并投放市场。条件：仅在必要范围内有意添加铅；须经脱碱处理或同等工艺形成限制铅迁移的表面阻隔层；带有可识别水晶玻璃生产商的永久性标识；告知最终用户可免费退回回收；退回的包装返回原生产商（封闭受控循环），生产商须保存记录并应主管机关和委员会要求提供。2026 年 10 月 29 日起生效（欧盟官方公报 L 2026 年 10 月 28 日）。",
+   "impact": "AI pre-review (C04-16 / C04-70 / C04-73): a heavy-metal result above 100 mg/kg on crystal glass packaging is no longer an automatic 'may not be placed on the market' failure. It is flagged 'derogation may apply' and the derogation's dates and six conditions become evidence checks for the expert. All other packaging: unchanged — the 100 mg/kg limit applies.",
+   "impact_zh": "AI 初审（C04-16 / C04-70 / C04-73）：水晶玻璃包装的重金属结果超过 100 mg/kg 时，不再直接判定为“不得投放市场”，而是提示“可能适用豁免”，并把豁免期限与六项条件列为待专家核查的证据项。其他包装不变——仍适用 100 mg/kg 限值。",
+   "articles": ["a5"],
+   "items": ["C04-16", "C04-70", "C04-73"],
+   "rule": {
+    "type": "limit_derogation",
+    "article": "a5",
+    "provision": "Art 5(4)",
+    "limit_label": "100 mg/kg",
+    "scope_terms": ["crystal glass", "lead crystal", "水晶玻璃", "铅水晶", "铅晶质"],
+    "manufactured_until": "2028-12-31",
+    "market_until": "2029-12-31",
+    "conditions": [
+     {"en": "Lead intentionally introduced only insofar as necessary for crystal glass (Art 5b(1))",
+      "zh": "仅在制造水晶玻璃所必需的范围内有意添加铅（Art 5b(1)）",
+      "terms": ["lead only as necessary", "lead-free transition", "transition plan", "无铅转型"], "ref": "Decision (EU) 2026/1948, Art 5b(1), (3)"},
+     {"en": "Dealkalisation treatment or equivalent surface barrier limiting lead release into the contents (Art 5b(2))",
+      "zh": "经脱碱处理或同等工艺，形成限制铅向内容物迁移的表面阻隔层（Art 5b(2)）",
+      "terms": ["dealkalis", "dealkaliz", "surface barrier", "脱碱"], "ref": "Decision (EU) 2026/1948, Art 5b(2)"},
+     {"en": "Permanent marking identifying the crystal glass producer (Art 5c(1))",
+      "zh": "带有可识别水晶玻璃生产商的永久性标识（Art 5c(1)）",
+      "terms": ["permanent mark", "producer mark", "永久标识", "永久性标识"], "ref": "Decision (EU) 2026/1948, Art 5c(1)"},
+     {"en": "End users informed that the packaging can be returned for recycling free of charge (Art 5c(2))",
+      "zh": "已告知最终用户可免费退回包装进行回收（Art 5c(2)）",
+      "terms": ["free return", "free of charge", "take-back", "take back", "免费回收", "免费退回"], "ref": "Decision (EU) 2026/1948, Art 5c(2)"},
+     {"en": "Returned packaging transferred back to the originating producer — closed and controlled loop (Art 5c(3)-(4))",
+      "zh": "退回的包装返回原生产商——封闭受控循环（Art 5c(3)-(4)）",
+      "terms": ["closed loop", "closed-loop", "controlled loop", "return channel", "闭环", "回收渠道"], "ref": "Decision (EU) 2026/1948, Art 5c(3)-(4)"},
+     {"en": "Producer keeps records of the closed loop, available to authorities on request (Art 5c(5))",
+      "zh": "生产商保存封闭循环运行记录，可应主管机关要求提供（Art 5c(5)）",
+      "terms": ["loop records", "closed-loop records", "循环记录", "闭环记录"], "ref": "Decision (EU) 2026/1948, Art 5c(5)"}
+    ]
+   }
+  }
+ ]
+}

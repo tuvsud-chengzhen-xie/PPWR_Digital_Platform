@@ -91,7 +91,7 @@ i18n.install(templates.env)
 
 def _kb_href(entry: dict) -> str:
     from . import rag
-    return rag.entry_url(entry) if entry.get("src") else ""
+    return rag.entry_url(entry) if (entry.get("src") or entry.get("source_path")) else ""
 
 
 templates.env.globals.update(KB_KINDS={"regulation": ("Regulation", "法规"), "standard": ("Standard", "标准"),
@@ -129,8 +129,9 @@ def render(name: str, ctx: dict):
 
 def redirect(url: str, message: str = "", kind: str = "success") -> RedirectResponse:
     if message:
+        url, hash_, frag = url.partition("#")
         sep = "&" if "?" in url else "?"
-        url = f"{url}{sep}toast={quote(message)}&toast_type={kind}"
+        url = f"{url}{sep}toast={quote(message)}&toast_type={kind}{hash_}{frag}"
     return RedirectResponse(url, status_code=303)
 
 

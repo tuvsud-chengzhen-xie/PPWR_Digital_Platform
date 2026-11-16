@@ -65,7 +65,8 @@ GLOSSARY = {
     "图纸": "drawing drawings design", "设计": "design", "制造": "manufacturing manufacture", "生产": "production manufacturing",
     "供应商": "supplier suppliers", "检测": "test testing analysis", "报告": "report", "测试": "test",
     "堆肥": "compostable composting", "可降解": "biodegradable", "生物基": "biobased", "重复使用": "reusable reuse re-use",
-    "押金": "deposit return", "豁免": "exemption derogation", "协调标准": "harmonised standard presumption",
+    "押金": "deposit return", "豁免": "exemption derogation", "水晶": "crystal glass lead crystal",
+    "香水": "perfume", "化妆品": "cosmetic", "烈酒": "spirits", "协调标准": "harmonised standard presumption",
     "推定": "presumption of conformity", "实施法案": "implementing act", "授权法案": "delegated act",
     "制造商": "manufacturer", "进口商": "importer", "经销商": "distributor", "运输包装": "transport packaging",
     "销售包装": "sales packaging", "组合包装": "grouped packaging", "电商": "e-commerce", "保存": "keep retain years",
@@ -150,7 +151,13 @@ def pool() -> dict:
 
 
 def pool_entries() -> list[dict]:
-    return pool()["entries"]
+    """Curated entries plus the experts' active manual updates (kb_rules), newest knowledge first."""
+    from . import kb_rules
+    return kb_rules.active() + pool()["entries"]
+
+
+def invalidate_pool() -> None:
+    _pool_index.cache_clear()
 
 
 def pool_entry(eid: str) -> dict | None:
@@ -164,15 +171,17 @@ def kb_url(rel: str, page: int = 0) -> str:
 
 
 def entry_url(e: dict) -> str:
-    rel = pool()["sources"].get(e.get("src", ""), "")
+    rel = e.get("source_path") or pool()["sources"].get(e.get("src", ""), "")
     return kb_url(rel, e.get("page") or 0)
 
 
 @lru_cache(maxsize=1)
-def _pool_index() -> BM25:
+def _pool_index() -> tuple[list[dict], BM25]:
+    """Entries and their index together, so a knowledge update never mixes old index and new entries."""
+    entries = pool_entries()
     docs = [tokens(" ".join([e["ref"], e["title"], e["title_zh"], e["text"], e["text_zh"]] * 1 + [e["title"]] * 2))
-            for e in pool_entries()]
-    return BM25(docs)
+            for e in entries]
+    return entries, BM25(docs)
 
 
 def for_item(item_id: str, article: str | None = None, limit: int = 8) -> list[dict]:
@@ -388,8 +397,8 @@ def _is_binding(rel: str) -> bool:
     name = rel.rsplit("/", 1)[-1].lower()
     if rel[:2] in ("03", "05"):
         return False
-    return name.startswith(("ppwr regulation", "decision", "implementingdecision", "reg_eu", "supd_directive",
-                            "94 62 ec"))
+    return name.startswith(("ppwr regulation", "decision", "implementingdecision", "delegateddecision",
+                            "delegatedregulation", "implementingregulation", "reg_eu", "supd_directive", "94 62 ec"))
 
 
 def _snippet(text: str, q_terms: list[str], width: int = 420) -> str:
@@ -407,8 +416,8 @@ def search(query: str, k: int = 6, item_id: str | None = None, articles: list[st
     if item_id:
         qt += [item_id.lower().replace("-", "")]
     hits: list[Hit] = []
-    entries = pool_entries()
-    ps = _pool_index().scores(qt) if qt else {}
+    entries, pool_bm25 = _pool_index()
+    ps = pool_bm25.scores(qt) if qt else {}
     top_p = max(ps.values()) if ps else 0.0
     for i, e in enumerate(entries):
         s = (ps.get(i, 0.0) / top_p) if top_p else 0.0

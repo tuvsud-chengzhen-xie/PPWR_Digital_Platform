@@ -20,6 +20,7 @@
 
     <section class="card">
         <div class="card-head"><h2 class="card-title">{{ t('Structured knowledge pool', '结构化知识池') }} <span class="hint">{{ pool | length }}</span></h2>
+            {% if is_expert %}<a class="btn btn-sm btn-primary" href="/knowledge/manual">＋ {{ t('Manual update', '人工更新知识库') }}</a>{% endif %}
             <div class="filterbar" data-kind-filter>
                 <button type="button" class="pill is-active" data-kind="">{{ t('All', '全部') }}</button>
                 {% for k, v in kinds.items() %}<button type="button" class="pill" data-kind="{{ k }}">{{ t(v[0], v[1]) }}</button>{% endfor %}
@@ -28,6 +29,7 @@
         {% for e in pool %}
             <details class="fold pool-entry" data-kind="{{ e.kind }}">
                 <summary><span class="badge {{ 'badge-high' if e.binding else 'badge-outline' }}">{{ t(kinds[e.kind][0], kinds[e.kind][1]) }}</span>
+                    {% if e.custom %}<span class="badge badge-ok" title="{{ e.added_by }} · {{ e.added_at }}">{{ t('manual update', '人工更新') }}{% if e.rule %} · {{ t('AI rule', 'AI 规则') }}{% endif %}</span>{% endif %}
                     <b>{{ t(e.title, e.title_zh) }}</b> <span class="xs muted">{{ e.ref }}{% if e.applies_from %} · {{ t('applies from', '适用自') }} {{ e.applies_from }}{% endif %}</span></summary>
                 <div class="fold-body small">{{ tb(e.text, e.text_zh) }}
                     <div class="xs muted" style="margin-top:6px">{% if e['items'] %}{{ t('Items', '条目') }}: {{ e['items'] | join(', ') }} · {% endif %}{% if kb_href(e) %}<a href="{{ kb_href(e) }}" target="_blank" rel="noopener">{{ t('source', '来源') }}{% if e.page %} p.{{ e.page }}{% endif %}</a>{% endif %}</div></div>

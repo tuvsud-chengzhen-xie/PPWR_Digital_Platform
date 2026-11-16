@@ -63,7 +63,7 @@ def knowledge(request: Request, session: Session = Depends(get_session), user: U
     return render("knowledge.html", base_context(request, session, "knowledge", folders=folders, kit=kit,
                                                  dates=KEY_DATES, article_map=ARTICLE_MAP,
                                                  cats=catalogue.categories(), items=catalogue.items(),
-                                                 sections=catalogue.td_sections(), pool=pool["entries"],
+                                                 sections=catalogue.td_sections(), pool=rag.pool_entries(),
                                                  kinds=pool["kinds"], kb_status=st,
                                                  suggestions=assistant.suggestions_for(None),
                                                  levels={i["id"]: guidance.level_of(i["id"]) for i in catalogue.items()}))

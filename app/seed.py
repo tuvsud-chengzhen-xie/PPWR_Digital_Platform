@@ -329,4 +329,93 @@ def seed(session: Session) -> None:
                          ["hm", "pf", "rc"], "Aurora Foods — Quality & Regulatory")
     changes.scan_expiries(session)
     auth.ensure_demo_users(session)
+    seed_crystal(session)
     session.commit()
+
+
+def seed_crystal(session: Session) -> Project | None:
+    """Lumen's lead crystal diffuser flacon — the showcase for a manual knowledge-base update.
+
+    Its heavy-metal result (Pb ≈ 278 500 mg/kg, inherent to full lead crystal) fails the Art 5(4)
+    limit until an expert publishes Delegated Decision (EU) 2026/1948 on Knowledge → Manual update;
+    the AI pre-review then recognises the crystal-glass derogation and lists its conditions.
+    Idempotent: also tops up an existing demo database.
+    """
+    if session.query(Project).filter_by(code="PRJ-2026-003").first():
+        return None
+    lumen = session.query(Client).filter_by(name="Lumen Home Products Co., Ltd.").first()
+    if lumen is None:
+        return None
+    if not any(x.code == "SUP-004" for x in lumen.suppliers):
+        _, val = _supplier(session, lumen, "SUP-004", "Cristallerie Valmont SAS", "France", "Baccarat, Meurthe-et-Moselle",
+                           [dict(code="SPT-001", trace="VAL-PbX30-2026", name="Full lead crystal 30 % PbO — flacon glass",
+                                 material="Full lead crystal glass (PbO ≥ 30 %)", group="glass", certs=[
+                                     ("hm", "VAL-HM-2026-031", "Laboratoire Verre Analyse", d(-40), d(325),
+                                      "278500 mg/kg (Pb; Cd, Hg, Cr(VI) n.d.)"),
+                                     ("doc", "VAL-DCL-2026-02", "Cristallerie Valmont", d(-40), d(325))])])
+        mat = val["SPT-001"]
+    else:
+        sup = next(x for x in lumen.suppliers if x.code == "SUP-004")
+        mat = sup.materials[0]
+    p = Project(code="PRJ-2026-003", client=lumen, title="Reed diffuser 100 ml — lead crystal flacon (luxury line)",
+                product_description="Home-fragrance reed diffuser in a hand-finished full lead crystal flacon with a "
+                                    "glass stopper, sold in a paperboard gift box in the EU. Flacons are melted, "
+                                    "permanently marked and returned through Cristallerie Valmont (France). "
+                                    "Single-use sales packaging, not food-contact.",
+                ps_code="PS-003", scenario="A", target_date=d(60), created_by="HDL PPWR Expert",
+                created_at=now() - dt.timedelta(days=12))
+    session.add(p)
+    f1 = PackagingUnit(project=p, code="PU-001", name="Lead crystal flacon 100 ml", level="Sales", pack_type="Bottle",
+                       upi="LUM-PS003-PU001", skus="RD-LUX-100-OUD / RD-LUX-100-FIG", mass_g=425,
+                       dims="Ø 78 × 142", supplier_name="Cristallerie Valmont SAS", site="Baccarat",
+                       country="France", artwork_ref="ART-LUX-2026-03 R1")
+    f2 = PackagingUnit(project=p, code="PU-002", name="Gift box", level="Sales", pack_type="Box",
+                       upi="LUM-PS003-PU002", skus="RD-LUX-100-OUD / RD-LUX-100-FIG", mass_g=96,
+                       dims="100 × 100 × 170", supplier_name="Hengda Paperboard Co., Ltd.", site="Dongguan plant 2",
+                       country="China")
+    session.add_all([f1, f2])
+    session.flush()
+    hengda = next((x for x in lumen.suppliers if x.code == "SUP-001"), None)
+    session.add_all([
+        Component(unit=f1, code="PU-001-C001", pack_type="Bottle", description="Flacon body, hand-cut",
+                  structure="Mono-material", material="Full lead crystal glass (PbO ≥ 30 %, Directive 69/493/EEC cat. 1)",
+                  material_group="glass", mass_g=410, dims="Ø 78 × 128", supplier=mat.supplier, supplier_material=mat,
+                  recycled_pct=0),
+        Component(unit=f1, code="PU-001-C002", pack_type="Stopper", description="Glass stopper with PE seal",
+                  structure="Multi-material", material="Soda-lime glass, PE seal", material_group="glass", mass_g=15),
+        Component(unit=f2, code="PU-002-C001", pack_type="Box", description="Rigid gift box",
+                  structure="Mono-material", material="Coated paperboard 300 g/m² (PAP 20)", material_group="paper",
+                  mass_g=96, supplier=hengda, supplier_material=hengda.materials[0] if hengda else None),
+    ])
+    session.flush()
+    session.refresh(p)
+    workflow.ensure_submissions(session, p)
+    actor = "Lumen Home — Packaging Compliance"
+    c = {x.code: x for u in p.units for x in u.components}
+    _evidence(session, p, f1, c["PU-001-C001"], "C04-16", "Heavy-metal test report — lead crystal flacon", "TST",
+              "VAL-HM-2026-031", "Laboratoire Verre Analyse", d(-40), actor, conformity="See remarks",
+              supplier="Cristallerie Valmont SAS")
+    _evidence(session, p, f1, c["PU-001-C001"], "C04-70", "Heavy-metal test report — lead crystal flacon", "TST",
+              "VAL-HM-2026-031", "Laboratoire Verre Analyse", d(-40), actor, conformity="See remarks",
+              supplier="Cristallerie Valmont SAS")
+    _evidence(session, p, f1, c["PU-001-C001"], "C04-73", "Dealkalisation treatment certificate — flacon inner surface",
+              "DCL", "VAL-DEALK-2026-07", "Cristallerie Valmont SAS", d(-35), actor,
+              supplier="Cristallerie Valmont SAS")
+    _set(p, f1, "C04-16", {"res": "278500", "method": "XRF screening + EN 13657 digestion / ICP-OES "
+                                                     "(Pb 278 500 mg/kg; Cd, Hg, Cr(VI) not detected)"})
+    _set(p, f1, "C04-70", {"cocno": "VAL-HM-2026-031", "lab": "Laboratoire Verre Analyse (accredited)",
+                           "rdate": d(-40).isoformat(), "scope": "Flacon body (full lead crystal) and stopper",
+                           "res": "278500", "note": "Lead is inherent to full lead crystal (PbO ≥ 30 %)."})
+    _set(p, f2, "C04-16", {"res": "28", "method": "EN 13657 digestion + ICP-OES"})
+    for u in (f1, f2):
+        _set(p, u, "C04-18", {"app": "No — not food-contact"})
+    session.flush()
+    target = {k: "pending" for k in [i["id"] for i in catalogue.items()]}
+    target.update({"C01-01": "approved", "C01-02": "approved", "C01-03": "approved", "C01-04": "approved",
+                   ("C04-16", "PU-001"): "ai_reviewed", ("C04-70", "PU-001"): "ai_reviewed",
+                   ("C04-16", "PU-002"): "ai_reviewed"})
+    _advance(session, p, target, actor, default="pending")
+    session.flush()
+    session.refresh(p)
+    workflow.sync(session, p)
+    return p

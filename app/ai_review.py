@@ -15,7 +15,7 @@ import datetime as dt
 import re
 from dataclasses import dataclass, field
 
-from . import applicability, catalogue, config
+from . import applicability, catalogue, config, kb_rules
 from .db import Evidence, PackagingUnit, Project, Submission, now
 
 REG = "PPWR (EU) 2025/40"
@@ -115,16 +115,44 @@ def _r_photos(ctx):
                   KB["checklist"])]
 
 
-def _r_heavy_metals(ctx):
-    out = []
-    v = _number(ctx.data.get("res"))
+A5_LIMIT = "Art 5(4) limit: Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg"
+A5_LIMIT_ZH = "Art 5(4) 限值：Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg"
+
+
+def _scope_text(ctx) -> str:
+    """What the packaging is — matched against the scope of derogations in the knowledge base."""
+    return kb_rules.scope_text(ctx.project, ctx.unit)
+
+
+def _a5_evidence_text(ctx) -> str:
+    """Entries and files of the Art 5 items of this unit — searched for the conditions of a derogation."""
+    a5 = {i["id"] for i in catalogue.items() if i["article"] == "a5"}
+    parts = [str(v) for v in ctx.data.values()]
+    for s in ctx.project.submissions:
+        if s.item_id in a5 and s.unit_id in ((ctx.unit.id if ctx.unit else None), None) \
+                and s.item_id != ctx.sub.item_id:     # this item's own entry is ctx.data (may be a preview)
+            parts += [str(v) for v in (s.data or {}).values()]
+    for e in ctx.project.evidence:
+        if e.item_id in a5 and e.unit_id in ((ctx.unit.id if ctx.unit else None), None):
+            parts += [e.title or "", e.file_no or "", e.filename or ""]
+    return " · ".join(parts)
+
+
+def _limit_check(ctx, v: float | None, short: bool = False) -> list[dict]:
+    """Art 5(4) limit — unless an active knowledge-base derogation covers this packaging."""
     if v is None:
-        out.append(check("Art 5(4) limit: Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg", None,
-                         "No numeric result — expert to read the report", KB["a5"]))
-    else:
-        out.append(check("Art 5(4) limit: Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg", v <= 100,
-                         f"{v:g} mg/kg " + ("≤ 100 ✓" if v <= 100 else "exceeds 100 mg/kg — may not be placed on the market"),
-                         KB["a5"]))
+        return [check(A5_LIMIT, None, "No numeric result" if short else "No numeric result — expert to read the report",
+                      KB["a5"])]
+    if v <= 100:
+        return [check(A5_LIMIT, True, f"{v:g} mg/kg" if short else f"{v:g} mg/kg ≤ 100 ✓", KB["a5"])]
+    der = kb_rules.find_derogation("a5", _scope_text(ctx))
+    if der:
+        return kb_rules.derogation_checks(der, v, _scope_text(ctx), _a5_evidence_text(ctx), A5_LIMIT, A5_LIMIT_ZH)
+    return [check(A5_LIMIT, False, f"{v:g} mg/kg exceeds 100 mg/kg — may not be placed on the market", KB["a5"])]
+
+
+def _r_heavy_metals(ctx):
+    out = _limit_check(ctx, _number(ctx.data.get("res")))
     method = str(ctx.data.get("method", ""))
     known = bool(re.search(r"ICP|AAS|XRF|EN\s*13657|EN\s*71|IEC\s*62321", method, re.I))
     out.append(check("Recognised test method (ICP-OES/MS, AAS, EN 13657, IEC 62321)",
@@ -281,7 +309,10 @@ def _supplier_certs(ctx, doc_type: str, desc: str, soft: bool = False) -> list[d
         if doc_type == "hm":
             v = _number(cert.value)
             if v is not None and v > 100:
-                bad.append(f"{c.code}: {v:g} mg/kg")
+                scope = " · ".join([c.description or "", c.material or "", c.supplier_material.name or "",
+                                    c.supplier_material.material or ""])
+                if not kb_rules.find_derogation("a5", scope):
+                    bad.append(f"{c.code}: {v:g} mg/kg")
     if bad or expired:
         return [check(desc, False, "; ".join(bad + expired), KB["a5"] if doc_type == "hm" else KB["checklist"])]
     if missing and not ctx.evidence:
@@ -317,8 +348,7 @@ def _r_hm_report(ctx):
                  f"{len(ctx.evidence)} file(s)" if ctx.evidence else "No file", KB["annex7"]),
            check("Report number and laboratory registered", _filled(ctx, "cocno") and _filled(ctx, "lab"),
                  f"{ctx.data.get('cocno', '')} · {ctx.data.get('lab', '')}".strip(" ·") or "Missing", KB["checklist"]),
-           check("Art 5(4) limit: Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg", None if v is None else v <= 100,
-                 "No numeric result" if v is None else f"{v:g} mg/kg", KB["a5"]),
+           *_limit_check(ctx, v, short=True),
            check("Scope covers all components incl. inks and adhesives", _filled(ctx, "scope") or None,
                  ctx.data.get("scope") or "Scope not stated", KB["a5"])]
     main = ctx.sibling("C04-16")
@@ -425,7 +455,8 @@ def review(sub: Submission, project: Project, unit: PackagingUnit | None,
     else:
         checks = (RULES.get(sub.item_id, _generic))(ctx) + _evidence_checks(ctx)
     for c in checks:
-        c["desc_zh"], c["msg_zh"] = desc_zh(c["desc"]), msg_zh(c.get("msg", ""))
+        c["desc_zh"] = c.get("desc_zh") or desc_zh(c["desc"])
+        c["msg_zh"] = c.get("msg_zh") or msg_zh(c.get("msg", ""))
     oks = [c["ok"] for c in checks]
     verdict = "fail" if False in oks else "warn" if None in oks else "pass"
     return verdict, checks

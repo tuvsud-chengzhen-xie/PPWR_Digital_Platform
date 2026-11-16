@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% from "_macros.html" import octagon with context %}
+{% block title %}{{ tt('Manual knowledge update', '人工更新知识库') }}{% endblock %}
+{% block page %}
+<main class="page">
+    <nav class="breadcrumb"><a href="/knowledge">{{ t('Knowledge base', '知识库') }}</a><span class="breadcrumb-sep">›</span><strong>{{ t('Manual update', '人工更新') }}</strong></nav>
+    <div class="page-head"><div><span class="eyebrow">{{ t('Expert', '专家') }} · {{ t('knowledge → AI judgement', '知识 → AI 判断') }}</span>
+        <h1>{{ t('Manual knowledge-base update', '人工更新知识库') }}</h1></div></div>
+    <p class="page-purpose">{{ t('Add a new legal act to the knowledge base. 1 · upload the act; 2 · review the draft entry and its AI rule; 3 · publish. Publishing adds the entry to the assistant’s sources, applies the rule in the AI pre-review, and re-runs the AI on every open item it touches — the verdict changes are shown on the update page. Withdrawing reverts them.',
+        '向知识库添加新法规。1 · 上传法规原文；2 · 审核条目草稿及其 AI 规则；3 · 发布。发布后条目进入 AI 助手的检索来源，规则在 AI 初审中生效，并对其涉及的所有未结条目重新运行 AI——结论变化显示在法规动态页面。撤回即可恢复。') }}</p>
+
+    {% if not draft %}
+    <section class="card">
+        <h2 class="card-title">1 · {{ t('Upload the act', '上传法规原文') }} <span class="hint">PDF · {{ t('Official Journal text', '官方公报文本') }}</span></h2>
+        <form method="post" action="/knowledge/manual/upload" enctype="multipart/form-data" class="kb-upload">
+            <label class="field"><span class="field-label">{{ t('Act (PDF)', '法规文件（PDF）') }}</span>
+                <input type="file" name="file" accept=".pdf,.html,.htm" required>
+                <span class="field-help">{{ t('The text is read page by page; the draft is pre-filled from the TÜV SÜD regulatory desk’s notes when the act is known, otherwise extracted from the text (or drafted by the configured LLM). Nothing is published until you confirm.',
+                    '逐页读取文本；若为 TÜV SÜD 法规组已解读的法规，按其解读预填草稿，否则从原文提取（或由已配置的大模型起草）。确认前不会发布任何内容。') }}</span></label>
+            <button class="btn btn-primary ai-btn">{{ octagon(14) }} {{ t('Read the act & draft the entry', '读取法规并起草条目') }}</button>
+        </form>
+    </section>
+    {% else %}
+    <form method="post" action="/knowledge/manual/publish">
+        <input type="hidden" name="token" value="{{ token }}"><input type="hidden" name="original_name" value="{{ original_name }}">
+        <section class="card">
+            <div class="card-head"><h2 class="card-title">2 · {{ t('Review the knowledge entry', '审核知识条目') }}</h2>
+                <span class="badge {{ 'badge-ok' if draft.origin == 'desk' else 'badge-info' if draft.origin == 'ai' else 'badge-muted' }}">{{ t({'desk': 'Draft: TÜV SÜD regulatory desk', 'ai': 'Draft: AI (from the text only)', 'extracted': 'Draft: extracted from the text'}[draft.origin], {'desk': '草稿来源：TÜV SÜD 法规组解读', 'ai': '草稿来源：AI（仅依据原文）', 'extracted': '草稿来源：原文提取'}[draft.origin]) }}</span></div>
+            <p class="xs muted">{{ original_name }} · {{ n_chars | num }} {{ t('characters read', '个字符已读取') }}</p>
+            <div class="form-row">
+                <label class="field" style="grid-column: span 2"><span class="field-label">{{ t('Reference', '法规编号') }}</span><input name="ref" value="{{ draft.ref }}" required></label>
+                <label class="field"><span class="field-label">{{ t('Kind', '类型') }}</span><select name="kind">{% for k, v in KB_KINDS.items() %}<option value="{{ k }}" {{ 'selected' if k == draft.kind }}>{{ tt(v[0], v[1]) }}</option>{% endfor %}</select></label>
+                <div class="field"><span class="field-label">{{ t('Legally binding', '具法律约束力') }}</span><label class="check"><input type="checkbox" name="binding" value="1" {{ 'checked' if draft.binding }}> {{ t('yes', '是') }}</label></div>
+            </div>
+            <div class="form-row">
+                <label class="field"><span class="field-label">{{ t('Title (EN)', '标题（英文）') }}</span><input name="title" value="{{ draft.title }}" required></label>
+                <label class="field"><span class="field-label">{{ t('Title (中文)', '标题（中文）') }}</span><input name="title_zh" value="{{ draft.title_zh }}"></label>
+            </div>
+            <div class="form-row">
+                <label class="field"><span class="field-label">{{ t('Published (OJ)', '公报发布日期') }}</span><input type="date" name="published" value="{{ draft.published }}"></label>
+                <label class="field"><span class="field-label">{{ t('In force / applies from', '生效 / 适用日期') }}</span><input type="date" name="applies_from" value="{{ draft.applies_from }}"></label>
+                <label class="field"><span class="field-label">{{ t('Source page', '原文页码') }}</span><input name="page" value="{{ draft.page }}"></label>
+            </div>
+            <div class="form-row">
+                <label class="field"><span class="field-label">{{ t('What the act says (EN)', '法规内容（英文）') }}</span><textarea name="text" rows="7">{{ draft.text }}</textarea></label>
+                <label class="field"><span class="field-label">{{ t('What the act says (中文)', '法规内容（中文）') }}</span><textarea name="text_zh" rows="7">{{ draft.text_zh }}</textarea></label>
+            </div>
+            <div class="form-row">
+                <label class="field"><span class="field-label">{{ t('Impact on compliance (EN)', '对合规的影响（英文）') }}</span><textarea name="impact" rows="3">{{ draft.impact }}</textarea></label>
+                <label class="field"><span class="field-label">{{ t('Impact on compliance (中文)', '对合规的影响（中文）') }}</span><textarea name="impact_zh" rows="3">{{ draft.impact_zh }}</textarea></label>
+            </div>
+            <div class="form-row">
+                <div class="field"><span class="field-label">{{ t('Articles', '条款') }}</span>
+                    <div class="kb-chips">{% for a in articles %}<label class="check"><input type="checkbox" name="articles" value="{{ a }}" {{ 'checked' if a in draft.articles }}> {{ a }}</label>{% endfor %}</div></div>
+                <div class="field"><span class="field-label">{{ t('Catalogue items touched (AI re-runs on these)', '涉及的目录条目（AI 将对其重新判断）') }}</span>
+                    <select name="items" multiple size="6" class="input">{% for it in items %}<option value="{{ it.id }}" {{ 'selected' if it.id in draft['items'] }}>{{ it.id }} {{ tt(it.name, it.name_zh) }}</option>{% endfor %}</select></div>
+            </div>
+        </section>
+
+        <section class="card kb-rule">
+            <div class="card-head"><h2 class="card-title ai-card-title">{{ octagon(18) }} {{ t('AI rule carried by this act', '本法规带来的 AI 规则') }}</h2>
+                <label class="check"><input type="checkbox" name="rule_on" value="1" {{ 'checked' if draft.rule }}> {{ t('apply in the AI pre-review', '在 AI 初审中应用') }}</label></div>
+            <p class="small muted">{{ t('Derogation from a limit value: when a result exceeds the limit and the packaging matches a scope term, the AI no longer fails it automatically — it flags “derogation may apply” and checks the dates and each condition against the evidence (keywords).',
+                '限值豁免：当结果超过限值且包装描述匹配适用范围关键词时，AI 不再直接判定不合格，而是提示“可能适用豁免”，并按日期和各项条件（关键词）核查证据。') }}</p>
+            {% set r = draft.rule or {} %}
+            <div class="form-row">
+                <label class="field"><span class="field-label">{{ t('Article', '条款') }}</span><select name="rule_article">{% for a in ['a5', 'a5pfas'] %}<option {{ 'selected' if r.article == a }}>{{ a }}</option>{% endfor %}</select></label>
+                <label class="field"><span class="field-label">{{ t('Provision', '条文') }}</span><input name="provision" value="{{ r.provision or 'Art 5(4)' }}"></label>
+                <label class="field"><span class="field-label">{{ t('Limit', '限值') }}</span><input name="limit_label" value="{{ r.limit_label or '100 mg/kg' }}"></label>
+                <label class="field"><span class="field-label">{{ t('Manufactured until', '制造截止') }}</span><input type="date" name="manufactured_until" value="{{ r.manufactured_until }}"></label>
+                <label class="field"><span class="field-label">{{ t('Placed on the market until', '投放市场截止') }}</span><input type="date" name="market_until" value="{{ r.market_until }}"></label>
+            </div>
+            <label class="field"><span class="field-label">{{ t('Scope terms — matched against the packaging description, units and component materials (comma-separated, EN / 中文)', '适用范围关键词——与包装描述、单元及组件材料匹配（逗号分隔，中英文均可）') }}</span>
+                <input name="scope_terms" value="{{ (r.scope_terms or []) | join(', ') }}"></label>
+            <label class="field"><span class="field-label">{{ t('Conditions — one per line: EN | 中文 | evidence keywords | source', '条件——每行一项：英文 | 中文 | 证据关键词 | 出处') }}</span>
+                <textarea name="conditions" rows="8" class="mono">{% for c in r.conditions or [] %}{{ c.en }} | {{ c.zh }} | {{ (c.terms or []) | join(', ') }} | {{ c.ref }}
+{% endfor %}</textarea></label>
+        </section>
+
+        <div class="kb-actions">
+            <a class="btn" href="/knowledge/manual">{{ t('Cancel', '取消') }}</a>
+            <button class="btn btn-primary ai-btn">{{ octagon(14) }} {{ t('Publish to the knowledge base & re-run AI', '发布到知识库并重新运行 AI') }}</button>
+        </div>
+    </form>
+    {% endif %}
+
+    <section class="card">
+        <h2 class="card-title">{{ t('Manual updates', '人工更新记录') }} <span class="hint">{{ entries | length }}</span></h2>
+        {% if entries %}
+        <div class="table-wrap"><table class="data">
+            <thead><tr><th>{{ t('Entry', '条目') }}</th><th>{{ t('Act', '法规') }}</th><th>{{ t('AI rule', 'AI 规则') }}</th><th>{{ t('Status', '状态') }}</th><th>{{ t('Last AI re-run', '最近 AI 重新判断') }}</th><th></th></tr></thead>
+            <tbody>
+            {% for e in entries %}
+            <tr class="{{ 'is-muted' if e.status != 'active' }}">
+                <td><span class="chip-id">{{ e.code }}</span><div class="xs muted">{{ e.created_by }} · {{ e.created_at | date }}</div></td>
+                <td><b>{{ e.ref }}</b><div class="small">{{ t(e.title, e.title_zh) }}</div></td>
+                <td class="small">{% if e.rule %}{{ t(RULES[e.rule.type][0], RULES[e.rule.type][1]) }} · {{ e.rule.provision }}<div class="xs muted">{{ e.rule.scope_terms | join(', ') }}</div>{% else %}—{% endif %}</td>
+                <td>{% if e.status == 'active' %}<span class="badge badge-ok">{{ t('active', '生效中') }}</span>{% else %}<span class="badge badge-muted">{{ t('withdrawn', '已撤回') }}</span>{% endif %}</td>
+                <td class="small">{% if e.rerun %}{{ e.rerun.at }} · {{ e.rerun.changed }} {{ t('changed', '项变化') }}{% endif %}</td>
+                <td>{% if e.update_id %}<a class="btn btn-sm" href="/updates/{{ e.update_id }}#ai-change">{{ t('Open', '查看') }}</a>{% endif %}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table></div>
+        {% else %}<p class="small muted">{{ t('No manual updates yet.', '暂无人工更新。') }}</p>{% endif %}
+    </section>
+</main>
+{% endblock %}

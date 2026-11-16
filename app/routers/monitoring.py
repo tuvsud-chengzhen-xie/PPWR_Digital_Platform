@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
-from .. import auth, monitor, rag
+from .. import auth, kb_rules, monitor, rag
 from ..db import RegUpdate, User, get_session, log
 from ..web import base_context, redirect, render
 
@@ -41,9 +41,13 @@ def update_page(uid: int, request: Request, session: Session = Depends(get_sessi
     monitor.acknowledge(session, u, user)
     session.commit()
     src = rag.kb_url(u.source_path) if u.source_path and not u.source_path.startswith("http") else u.source_path
+    entry = kb_rules.entry_for_update(session, u.id)
+    visible = {p.id for p in projects}
+    rerun_rows = [r for r in ((entry.rerun or {}).get("rows", []) if entry else []) if r["project_id"] in visible]
     return render("update.html", base_context(request, session, "updates", u=u, impact=monitor.impact(u, projects),
                                               KIND=monitor.KIND_LABEL, STATUS=monitor.STATUS_LABEL,
-                                              SEV=monitor.SEVERITY_BADGE, src=src))
+                                              SEV=monitor.SEVERITY_BADGE, src=src, entry=entry,
+                                              rerun_rows=rerun_rows))
 
 
 @router.post("/updates/ack-all")

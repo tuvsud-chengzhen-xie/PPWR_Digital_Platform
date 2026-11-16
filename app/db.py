@@ -396,6 +396,45 @@ class RegUpdate(Base):
     items = JsonField("items_json", [])
 
 
+class KnowledgeEntry(Base):
+    """An expert's manual update of the knowledge base (人工更新知识库).
+
+    The entry joins the curated knowledge pool (RAG retrieval) while it is active. When it
+    carries a rule (e.g. a time-bound derogation from the Art 5(4) limit) the AI pre-review
+    applies that rule too — publishing or withdrawing an entry therefore changes AI judgements,
+    and `rerun` records which verdicts changed.
+    """
+    __tablename__ = "kb_entries"
+    id = Column(Integer, primary_key=True)
+    code = Column(String, unique=True, nullable=False)     # KB-2026-1948
+    kind = Column(String, default="implementing")
+    ref = Column(String, default="")
+    binding = Column(Boolean, default=True)
+    title = Column(String, nullable=False)
+    title_zh = Column(String, default="")
+    text = Column(Text, default="")
+    text_zh = Column(Text, default="")
+    source_path = Column(String, default="")             # relative to PPWR Knowledgebase/
+    uploaded_file = Column(Boolean, default=False)       # the platform wrote source_path (removed on demo reset)
+    page = Column(Integer, default=0)
+    applies_from = Column(String, default="")
+    status = Column(String, default="active")            # active | withdrawn
+    update_id = Column(Integer, ForeignKey("reg_updates.id"), nullable=True)
+    created_by = Column(String, default="")
+    created_at = Column(DateTime, default=now)
+    changed_at = Column(DateTime, default=now)
+    articles_json = Column(Text, nullable=True)
+    items_json = Column(Text, nullable=True)
+    rule_json = Column(Text, nullable=True)
+    rerun_json = Column(Text, nullable=True)
+
+    update = relationship("RegUpdate")
+    articles = JsonField("articles_json", [])
+    items = JsonField("items_json", [])
+    rule = JsonField("rule_json", {})
+    rerun = JsonField("rerun_json", {})
+
+
 class RegAck(Base):
     __tablename__ = "reg_acks"
     id = Column(Integer, primary_key=True)

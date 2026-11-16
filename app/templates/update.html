@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import status with context %}
+{% from "_macros.html" import status, verdict, check_mark, octagon with context %}
 {% block title %}{{ u.code }}{% endblock %}
 {% block page %}
 <main class="page">
@@ -23,6 +23,56 @@
             </dl></div>
             {% if not u.binding %}<p class="xs muted">{{ t('Not legally binding: use it to interpret or prepare; it does not by itself add a legal requirement.', '无法律约束力：可用于解释或准备，其本身不增加法定要求。') }}</p>{% endif %}
         </section>
+
+        {% if entry %}
+        <section class="card ai-change" id="ai-change">
+            <div class="card-head"><h2 class="card-title ai-card-title">{{ octagon(18) }} {{ t('How this knowledge update changed AI judgement', '本次知识库更新如何改变 AI 判断') }}</h2>
+                {% if entry.status == 'active' %}<span class="badge badge-ok">{{ entry.code }} · {{ t('active in the knowledge base', '已在知识库生效') }}</span>
+                {% else %}<span class="badge badge-muted">{{ entry.code }} · {{ t('withdrawn', '已撤回') }}</span>{% endif %}</div>
+            {% set r = entry.rule %}
+            {% if r %}
+            {% set terms = r.scope_terms | join(' / ') %}
+            {% set before_en = 'The AI knew only the ' ~ r.provision ~ ' limit: any result above ' ~ r.limit_label ~ ' → “may not be placed on the market” (fail).' %}
+            {% set before_zh = 'AI 只知道 ' ~ r.provision ~ ' 限值：任何超过 ' ~ r.limit_label ~ ' 的结果 → “不得投放市场”（不通过）。' %}
+            {% set after_en = 'Above the limit and the packaging is ' ~ terms ~ ' → “derogation may apply” (check needed): placed on the market by ' ~ r.market_until ~ ', manufactured by ' ~ r.manufactured_until ~ ', and ' ~ (r.conditions | length) ~ ' conditions checked against the evidence. Any other packaging: unchanged.' %}
+            {% set after_zh = '超过限值且包装属于 ' ~ terms ~ ' → “可能适用豁免”（需核查）：须于 ' ~ r.market_until ~ ' 前投放市场、' ~ r.manufactured_until ~ ' 前制造，并按证据核查 ' ~ (r.conditions | length) ~ ' 项条件。其他包装：不变。' %}
+            <div class="ai-rule">
+                <div><span class="ai-rule-k">{{ t('Before', '更新前') }}</span><p class="small">{{ tb(before_en, before_zh) }}</p></div>
+                <div class="ai-rule-arrow">→</div>
+                <div class="is-after"><span class="ai-rule-k">{{ t('After', '更新后') }}</span><p class="small">{{ tb(after_en, after_zh) }}</p></div>
+            </div>
+            {% endif %}
+            {% if entry.rerun %}
+            <p class="small"><b>{{ t('AI re-run', 'AI 重新判断') }}</b> · {{ entry.rerun.at }} · {{ {'published': t('after publishing', '发布后'), 'withdrawn': t('after withdrawal', '撤回后'), 're-activated': t('after re-activation', '重新启用后')}[entry.rerun.reason] }} · {{ entry.rerun.by }} — <b>{{ entry.rerun.changed }}</b> {{ t('judgement(s) changed', '项结论变化') }}</p>
+            <div class="ai-diff">
+            {% for row in rerun_rows %}
+                <div class="ai-diff-row {{ 'is-changed' if row.changed else 'is-muted' }}">
+                    <div class="ai-diff-head">
+                        <a href="/projects/{{ row.project_id }}/items/{{ row.sub_id }}"><span class="chip-id">{{ row.item }}</span> {{ row.project }} · {{ row.unit }} <span class="xs muted">{{ row.unit_name }}</span></a>
+                        <span class="ai-diff-verdicts">{{ verdict(row.before) }} <span class="ai-diff-arrow">→</span> {{ verdict(row.after) }}</span>
+                    </div>
+                    {% if row.changed %}
+                    <ul class="ai-checks">{% for c in row.new_checks[:4] %}<li>{{ check_mark(c.ok) }}<span class="small">{{ t(c.desc, c.desc_zh) }}{% if c.msg %}<span class="ai-msg">{{ t(c.msg, c.msg_zh) }}</span>{% endif %}</span></li>{% endfor %}
+                        {% if row.new_checks | length > 4 %}<li class="xs muted"><span></span><span>+ {{ row.new_checks | length - 4 }} {{ t('more checks on the item page', '项其他检查，见条目页面') }}</span></li>{% endif %}</ul>
+                    {% else %}<p class="small muted">{{ t('Unchanged — the rule does not apply to this packaging.', '不变——该规则不适用于此包装。') }}</p>{% endif %}
+                </div>
+            {% else %}<p class="small muted">{{ t('No open items of your projects were re-reviewed.', '您的项目中没有被重新审核的未结条目。') }}</p>{% endfor %}
+            </div>
+            {% endif %}
+            {% if is_expert %}
+            <div class="kb-actions">
+                {% if entry.status == 'active' %}
+                <form method="post" action="/knowledge/manual/{{ entry.id }}/withdraw" data-confirm="{{ tt('Withdraw this entry from the knowledge base and re-run the AI?', '从知识库撤回该条目并重新运行 AI？') }}">
+                    <button class="btn btn-sm">{{ t('Withdraw from the knowledge base (AI reverts)', '从知识库撤回（AI 恢复原判断）') }}</button></form>
+                {% else %}
+                <form method="post" action="/knowledge/manual/{{ entry.id }}/activate"><button class="btn btn-sm btn-primary">{{ t('Re-activate (AI applies the rule again)', '重新启用（AI 再次应用规则）') }}</button></form>
+                {% endif %}
+                <a class="btn btn-sm" href="/knowledge/manual">{{ t('All manual updates', '全部人工更新') }}</a>
+            </div>
+            {% endif %}
+            <p class="xs muted">{{ t('Approved items are not changed automatically — use “Re-open approved items” below (Art 15(4)). The AI verdict is advisory; the expert decides.', '已批准条目不会被自动更改——请使用下方“重新打开已批准条目”（Art 15(4)）。AI 结论仅供参考，由专家决定。') }}</p>
+        </section>
+        {% endif %}
 
         <section class="card">
             <h2 class="card-title">{{ t('Impact on your projects', '对您项目的影响') }}</h2>

@@ -575,3 +575,30 @@ a.kpi-tile:hover { text-decoration: none; transform: translateY(-2px); }
     .brand-sub { display: none; }
     .nav-toggle-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 }
+
+/* Manual knowledge-base update → AI judgement change */
+.kb-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin: var(--space-3) 0; }
+.kb-actions form { margin: 0; }
+.kb-chips { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.kb-rule { border-left: 3px solid #7c5cff; }
+textarea.mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; }
+.ai-rule { display: grid; grid-template-columns: 1fr auto 1fr; gap: var(--space-3); align-items: stretch; margin-bottom: var(--space-3); }
+.ai-rule > div:not(.ai-rule-arrow) { border: 1px solid var(--neutral-100); border-radius: 10px; padding: 10px 12px; background: var(--neutral-25, #fafbfc); }
+.ai-rule > div.is-after { border-color: #c9bcff; background: #f6f3ff; }
+.ai-rule p { margin: 4px 0 0; }
+.ai-rule-k { font-size: var(--font-size-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--neutral-600); }
+.ai-rule-arrow { align-self: center; font-size: 20px; color: #7c5cff; }
+.ai-diff { display: grid; gap: var(--space-2); margin-bottom: var(--space-2); }
+.ai-diff-row { border: 1px solid var(--neutral-100); border-radius: 10px; padding: 10px 12px; }
+.ai-diff-row.is-changed { border-color: #c9bcff; box-shadow: inset 3px 0 0 #7c5cff; }
+.ai-diff-row.is-muted { opacity: .75; }
+.ai-diff-row p { margin: 6px 0 0; }
+.ai-diff-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 12px; }
+.ai-diff-verdicts { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.ai-diff .ai-checks { margin-top: 6px; }
+.ai-diff .ai-checks li { padding: 4px 0; }
+.ai-diff-arrow { color: #7c5cff; font-weight: 600; }
+@media (max-width: 720px) {
+    .ai-rule { grid-template-columns: 1fr; }
+    .ai-rule-arrow { transform: rotate(90deg); justify-self: center; }
+}

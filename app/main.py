@@ -14,10 +14,10 @@ from sqlalchemy.orm import Session
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.sessions import SessionMiddleware
 
-from . import auth, changes, config, monitor, rag, seed, workflow
+from . import auth, changes, config, kb_rules, monitor, rag, seed, workflow
 from .db import Base, Project, SessionLocal, User, engine, get_session, init_db
-from .routers import (catalogue_views, dashboard, documents, evidence, guide, imports, monitoring, projects, review,
-                      settings, suppliers)
+from .routers import (catalogue_views, dashboard, documents, evidence, guide, imports, kb_admin, monitoring, projects,
+                      review, settings, suppliers)
 from .web import base_context, redirect, render
 
 
@@ -26,6 +26,7 @@ async def lifespan(_app: FastAPI):
     init_db()
     with SessionLocal() as session:
         seed.seed(session)
+        seed.seed_crystal(session)          # showcase for manual knowledge-base updates (tops up older demo data)
         monitor.seed_updates(session)
         for p in session.query(Project):   # catalogue grew (V4.2 Art 5 evidence items): top up existing projects
             workflow.ensure_submissions(session, p)
@@ -48,7 +49,7 @@ if config.TEMPLATE_KIT_DIR.exists():
     app.mount("/kit", StaticFiles(directory=str(config.TEMPLATE_KIT_DIR)), name="kit")
 
 for r in (dashboard, projects, review, evidence, documents, suppliers, catalogue_views, guide, imports, monitoring,
-          settings):
+          settings, kb_admin):
     app.include_router(r.router)
 
 
@@ -92,9 +93,12 @@ def logout(request: Request):
 
 @app.post("/admin/reset")
 def reset(request: Request, user: User = Depends(auth.require_expert)):
-    """Restore the demo seed. Uploaded files of the demo stay on disk."""
+    """Restore the demo seed. Uploaded evidence files stay on disk; acts added by a manual
+    knowledge-base update are removed from PPWR Knowledgebase/ so the demo can be replayed."""
+    kb_rules.cleanup_for_reset()
     Base.metadata.drop_all(engine)
     init_db()
+    kb_rules.invalidate()
     with SessionLocal() as session:
         seed.seed(session)
         monitor.seed_updates(session)
