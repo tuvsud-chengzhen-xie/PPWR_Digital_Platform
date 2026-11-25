@@ -287,15 +287,29 @@ a.kpi-tile:hover { text-decoration: none; transform: translateY(-2px); }
 .cat-name small { color: var(--neutral-600); font-size: var(--font-size-xs); }
 .cat-logic { padding: 0 14px 10px 60px; color: var(--neutral-700); font-size: var(--font-size-xs); max-width: 110ch; }
 @media (max-width: 760px) { .cat > summary { grid-template-columns: 30px 1fr; } .cat > summary .hide-sm { display: none; } }
-.item-row { display: grid; grid-template-columns: 76px minmax(0, 1fr) 110px 150px 70px 100px; gap: 10px;
+/* the legal-status badge has its own column so a long item name can never hide it */
+.item-row { display: grid; grid-template-columns: 76px minmax(0, 1fr) 190px 110px 150px 70px 100px; gap: 10px;
     align-items: center; padding: 8px 14px 8px 60px; border-top: 1px solid var(--neutral-75); color: inherit;
     text-decoration: none; font-size: var(--font-size-sm); }
 .item-row:hover { background: var(--tuv-blue-50); text-decoration: none; }
-.item-row .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-row .nm { min-width: 0; overflow-wrap: anywhere; }
+.item-row .lvl { display: flex; flex-wrap: wrap; gap: 4px; }
+.item-row .lvl .badge { font-size: 11px; }
 .item-row .td { color: var(--neutral-600); font-size: var(--font-size-xs); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .item-row .ev { color: var(--neutral-600); font-size: var(--font-size-xs); text-align: right; font-variant-numeric: tabular-nums; }
+.item-row.is-flash { animation: row-flash 2s ease-out; }
+@keyframes row-flash { from { background: var(--tuv-blue-100, #cfe3fb); } to { background: transparent; } }
+@media (max-width: 1100px) { .item-row { grid-template-columns: 76px minmax(0, 1fr) 170px 150px 70px; }
+    .item-row .td, .item-row .ai { display: none; } }
 @media (max-width: 900px) { .item-row { grid-template-columns: 70px 1fr 120px; padding-left: 14px; }
+    .item-row .lvl { grid-column: 2 / -1; }
     .item-row .td, .item-row .ev, .item-row .ai { display: none; } }
+/* anchors land below the sticky top bar */
+[id] { scroll-margin-top: var(--sticky-top-offset, 90px); }
+.badge-ifapp { background: transparent; border: 1px dashed var(--neutral-300, #b8c2cc); color: var(--neutral-700); }
+.td-out { opacity: .62; }
+.optional-table td { vertical-align: top; }
+.annex7-table td:first-child { white-space: nowrap; font-weight: 600; }
 
 /* item page */
 .item-head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }

@@ -3,14 +3,15 @@ from __future__ import annotations
 
 from collections import Counter
 from typing import Optional
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from sqlalchemy.orm import Session
 
-from .. import applicability, assistant, auth, catalogue, guidance, i18n, monitor, rag
+from .. import applicability, assistant, auth, catalogue, config, guidance, i18n, monitor, rag
 from ..db import Submission, User, get_session
-from ..web import project_context, render
+from ..web import base_context, project_context, render
 
 router = APIRouter()
 
@@ -125,3 +126,28 @@ def kb_status(user: User = Depends(auth.require_user)):
     st = rag.status()
     st.pop("doc_list", None)
     return st
+
+
+OFFICIAL_SOURCES = [
+    ("Regulation (EU) 2025/40 (PPWR) — official text on EUR-Lex", "法规 (EU) 2025/40（PPWR）——EUR-Lex 官方文本",
+     "https://eur-lex.europa.eu/eli/reg/2025/40/oj"),
+    ("European Commission — packaging and packaging waste (guidance, FAQ, implementing acts)",
+     "欧盟委员会——包装与包装废弃物（指南、FAQ、实施法案）",
+     "https://environment.ec.europa.eu/topics/waste-and-recycling/packaging-waste_en"),
+]
+
+
+@router.get("/kb-source/{path:path}", response_class=HTMLResponse)
+def kb_source(path: str, request: Request, page: int = 0, session: Session = Depends(get_session),
+              user: User = Depends(auth.require_user)):
+    """Open a knowledge-base source document. Serves the file when it is present on this server;
+    otherwise explains that it is not deployed here and offers the official online source and a way back."""
+    base = config.KNOWLEDGE_DIR.resolve()
+    target = (base / path).resolve()
+    if base in target.parents and target.is_file() and target.stat().st_size > 0:
+        url = "/kb-files/" + "/".join(quote(x) for x in path.split("/")) + (f"#page={page}" if page else "")
+        return RedirectResponse(url, status_code=302)
+    resp = render("kb_missing.html", base_context(request, session, "knowledge", doc_name=path.rsplit("/", 1)[-1],
+                                                  doc_path=path, page=page, official=OFFICIAL_SOURCES))
+    resp.status_code = 404
+    return resp

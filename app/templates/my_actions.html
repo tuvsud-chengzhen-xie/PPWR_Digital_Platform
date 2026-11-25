@@ -1,33 +1,34 @@
 {% extends "base.html" %}
 {% from "_macros.html" import status with context %}
-{% block title %}My actions{% endblock %}
+{% block title %}{{ tt('My actions', '我的待办') }}{% endblock %}
 {% block page %}
 <main class="page is-narrow">
+    <span data-remember hidden></span>
     <div class="page-head">
-        <h1>My actions</h1>
-        <form class="filterbar" method="get"><select name="project" onchange="this.form.submit()"><option value="">All projects</option>
+        <h1>{{ t('My actions', '我的待办') }}</h1>
+        <form class="filterbar" method="get"><select name="project" onchange="this.form.submit()"><option value="">{{ tt('All projects', '全部项目') }}</option>
             {% for p in projects %}<option value="{{ p.id }}" {{ 'selected' if scope_id == p.id }}>{{ p.code }} · {{ p.title }}</option>{% endfor %}</select></form>
     </div>
     <section class="card">
-        <h2 class="card-title">Sent back for rework <span class="hint">{{ rework | length }} · fix and re-submit</span></h2>
+        <h2 class="card-title">{{ t('Sent back for rework', '已退回返工') }} <span class="hint">{{ rework | length }} · {{ t('fix and re-submit', '修改后重新提交') }}</span></h2>
         {% if rework %}
         <ul class="todo">{% for s in rework %}
             <li><a href="/projects/{{ s.project_id }}/items/{{ s.id }}"><span class="dot dot-red"></span>
-                <span style="min-width:0"><span class="todo-title">{{ s.item_id }} · {{ catalogue.item(s.item_id).name }}</span>
-                <span class="todo-sub">{{ s.project.code }} · {{ s.unit.code if s.unit else 'project' }} — “{{ s.review_comment }}”</span></span><span class="go">→</span></a></li>
+                <span style="min-width:0"><span class="todo-title">{{ s.item_id }} · {{ tf(catalogue.item(s.item_id), 'name') }}</span>
+                <span class="todo-sub">{{ s.project.code }} · {{ s.unit.code if s.unit else t('project', '项目') }} — “{{ s.review_comment }}”</span></span><span class="go">→</span></a></li>
         {% endfor %}</ul>
-        {% else %}<div class="empty-state"><b>Nothing sent back.</b>Your submissions are with the reviewer or approved.</div>{% endif %}
+        {% else %}<div class="empty-state"><b>{{ t('Nothing sent back.', '没有被退回的条目。') }}</b>{{ tb('Your submissions are with the reviewer or approved.', '您的提交正在审核中或已获批准。') }}</div>{% endif %}
     </section>
     <section class="card">
-        <h2 class="card-title">Still to collect <span class="hint">{{ todo | length }}</span></h2>
+        <h2 class="card-title">{{ t('Still to collect', '待收集') }} <span class="hint">{{ todo | length }}</span></h2>
         {% if todo %}
         <ul class="todo">{% for s in todo[:60] %}
             <li><a href="/projects/{{ s.project_id }}/items/{{ s.id }}"><span class="chip-id">{{ s.item_id }}</span>
-                <span style="min-width:0"><span class="todo-title">{{ catalogue.item(s.item_id).name }}</span>
-                <span class="todo-sub">{{ s.project.code }} · {{ s.unit.code ~ ' ' ~ s.unit.name if s.unit else 'project-level' }} · {{ catalogue.item(s.item_id).td }}</span></span><span class="go">→</span></a></li>
+                <span style="min-width:0"><span class="todo-title">{{ tf(catalogue.item(s.item_id), 'name') }}</span>
+                <span class="todo-sub">{{ s.project.code }} · {{ s.unit.code ~ ' ' ~ s.unit.name if s.unit else t('project-level', '项目级') }} · {{ catalogue.item(s.item_id).td }}</span></span><span class="go">→</span></a></li>
         {% endfor %}</ul>
-        {% if todo | length > 60 %}<p class="xs muted">…and {{ todo | length - 60 }} more — use the Data collection tab of each project.</p>{% endif %}
-        {% else %}<div class="empty-state"><b>Everything is collected.</b></div>{% endif %}
+        {% if todo | length > 60 %}<p class="xs muted">{{ t('…and', '……另有') }} {{ todo | length - 60 }} {{ t('more — use the Data collection tab of each project.', '项——请使用各项目的“数据收集”标签页。') }}</p>{% endif %}
+        {% else %}<div class="empty-state"><b>{{ t('Everything is collected.', '所有资料均已收集。') }}</b></div>{% endif %}
     </section>
 </main>
 {% endblock %}

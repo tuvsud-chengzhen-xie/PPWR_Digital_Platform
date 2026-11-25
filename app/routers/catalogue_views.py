@@ -50,7 +50,7 @@ def knowledge(request: Request, session: Session = Depends(get_session), user: U
             files = sorted(f for f in d.iterdir() if f.is_file() and f.suffix.lower() in (".pdf", ".html"))
             folders.append({"label": FOLDER_LABEL.get(d.name[:2], d.name), "name": d.name,
                             "files": [{"name": f.stem, "ext": f.suffix.lstrip(".").upper(), "size": f.stat().st_size,
-                                       "href": f"/kb-files/{quote(d.name)}/{quote(f.name)}"} for f in files]})
+                                       "href": f"/kb-source/{quote(d.name)}/{quote(f.name)}"} for f in files]})
     kit = []
     if config.TEMPLATE_KIT_DIR.exists():
         for f in sorted(config.TEMPLATE_KIT_DIR.iterdir()):

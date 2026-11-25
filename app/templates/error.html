@@ -3,9 +3,12 @@
 {% block page %}
 <main class="page is-narrow">
     <section class="card empty-state">
-        <b>{{ 'Not found' if code == 404 else 'Something went wrong' }}</b>
-        <p>{{ detail or 'The page does not exist or is not part of your account.' }}</p>
-        <a class="btn btn-primary" href="/">Back to the dashboard</a>
+        <b>{{ t('Not found', '未找到') if code == 404 else t('Something went wrong', '出现错误') }}</b>
+        <p>{{ detail or t('The page does not exist or is not part of your account.', '该页面不存在，或不属于您的账户。') }}</p>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <a class="btn btn-primary" href="/" data-go-back>← {{ t('Back to the previous page', '返回上一页') }}</a>
+            <a class="btn btn-ghost" href="/">{{ t('Dashboard', '仪表盘') }}</a>
+        </div>
     </section>
 </main>
 {% endblock %}

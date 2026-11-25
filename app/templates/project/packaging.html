@@ -3,92 +3,92 @@
 {% block content %}
 <section class="card">
     <div class="card-head">
-        <h2 class="card-title">Read a filled BOM workbook <span class="hint">PPWR BOM template V1.1 — one row per component</span></h2>
-        <span class="small"><a href="/kit/PPWR_BOM_V1.xlsx">Blank template</a> · <a href="/projects/{{ project.id }}/bom.xlsx">Export this BOM</a></span>
+        <h2 class="card-title">{{ t('Read a filled BOM workbook', '读取已填写的 BOM 工作簿') }} <span class="hint">{{ t('PPWR BOM template V1.1 — one row per component', 'PPWR BOM 模板 V1.1——每个组件一行') }}</span></h2>
+        <span class="small"><a href="/kit/PPWR_BOM_V1.xlsx">{{ t('Blank template', '空白模板') }}</a> · <a href="/projects/{{ project.id }}/bom.xlsx">{{ t('Export this BOM', '导出本 BOM') }}</a></span>
     </div>
     <input type="file" id="bomFile" accept=".xlsx" hidden>
     <div class="qi-shell">
         <div id="aiDrop" class="qi-bar gborder" tabindex="0" role="button" data-ai-file="bomFile"
              data-ai-url="/projects/{{ project.id }}/bom/import"
-             data-ai-stages="Reading the workbook…|Finding PS / PU / component IDs…|Matching suppliers in your library…|Classifying materials for the applicability matrix…">
+             data-ai-stages="Reading the workbook · 读取工作簿…|Finding PS / PU / component IDs · 识别 PS / PU / 组件编号…|Matching suppliers in your library · 匹配供应商库…|Classifying materials for the applicability matrix · 为适用性矩阵分类材料…">
             <span class="qi-oct">{{ octagon(24) }}</span>
-            <span class="qi-bar-text">Drop the BOM workbook here, or <u>click to browse</u></span>
+            <span class="qi-bar-text">{{ t('Drop the BOM workbook here, or', '将 BOM 工作簿拖到此处，或') }} <u>{{ t('click to browse', '点击选择') }}</u></span>
             <span class="qi-bar-hint">.xlsx</span>
         </div>
         <div class="qi-glow" aria-hidden="true"></div>
     </div>
-    <p class="xs muted" style="text-align:center;margin:10px 0 0">Units and components are created or updated by their IDs; suppliers are matched
-        against the supplier library; each material is classified (paper / plastic / …) so the applicability matrix follows.</p>
+    <p class="xs muted" style="text-align:center;margin:10px 0 0">{{ t('Units and components are created or updated by their IDs; suppliers are matched against the supplier library; each material is classified (paper / plastic / …) so the applicability matrix follows.', '单元与组件按编号创建或更新；供应商与供应商库匹配；每种材料自动分类（纸 / 塑料 / …），适用性矩阵随之更新。') }}</p>
 </section>
 
 <section class="card">
     <div class="card-head">
-        <h2 class="card-title">Packaging register <span class="hint">TD §2 · every packaging unit of {{ project.ps_code }}</span></h2>
+        <h2 class="card-title">{{ t('Packaging register', '包装登记表') }} <span class="hint">TD §2 · {{ t('every packaging unit of', '的全部包装单元：') }} {{ project.ps_code }}</span></h2>
+        <span class="xs muted">{{ t('Click a unit to show its BOM below', '点击单元即可在下方查看其 BOM') }} ↓</span>
     </div>
     <div class="table-wrap">
     <table class="data scan">
         <colgroup><col style="width:80px"><col><col style="width:95px"><col style="width:150px"><col style="width:170px"><col style="width:80px"><col style="width:150px"><col style="width:120px"></colgroup>
-        <thead><tr><th>Unit</th><th>Name</th><th>Level</th><th>UPI</th><th>SKUs</th><th class="num">Mass g</th><th>Supplier</th><th></th></tr></thead>
+        <thead><tr><th>{{ t('Unit', '单元') }}</th><th>{{ t('Name', '名称') }}</th><th>{{ t('Level', '层级') }}</th><th>UPI</th><th>SKUs</th><th class="num">{{ t('Mass g', '质量 g') }}</th><th>{{ t('Supplier', '供应商') }}</th><th></th></tr></thead>
         <tbody>
         {% for u in project.units %}
         <tr class="{{ 'is-selected' if current and u.id == current.id }}" style="{{ 'background: var(--tuv-blue-50)' if current and u.id == current.id }}">
             <td><span class="chip-id">{{ u.code }}</span></td>
-            <td><a href="?unit={{ u.id }}"><b>{{ u.name }}</b></a> <span class="xs muted">· {{ u.components | length }} components</span></td>
+            <td><a href="?unit={{ u.id }}#bom" title="{{ tt('Show the BOM of this unit', '查看该单元的 BOM') }}"><b>{{ u.name }}</b></a> <span class="xs muted">· {{ u.components | length }} {{ tt('components', '个组件') }}</span></td>
             <td>{{ u.level }}</td><td class="mono xs">{{ u.upi or '—' }}</td><td class="xs">{{ u.skus or '—' }}</td>
             <td class="num">{{ u.mass_g | num }}</td><td class="xs">{{ u.supplier_name or '—' }}</td>
-            <td style="text-align:right"><a class="btn btn-sm" href="?unit={{ u.id }}&edit={{ u.id }}#unit-form">Edit</a></td>
+            <td style="text-align:right"><a class="btn btn-sm" href="?unit={{ u.id }}&edit={{ u.id }}#unit-form">{{ t('Edit', '编辑') }}</a></td>
         </tr>
         {% else %}
-        <tr><td colspan="8"><div class="empty-state"><b>No packaging registered.</b>Add the first unit below or read a BOM workbook.</div></td></tr>
+        <tr><td colspan="8"><div class="empty-state"><b>{{ t('No packaging registered.', '尚未登记包装。') }}</b>{{ t('Add the first unit below or read a BOM workbook.', '请在下方添加第一个单元，或读取 BOM 工作簿。') }}</div></td></tr>
         {% endfor %}
         </tbody>
     </table>
     </div>
     {% set eu = (project.units | selectattr('id', 'equalto', edit) | first) if edit else none %}
     <details class="fold" id="unit-form" style="margin-top:12px" {{ 'open' if eu or not project.units }}>
-        <summary>{{ 'Edit ' ~ eu.code if eu else '+ Add a packaging unit (' ~ next_unit ~ ')' }}</summary>
+        <summary>{% if eu %}{{ t('Edit', '编辑') }} {{ eu.code }}{% else %}+ {{ t('Add a packaging unit', '添加包装单元') }} ({{ next_unit }}){% endif %}</summary>
         <form method="post" action="/projects/{{ project.id }}/units" class="fold-body">
             {% if eu %}<input type="hidden" name="unit_id" value="{{ eu.id }}">{% endif %}
             <div class="form-row">
-                <label class="field" style="grid-column: span 2"><span class="field-label">Name / description</span><input name="name" required value="{{ eu.name if eu }}" placeholder="e.g. Folding carton"></label>
-                <label class="field"><span class="field-label">Level (Art 3)</span><select name="level">{% for l in UNIT_LEVELS %}<option {{ 'selected' if eu and eu.level == l }}>{{ l }}</option>{% endfor %}</select></label>
-                <label class="field"><span class="field-label">Type</span><input name="pack_type" value="{{ eu.pack_type if eu }}" placeholder="Carton, pouch, bottle…"></label>
+                <label class="field" style="grid-column: span 2"><span class="field-label">{{ t('Name / description', '名称 / 描述') }}</span><input name="name" required value="{{ eu.name if eu }}" placeholder="{{ tt('e.g. Folding carton', '例：折叠纸盒') }}"></label>
+                <label class="field"><span class="field-label">{{ t('Level (Art 3)', '包装层级（Art 3）') }}</span><select name="level">{% for l in UNIT_LEVELS %}<option {{ 'selected' if eu and eu.level == l }}>{{ l }}</option>{% endfor %}</select></label>
+                <label class="field"><span class="field-label">{{ t('Type', '类型') }}</span><input name="pack_type" value="{{ eu.pack_type if eu }}" placeholder="{{ tt('Carton, pouch, bottle…', '纸盒、袋、瓶…') }}"></label>
             </div>
             <div class="form-row">
-                <label class="field"><span class="field-label">UPI</span><input name="upi" value="{{ eu.upi if eu }}" placeholder="unique packaging ID"></label>
+                <label class="field"><span class="field-label">UPI</span><input name="upi" value="{{ eu.upi if eu }}" placeholder="{{ tt('unique packaging ID', '包装唯一标识') }}"></label>
                 <label class="field"><span class="field-label">SKUs</span><input name="skus" value="{{ eu.skus if eu }}" placeholder="SKU-A / SKU-B"></label>
-                <label class="field"><span class="field-label">Mass (g)</span><input name="mass_g" value="{{ eu.mass_g | num if eu and eu.mass_g else '' }}"></label>
-                <label class="field"><span class="field-label">Dimensions (mm)</span><input name="dims" value="{{ eu.dims if eu }}" placeholder="L × W × H"></label>
+                <label class="field"><span class="field-label">{{ t('Mass (g)', '质量（g）') }}</span><input name="mass_g" value="{{ eu.mass_g | num if eu and eu.mass_g else '' }}"></label>
+                <label class="field"><span class="field-label">{{ t('Dimensions (mm)', '尺寸（mm）') }}</span><input name="dims" value="{{ eu.dims if eu }}" placeholder="L × W × H"></label>
             </div>
             <div class="form-row">
-                <label class="field"><span class="field-label">Packaging supplier</span><input name="supplier_name" value="{{ eu.supplier_name if eu }}"></label>
-                <label class="field"><span class="field-label">Site</span><input name="site" value="{{ eu.site if eu }}"></label>
-                <label class="field"><span class="field-label">Country</span><input name="country" value="{{ eu.country if eu }}"></label>
-                <label class="field"><span class="field-label">Photo / artwork ref.</span><input name="artwork_ref" value="{{ eu.artwork_ref if eu }}"></label>
+                <label class="field"><span class="field-label">{{ t('Packaging supplier', '包装供应商') }}</span><input name="supplier_name" value="{{ eu.supplier_name if eu }}"></label>
+                <label class="field"><span class="field-label">{{ t('Site', '生产地点') }}</span><input name="site" value="{{ eu.site if eu }}"></label>
+                <label class="field"><span class="field-label">{{ t('Country', '国家') }}</span><input name="country" value="{{ eu.country if eu }}"></label>
+                <label class="field"><span class="field-label">{{ t('Photo / artwork ref.', '照片 / Artwork 编号') }}</span><input name="artwork_ref" value="{{ eu.artwork_ref if eu }}"></label>
             </div>
             <div class="form-actions">
-                <button class="btn btn-primary">{{ 'Save ' ~ eu.code if eu else 'Add unit' }}</button>
-                {% if eu %}<a class="btn btn-ghost" href="?unit={{ eu.id }}">Cancel</a>{% endif %}
-                <span class="xs muted">Register data feeds items C01-01 to C01-05; changing an approved value re-opens it.</span>
+                <button class="btn btn-primary">{% if eu %}{{ t('Save', '保存') }} {{ eu.code }}{% else %}{{ t('Add unit', '添加单元') }}{% endif %}</button>
+                {% if eu %}<a class="btn btn-ghost" href="?unit={{ eu.id }}#bom">{{ t('Cancel', '取消') }}</a>{% endif %}
+                <span class="xs muted">{{ t('Register data feeds items C01-01 to C01-05; changing an approved value re-opens it.', '登记数据用于条目 C01-01 至 C01-05；修改已批准的数值会重新打开该条目。') }}</span>
             </div>
         </form>
         {% if eu %}
-        <form method="post" action="/projects/{{ project.id }}/units/{{ eu.id }}/delete" data-confirm="Remove {{ eu.code }} with its components and collection items?" style="margin-top:6px">
-            <button class="linkbtn danger xs">Remove {{ eu.code }}</button></form>
+        <form method="post" action="/projects/{{ project.id }}/units/{{ eu.id }}/delete" data-confirm="{{ tt('Remove ' ~ eu.code ~ ' with its components and collection items?', '删除 ' ~ eu.code ~ ' 及其组件和收集条目？') }}" style="margin-top:6px">
+            <button class="linkbtn danger xs">{{ t('Remove', '删除') }} {{ eu.code }}</button></form>
         {% endif %}
     </details>
 </section>
 
 {% if current %}
-<section class="card">
+<section class="card" id="bom">
     <div class="card-head">
-        <h2 class="card-title">BOM · {{ current.code }} {{ current.name }} <span class="hint">TD §3 · components, materials and their supplier source</span></h2>
-        <div class="filterbar">{% for u in project.units %}<a class="pill {{ 'is-active' if u.id == current.id }}" href="?unit={{ u.id }}">{{ u.code }}</a>{% endfor %}</div>
+        <h2 class="card-title">BOM · {{ current.code }} {{ current.name }} <span class="hint">TD §3 · {{ t('components, materials and their supplier source', '组件、材料及其供应商来源') }}</span></h2>
+        {% if project.units | length > 1 %}<div class="filterbar" title="{{ tt('Switch unit — same as clicking the unit in the register above', '切换单元——与点击上方登记表中的单元相同') }}">{% for u in project.units %}<a class="pill {{ 'is-active' if u.id == current.id }}" href="?unit={{ u.id }}#bom">{{ u.code }}</a>{% endfor %}</div>{% endif %}
     </div>
     <div class="table-wrap">
     <table class="data scan">
         <colgroup><col style="width:120px"><col style="width:110px"><col><col style="width:110px"><col style="width:80px"><col style="width:80px"><col style="width:240px"><col style="width:60px"><col style="width:90px"></colgroup>
-        <thead><tr><th>Component</th><th>Type</th><th>Material</th><th>Structure</th><th>Group</th><th class="num">Mass g</th><th>Supplier · material (trace code)</th><th class="num">PCR %</th><th></th></tr></thead>
+        <thead><tr><th>{{ t('Component', '组件') }}</th><th>{{ t('Type', '类型') }}</th><th>{{ t('Material', '材料') }}</th><th>{{ t('Structure', '结构') }}</th><th>{{ t('Group', '材料组') }}</th><th class="num">{{ t('Mass g', '质量 g') }}</th><th>{{ t('Supplier · material (trace code)', '供应商 · 材料（追溯码）') }}</th><th class="num">PCR %</th><th></th></tr></thead>
         <tbody>
         {% for c in current.components %}
         <tr>
@@ -96,16 +96,16 @@
             <td title="{{ c.description }}"><b>{{ c.material or '—' }}</b> <span class="xs muted">{{ c.description }}</span></td>
             <td class="xs">{{ c.structure }}</td><td><span class="badge badge-outline">{{ c.material_group }}</span></td>
             <td class="num">{{ c.mass_g | num }}</td>
-            <td class="xs">{% if c.supplier_material %}<a href="/suppliers/{{ c.supplier_id }}">{{ c.supplier.name }}</a> · {{ c.supplier_material.code }} <span class="mono">{{ c.supplier_material.trace_code }}</span>{% else %}<span class="muted">not linked to the library</span>{% endif %}</td>
+            <td class="xs">{% if c.supplier_material %}<a href="/suppliers/{{ c.supplier_id }}">{{ c.supplier.name }}</a> · {{ c.supplier_material.code }} <span class="mono">{{ c.supplier_material.trace_code }}</span>{% else %}<span class="muted">{{ t('not linked to the library', '未关联供应商库') }}</span>{% endif %}</td>
             <td class="num">{{ c.recycled_pct | num }}</td>
-            <td style="text-align:right"><a class="btn btn-sm" href="#comp-{{ c.id }}" onclick="const d=document.getElementById('comp-{{ c.id }}');d.open=true;d.scrollIntoView({behavior:'smooth',block:'center'});return false">Edit</a></td>
+            <td style="text-align:right"><a class="btn btn-sm" href="#comp-{{ c.id }}" onclick="const d=document.getElementById('comp-{{ c.id }}');d.open=true;d.scrollIntoView({behavior:'smooth',block:'center'});return false">{{ t('Edit', '编辑') }}</a></td>
         </tr>
         {% else %}
-        <tr><td colspan="9"><div class="empty-state"><b>No components yet.</b>Add each part — carton, film, cap, label, ink, adhesive — as its own line.</div></td></tr>
+        <tr><td colspan="9"><div class="empty-state"><b>{{ t('No components yet.', '尚无组件。') }}</b>{{ t('Add each part — carton, film, cap, label, ink, adhesive — as its own line.', '每个部件——纸盒、薄膜、瓶盖、标签、油墨、胶黏剂——各占一行。') }}</div></td></tr>
         {% endfor %}
         </tbody>
         {% if current.components %}
-        <tfoot><tr><td colspan="5" class="xs muted">Sum of components{% if current.mass_g %} · declared unit mass {{ current.mass_g | num }} g{% endif %}</td>
+        <tfoot><tr><td colspan="5" class="xs muted">{{ t('Sum of components', '组件合计') }}{% if current.mass_g %} · {{ t('declared unit mass', '申报单元质量') }} {{ current.mass_g | num }} g{% endif %}</td>
             <td class="num"><b>{{ current.components | map(attribute='mass_g') | select | sum | round(2) | num }}</b></td><td colspan="3"></td></tr></tfoot>
         {% endif %}
     </table>
@@ -116,38 +116,38 @@
         <input type="hidden" name="unit_id" value="{{ current.id }}">
         {% if c %}<input type="hidden" name="comp_id" value="{{ c.id }}">{% endif %}
         <div class="form-row">
-            <label class="field"><span class="field-label">Type</span><input name="pack_type" value="{{ c.pack_type if c }}" placeholder="Carton, film, cap, label…"></label>
-            <label class="field" style="grid-column: span 2"><span class="field-label">Description</span><input name="description" value="{{ c.description if c }}"></label>
-            <label class="field"><span class="field-label">Structure</span><select name="structure">{% for s in STRUCTURES %}<option {{ 'selected' if c and c.structure == s }}>{{ s }}</option>{% endfor %}</select></label>
+            <label class="field"><span class="field-label">{{ t('Type', '类型') }}</span><input name="pack_type" value="{{ c.pack_type if c }}" placeholder="{{ tt('Carton, film, cap, label…', '纸盒、薄膜、瓶盖、标签…') }}"></label>
+            <label class="field" style="grid-column: span 2"><span class="field-label">{{ t('Description', '描述') }}</span><input name="description" value="{{ c.description if c }}"></label>
+            <label class="field"><span class="field-label">{{ t('Structure', '结构') }}</span><select name="structure">{% for s in STRUCTURES %}<option {{ 'selected' if c and c.structure == s }}>{{ s }}</option>{% endfor %}</select></label>
         </div>
         <div class="form-row">
-            <label class="field" style="grid-column: span 2"><span class="field-label">Material</span><input name="material" value="{{ c.material if c }}" placeholder="e.g. Corrugated fibreboard B-flute, PET/PE laminate"></label>
-            <label class="field"><span class="field-label">Material group</span><select name="material_group"><option value="">auto-detect</option>{% for g in MATERIAL_GROUPS %}<option {{ 'selected' if c and c.material_group == g }}>{{ g }}</option>{% endfor %}</select></label>
-            <label class="field"><span class="field-label">Mass (g)</span><input name="mass_g" value="{{ c.mass_g | num if c and c.mass_g is not none else '' }}"></label>
+            <label class="field" style="grid-column: span 2"><span class="field-label">{{ t('Material', '材料') }}</span><input name="material" value="{{ c.material if c }}" placeholder="{{ tt('e.g. Corrugated fibreboard B-flute, PET/PE laminate', '例：B 楞瓦楞纸板、PET/PE 复合膜') }}"></label>
+            <label class="field"><span class="field-label">{{ t('Material group', '材料组') }}</span><select name="material_group"><option value="">{{ tt('auto-detect', '自动识别') }}</option>{% for g in MATERIAL_GROUPS %}<option {{ 'selected' if c and c.material_group == g }}>{{ g }}</option>{% endfor %}</select></label>
+            <label class="field"><span class="field-label">{{ t('Mass (g)', '质量（g）') }}</span><input name="mass_g" value="{{ c.mass_g | num if c and c.mass_g is not none else '' }}"></label>
         </div>
         <div class="form-row">
-            <label class="field" style="grid-column: span 2"><span class="field-label">Supplier material (library)</span>
-                <select name="supplier_material_id"><option value="">— not linked —</option>
+            <label class="field" style="grid-column: span 2"><span class="field-label">{{ t('Supplier material (library)', '供应商材料（供应商库）') }}</span>
+                <select name="supplier_material_id"><option value="">— {{ tt('not linked', '未关联') }} —</option>
                     {% for s in suppliers %}<optgroup label="{{ s.code }} {{ s.name }}">{% for m in s.materials %}
                         <option value="{{ m.id }}" {{ 'selected' if c and c.supplier_material_id == m.id }}>{{ m.code }} · {{ m.name }} ({{ m.trace_code }})</option>{% endfor %}</optgroup>{% endfor %}
-                </select><span class="field-help">Linking makes the supplier's certificates count as evidence — and lets a supplier change find this component.</span></label>
-            <label class="field"><span class="field-label">Dimensions (mm)</span><input name="dims" value="{{ c.dims if c }}"></label>
-            <label class="field"><span class="field-label">Recycled content %</span><input name="recycled_pct" value="{{ c.recycled_pct | num if c and c.recycled_pct is not none else '' }}"></label>
+                </select><span class="field-help">{{ t("Linking makes the supplier's certificates count as evidence — and lets a supplier change find this component.", '关联后，供应商证书可作为证据——供应商变更时也能追溯到该组件。') }}</span></label>
+            <label class="field"><span class="field-label">{{ t('Dimensions (mm)', '尺寸（mm）') }}</span><input name="dims" value="{{ c.dims if c }}"></label>
+            <label class="field"><span class="field-label">{{ t('Recycled content %', '再生料含量 %') }}</span><input name="recycled_pct" value="{{ c.recycled_pct | num if c and c.recycled_pct is not none else '' }}"></label>
         </div>
-        <label class="field"><span class="field-label">Remarks</span><input name="remarks" value="{{ c.remarks if c }}"></label>
-        <div class="form-actions"><button class="btn btn-primary btn-sm">{{ 'Save ' ~ c.code if c else 'Add component' }}</button></div>
+        <label class="field"><span class="field-label">{{ t('Remarks', '备注') }}</span><input name="remarks" value="{{ c.remarks if c }}"></label>
+        <div class="form-actions"><button class="btn btn-primary btn-sm">{% if c %}{{ t('Save', '保存') }} {{ c.code }}{% else %}{{ t('Add component', '添加组件') }}{% endif %}</button></div>
     </form>
     {% endmacro %}
 
     {% for c in current.components %}
     <details class="fold" id="comp-{{ c.id }}" style="margin-top:10px">
-        <summary>Edit {{ c.code }}</summary>
+        <summary>{{ t('Edit', '编辑') }} {{ c.code }}</summary>
         {{ comp_form(c) }}
-        <form method="post" action="/projects/{{ project.id }}/components/{{ c.id }}/delete" data-confirm="Remove {{ c.code }}?"><button class="linkbtn danger xs">Remove {{ c.code }}</button></form>
+        <form method="post" action="/projects/{{ project.id }}/components/{{ c.id }}/delete" data-confirm="{{ tt('Remove ' ~ c.code ~ '?', '删除 ' ~ c.code ~ '？') }}"><button class="linkbtn danger xs">{{ t('Remove', '删除') }} {{ c.code }}</button></form>
     </details>
     {% endfor %}
     <details class="fold" style="margin-top:12px" {{ 'open' if not current.components }}>
-        <summary>+ Add a component ({{ next_comp }})</summary>
+        <summary>+ {{ t('Add a component', '添加组件') }} ({{ next_comp }})</summary>
         {{ comp_form(none) }}
     </details>
 </section>

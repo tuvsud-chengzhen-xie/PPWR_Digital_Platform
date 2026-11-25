@@ -171,12 +171,75 @@ def obligation(project, unit, item_id: str, done: bool = False) -> Obligation:
                       bool(due and days is not None and days < 0 and not done and code == "mandatory_now"), days, notes)
 
 
+OPTIONAL_CODES = ("mandatory_from", "supporting", "practice")
+
+
+def is_optional(ob: Obligation) -> bool:
+    """Content the manufacturer may leave out of the final TD: not legally required today
+    (Annex VII 2: 'wherever applicable, at least …'). Legally required items are always in the TD."""
+    return ob.code in OPTIONAL_CODES
+
+
+def if_applicable(project, unit, item_id: str) -> Obligation | None:
+    """For an item that is N/A for this packaging: the legal status and date it would have if
+    its article applied — shown as a timing hint on 'if applicable' items."""
+    it = catalogue.item(item_id)
+    if it is None:
+        return None
+    level, why, why_zh = level_of(item_id)
+    override = data()["applies_from"].get(item_id)
+    art = override[1] if override else it["article"]
+    row = next((r for r in applicability.matrix(project) if r.key == art), None)
+    applies = parse_date(override[0]) if override else (parse_date(row.applies_from) if row else GENERAL_APPLICATION)
+    if art == "core" and not override:
+        applies = GENERAL_APPLICATION
+    if level == "required":
+        code = "mandatory_now" if (applies is None or applies <= dt.date.today()) else "mandatory_from"
+    else:
+        code = level
+    return Obligation(code, level, why, why_zh, art, applicability.NA, row.basis if row else "", applies)
+
+
+def need_zh(zh: str) -> str:
+    """Minimum-evidence lines are written as states ('已填写 …'); for something still missing
+    the Chinese must read as a to-do ('需填写 …'), not as if it were already done."""
+    if zh and zh.startswith("已"):
+        return "需" + zh[1:]
+    return zh
+
+
+_STATE_WORDS = {"entered", "registered", "attached", "uploaded", "stated", "filled", "selected", "completed",
+                "provided", "recorded", "file", "files"}
+
+
+def _norm_words(text: str) -> set[str]:
+    text, prev = text.lower(), None
+    while prev != text:   # drop parentheticals, innermost first: "(Annex VII 2(f) test reports)"
+        prev, text = text, re.sub(r"\([^()]*\)", " ", text)
+    return {w for w in re.findall(r"[a-z0-9.]+", text) if w not in _STATE_WORDS and w not in ("and", "the", "a", "/")}
+
+
+def _same_requirement(a: str, b: str) -> bool:
+    """True when an AI pre-review check repeats a minimum-evidence line in other words
+    (e.g. 'Report number and laboratory registered' vs '… entered')."""
+    wa, wb = _norm_words(a), _norm_words(b)
+    if not wa or not wb:
+        return False
+    return len(wa & wb) / len(wa | wb) >= 0.6
+
+
 # ---------------------------------------------------------------------------
 # Evaluation
 # ---------------------------------------------------------------------------
 
 def evidence_for(project, sub) -> list:
     return [e for e in project.evidence if e.item_id == sub.item_id and e.unit_id in (sub.unit_id, None)]
+
+
+def below_lod(text: str) -> bool:
+    """'< LOD', 'ND', 'not detected', '未检出', '低于检出限' — a result reported below the detection limit."""
+    t = str(text or "").strip().lower()
+    return bool(t) and bool(re.search(r"\blod\b|\bn\.?d\.?\b|not detected|below (the )?(limit of )?detection|未检出|检出限", t))
 
 
 def _num(v) -> float | None:
@@ -215,7 +278,10 @@ def _check(spec: str, ctx: dict):
         hits = sum(1 for kw in parts[2].split("|") if kw.lower() in text)
         return hits >= int(parts[3])
     if kind in ("num_le", "num_gt"):
-        v = _num(d.get(parts[1]))
+        raw = str(d.get(parts[1], ""))
+        v = _num(raw)
+        if v is None and kind == "num_le" and below_lod(raw):
+            return True   # all analytes below the limit of detection — reported as such
         if v is None:
             return False
         return v <= float(parts[2]) if kind == "num_le" else v > float(parts[2])
@@ -246,6 +312,11 @@ def _check(spec: str, ctx: dict):
         if not app:
             return False
         return filled("note") if app.startswith("Not applicable") else bool(ev)
+    if kind == "importer":
+        imp = str(d.get("imported", ""))
+        if not imp:
+            return False
+        return filled("importer") if imp.startswith("Yes") else True
     if kind == "pcr":
         app = str(d.get("app", ""))
         if not app:
@@ -291,6 +362,9 @@ def evaluate(project, sub, unit=None, evidence=None, data_override: dict | None 
         minimum.append({"en": en, "zh": zh, "spec": spec, "ok": _check(spec, ctx)})
     field_issues = validate_fields(it, g, d)
     gaps = []
+    for m in minimum:
+        if m["ok"] is False:
+            m["zh"] = need_zh(m["zh"])
     if ob.code != "not_required":
         for m in minimum:
             if m["ok"] is False:
@@ -300,9 +374,11 @@ def evaluate(project, sub, unit=None, evidence=None, data_override: dict | None 
             generic = re.match(r"^“.+” completed$", c["desc"]) or (c["desc"] == "Evidence file attached" and has_file_rule)
             if g["detailed"] and generic:
                 continue  # already covered by a more specific minimum-evidence line
+            if c["ok"] is False and any(_same_requirement(c["desc"], m["en"]) for m in minimum):
+                continue  # the same requirement is already listed as a minimum-evidence line
             if c["ok"] is False and not any(c["desc"] == x.get("en") for x in gaps):
                 gaps.append({"kind": "check", "en": c["desc"] + (f" — {c['msg']}" if c.get("msg") else ""),
-                             "zh": c.get("desc_zh", ""), "ref": c.get("ref", "")})
+                             "zh": need_zh(c.get("desc_zh", "")), "ref": c.get("ref", "")})
         for fi in field_issues:
             gaps.append({"kind": "format", "en": f"{fi['label']}: {fi['en']}",
                          "zh": f"{fi['label_zh'] or fi['label']}：{fi['zh']}"})
@@ -407,26 +483,30 @@ def project_gaps(project) -> dict:
     ev_by = {}
     for e in project.evidence:
         ev_by.setdefault(e.item_id, []).append(e)
+    excluded = 0
     for s in project.submissions:
         it = catalogue.item(s.item_id)
-        if it is None:
-            continue
+        if it is None or it.get("system"):
+            continue   # assembled by the platform — nothing for the client to collect
         done = s.status in ("approved", "na")
         ob = obligation(project, s.unit, s.item_id, done=done)
+        if not done and not s.in_td and is_optional(ob):
+            excluded += 1
+            continue   # optional content the manufacturer left out of the final TD
         counts[ob.code] += 0 if done else 1
-        if done or ob.code == "not_required" or it.get("system"):
+        if done or ob.code == "not_required":
             continue
         evidence = [e for e in ev_by.get(s.item_id, []) if e.unit_id in (s.unit_id, None)]
         g = item_guidance(s.item_id)
         ctx = {"data": s.data or {}, "evidence": evidence, "g": g, "project": project, "unit": s.unit,
                "table": s.table or [], "ai_checks": s.ai_checks or []}
         mins = [(en, zh, _check(spec, ctx)) for en, zh, spec in g.get("minimum", [])]
-        missing = [(en, zh) for en, zh, ok in mins if ok is False]
+        missing = [(en, need_zh(zh)) for en, zh, ok in mins if ok is False]
         rows.append({"sub": s, "item": it, "ob": ob, "missing": missing,
                      "met": sum(1 for *_x, ok in mins if ok), "total": len(mins)})
     rows.sort(key=lambda r: (ORDER[r["ob"].code], r["ob"].due or dt.date.max, r["sub"].item_id,
                              r["sub"].unit.code if r["sub"].unit else ""))
-    return {"rows": rows, "counts": counts,
+    return {"rows": rows, "counts": counts, "excluded": excluded,
             "overdue": sum(1 for r in rows if r["ob"].overdue)}
 
 

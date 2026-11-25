@@ -74,6 +74,24 @@ def sync(session: Session, project: Project) -> None:
             sub.reopened_reason = "Article became applicable after a change to the project profile or BOM."
         if it.get("system"):
             _sync_system_item(project, sub)
+        if not sub.in_td:
+            from . import guidance
+            if not guidance.is_optional(guidance.obligation(project, sub.unit, sub.item_id)):
+                sub.td_include = True   # legally required now (date reached or profile changed) — back in the TD
+
+
+def set_td_include(session: Session, sub: Submission, include: bool, actor: str) -> bool:
+    """Include / leave out an optional item in the final TD. Legally required items cannot be left out."""
+    from . import guidance
+    ob = guidance.obligation(sub.project, sub.unit, sub.item_id)
+    if not include and not guidance.is_optional(ob):
+        return False
+    if sub.in_td == include:
+        return True
+    sub.td_include = include
+    log(session, "included in TD" if include else "left out of TD (optional content)", actor, sub.project_id,
+        sub.unit_id, sub.item_id, f"Legal status: {ob.code}")
+    return True
 
 
 def _sync_system_item(project: Project, sub: Submission) -> None:
@@ -158,6 +176,8 @@ def subs_for(project: Project, unit: PackagingUnit | None) -> list[Submission]:
 
 
 def progress(subs: list[Submission]) -> dict:
+    # optional items the manufacturer left out of the final TD do not count as open work
+    subs = [s for s in subs if s.in_td or s.is_done]
     c = Counter(s.status for s in subs)
     total = len(subs)
     done = c["approved"] + c["na"]

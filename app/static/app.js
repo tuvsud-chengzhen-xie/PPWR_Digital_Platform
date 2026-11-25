@@ -308,3 +308,58 @@
         ta.value = b.dataset.sample;
     }));
 })();
+
+/* Navigation memory — "Back" from an item returns to the list exactly where it was left
+   (same filters, same open categories, same scroll position); #row-<id> anchors open their
+   category; [data-go-back] returns to the previous page (or closes a tab opened from it). */
+(function () {
+    const here = location.pathname + location.search;
+    const read = (k) => { try { return JSON.parse(sessionStorage.getItem(k) || "null"); } catch (e) { return null; } };
+    const write = (k, v) => { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage off */ } };
+
+    if (document.querySelector("[data-remember]")) {
+        const save = () => write("ppwr-from", {
+            url: here, y: window.scrollY,
+            open: Array.from(document.querySelectorAll("details[data-key]")).filter(d => d.open).map(d => d.dataset.key),
+        });
+        window.addEventListener("pagehide", save);
+        document.addEventListener("click", (e) => { if (e.target.closest("a, .row-link")) save(); }, true);
+        const st = read("ppwr-restore");
+        try { sessionStorage.removeItem("ppwr-restore"); } catch (e) { /* storage off */ }
+        if (st && st.url === here) {
+            (st.open || []).forEach(k => {
+                const d = document.querySelector('details[data-key="' + CSS.escape(k) + '"]');
+                if (d) d.open = true;
+            });
+            requestAnimationFrame(() => window.scrollTo(0, st.y || 0));
+        }
+    }
+
+    // #row-123 → open the category that holds the row, centre it and flash it
+    if (location.hash.startsWith("#row-")) {
+        const row = document.getElementById(location.hash.slice(1));
+        if (row) {
+            const d = row.closest("details");
+            if (d) d.open = true;
+            requestAnimationFrame(() => {
+                row.scrollIntoView({ block: "center" });
+                row.classList.add("is-flash");
+                setTimeout(() => row.classList.remove("is-flash"), 2200);
+            });
+        }
+    }
+
+    document.querySelectorAll("[data-back-to-list]").forEach(a => {
+        const from = read("ppwr-from");
+        if (from && from.url.startsWith(a.dataset.backToList) && !from.url.includes("/items/")) {
+            a.href = from.url;
+            a.addEventListener("click", () => write("ppwr-restore", from));
+        }
+    });
+
+    document.querySelectorAll("[data-go-back]").forEach(a => a.addEventListener("click", (e) => {
+        const ref = document.referrer;
+        if (ref && ref.startsWith(location.origin) && history.length > 1) { e.preventDefault(); history.back(); }
+        else if (window.opener && !window.opener.closed) { e.preventDefault(); window.close(); }
+    }));
+})();

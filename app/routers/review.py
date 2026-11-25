@@ -50,20 +50,91 @@ def collect(pid: int, request: Request, unit: Optional[str] = None, status: Opti
         ql = q.lower()
         shown = [s for s in shown if ql in s.item_id.lower() or ql in catalogue.item(s.item_id)["name"].lower()
                  or ql in catalogue.item(s.item_id)["name_zh"]]
+    order = {it["id"]: i for i, it in enumerate(catalogue.items())}   # catalogue order, not ID order
     groups = []
     for cat in catalogue.categories():
         rows = [s for s in shown if catalogue.item(s.item_id)["cat"] == cat["id"]]
         if rows:
             all_in_cat = [s for s in subs if catalogue.item(s.item_id)["cat"] == cat["id"]]
-            groups.append({"cat": cat, "rows": sorted(rows, key=lambda s: s.item_id),
+            groups.append({"cat": cat, "rows": sorted(rows, key=lambda s: order.get(s.item_id, 999)),
                            "prog": workflow.progress(all_in_cat)})
     unit_tabs = [{"u": u, "prog": workflow.progress([s for s in p.submissions if s.unit_id == u.id])} for u in p.units]
     project_prog = workflow.progress([s for s in p.submissions if s.unit_id is None])
+    obs = {s.id: guidance.obligation(p, s.unit, s.item_id, s.is_done) for s in subs}
+    # 'if applicable' items that are N/A here still show when they would apply
+    ifapp = {s.id: guidance.if_applicable(p, s.unit, s.item_id) for s in shown
+             if s.status == "na" or obs[s.id].code == "not_required"}
+    optional = [s for s in sorted(subs, key=lambda s: order.get(s.item_id, 999))
+                if not s.is_done and not catalogue.item(s.item_id).get("system") and guidance.is_optional(obs[s.id])]
     return render("project/collect.html", project_context(
         request, session, p, "collect", current=current, groups=groups, unit_tabs=unit_tabs,
         project_prog=project_prog, unit_param=unit or (str(current.id) if current else "project"),
         status_filter=status or "", q=q or "", ev_count=ev_count, subs_prog=workflow.progress(subs),
-        obs={s.id: guidance.obligation(p, s.unit, s.item_id, s.is_done) for s in shown}))
+        obs=obs, ifapp=ifapp, optional=optional, annex7=ANNEX7_MAP,
+        project_subs={s.item_id: s for s in p.submissions if s.unit_id is None},
+        unit_subs={s.item_id: s for s in subs}))
+
+
+# Annex VII point 2 minimum TD content → where each element is collected on the platform
+ANNEX7_MAP = [
+    ("intro", "Analysis and assessment of the risks of non-conformity", "不符合风险的分析与评估", ["C12-46"]),
+    ("(a)", "General description of the packaging and its intended use", "包装概述及其预期用途", ["C01-01", "C01-02"]),
+    ("(b)", "Conceptual design, manufacturing drawings and materials of components", "概念设计、制造图纸及组件材料",
+     ["C03-10", "C03-11", "C02-06", "C02-07"]),
+    ("(c)", "Descriptions and explanations needed to understand the drawings and operation", "理解图纸及包装工作方式所需的说明",
+     ["C03-15"]),
+    ("(d)", "List of harmonised standards / common specifications / other technical specifications applied, or solutions adopted",
+     "所采用的协调标准 / 共同规范 / 其他技术规范清单，或所采取的解决方案", ["C14-54", "C05-21"]),
+    ("(e)", "Qualitative description of how the Art 6, 10 and 11 assessments were carried out", "Art 6、10、11 评估实施方式的定性说明",
+     ["C05-19", "C09-29", "C10-37"]),
+    ("(f)", "Test reports", "测试报告", ["C04-70", "C04-71", "C14-55"]),
+]
+
+
+@router.post("/projects/{pid}/td-scope")
+async def td_scope(pid: int, request: Request, session: Session = Depends(get_session),
+                   user: User = Depends(auth.require_user)):
+    """Choose which optional (not legally required now) items go into the final TD."""
+    p = auth.get_project(session, user, pid)
+    form = await request.form()
+    ids = [int(x) for x in str(form.get("opt_ids", "")).split(",") if x.strip().isdigit()]
+    all_units = bool(form.get("all_units"))
+    changed = refused = 0
+    by_id = {s.id: s for s in p.submissions}
+    for sid in ids:
+        s = by_id.get(sid)
+        if s is None:
+            continue
+        include = bool(form.get(f"inc_{sid}"))
+        targets = [s]
+        if all_units and s.unit_id is not None:
+            targets = [x for x in p.submissions if x.item_id == s.item_id and x.unit_id is not None]
+        for x in targets:
+            before = x.in_td
+            if workflow.set_td_include(session, x, include, user.display_name):
+                changed += before != x.in_td
+            else:
+                refused += 1
+    session.commit()
+    msg = f"TD content updated — {changed} change(s) · 技术文档内容已更新——{changed} 处变更"
+    if refused:
+        msg += f" · {refused} legally required item(s) stay in the TD · {refused} 项法定必需项保留在技术文档中"
+    back = str(form.get("back") or f"/projects/{pid}/collect")
+    return redirect(back if back.startswith("/") else f"/projects/{pid}/collect", msg)
+
+
+@router.post("/projects/{pid}/items/{sid}/td-include")
+def item_td_include(pid: int, sid: int, include: str = Form("1"), session: Session = Depends(get_session),
+                    user: User = Depends(auth.require_user)):
+    p = auth.get_project(session, user, pid)
+    s = _sub(session, p, sid)
+    ok = workflow.set_td_include(session, s, include == "1", user.display_name)
+    session.commit()
+    if not ok:
+        return redirect(f"/projects/{pid}/items/{sid}", "Legally required — this item is always in the TD. · "
+                        "法定必需——此项始终纳入技术文档。", "warn")
+    return redirect(f"/projects/{pid}/items/{sid}", "Included in the final TD · 已纳入最终技术文档" if include == "1"
+                    else "Left out of the final TD (optional content) · 已从最终技术文档中排除（可选内容）")
 
 
 # ---------------------------------------------------------------------------
@@ -80,7 +151,8 @@ def item_page(pid: int, sid: int, request: Request, session: Session = Depends(g
     history = session.query(AuditEvent).filter(AuditEvent.project_id == p.id, AuditEvent.item_id == s.item_id,
                                                 AuditEvent.unit_id == s.unit_id).order_by(AuditEvent.at.desc()).all()
     # neighbours within the same unit, for keyboard-free next / previous
-    peers = sorted([x for x in p.submissions if x.unit_id == s.unit_id], key=lambda x: x.item_id)
+    order = {it["id"]: i for i, it in enumerate(catalogue.items())}
+    peers = sorted([x for x in p.submissions if x.unit_id == s.unit_id], key=lambda x: order.get(x.item_id, 999))
     idx = next(i for i, x in enumerate(peers) if x.id == s.id)
     open_peers = [x for x in peers[idx + 1:] + peers[:idx] if not x.is_done]
     unit_comps = s.unit.components if s.unit else [c for u in p.units for c in u.components]
@@ -93,7 +165,8 @@ def item_page(pid: int, sid: int, request: Request, session: Session = Depends(g
         prev=peers[idx - 1] if idx > 0 else None, next=peers[idx + 1] if idx + 1 < len(peers) else None,
         next_open=open_peers[0] if open_peers else None, comps=unit_comps, table=table,
         locked=s.status in ("approved", "na") and not user.is_expert,
-        ev=guidance.evaluate(p, s, evidence=_evidence_for(p, s)), suggestions=assistant.suggestions_for(s.item_id)))
+        ev=guidance.evaluate(p, s, evidence=_evidence_for(p, s)), suggestions=assistant.suggestions_for(s.item_id),
+        if_app=guidance.if_applicable(p, s.unit, s.item_id) if s.status == "na" else None))
 
 
 @router.post("/projects/{pid}/items/{sid}/save")

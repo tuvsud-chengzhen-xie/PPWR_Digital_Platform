@@ -1,0 +1,64 @@
+{
+ "_about": "REACH and food-contact (FCM) evidence in category 4 (added 2026-11 on client request). Art 5(4) applies 'without prejudice to' REACH Annex XVII and the FCM legislation; those obligations come from their own regulations, so in the PPWR TD these items are recommended evidence — the declaration is the minimum document, test reports support it.",
+ "item_levels": {
+  "C04-74": ["supporting", "Art 5(4) applies without prejudice to REACH Annex XVII restrictions; REACH compliance is a separate legal obligation (Reg. (EC) 1907/2006) — a declaration is the minimum evidence in the TD", "Art 5(4) 的适用不影响 REACH 附件 XVII 限制；REACH 符合性为另一项独立法定义务（(EC) 1907/2006）——技术文档中声明为最低证据"],
+  "C04-75": ["supporting", "Annex VII 2(f) test reports — supports the REACH declaration (C04-74) where a restriction is verified by testing", "Annex VII 2(f) 测试报告——在需检测验证限制时支撑 REACH 声明（C04-74）"],
+  "C04-76": ["supporting", "Supporting documentation behind the food-contact declaration of compliance (C04-72) under Reg. (EC) 1935/2004 and specific measures; Annex VII 2(f)", "依据 (EC) 1935/2004 及具体措施，食品接触符合性声明（C04-72）背后的支持文件；Annex VII 2(f)"]
+ },
+ "items": {
+  "C04-74": {
+   "summary": ["Upload a declaration (from you or your supplier) that the packaging and its components meet the REACH Annex XVII restrictions, and state whether any SVHC from the Candidate List is above 0.1 % w/w. The declaration is the minimum; add test reports under C04-75 where needed.",
+               "上传（由您或供应商出具的）声明，说明包装及其组件符合 REACH 附件 XVII 限制，并说明候选清单中是否有 SVHC 超过 0.1 % w/w。声明为最低要求；如需检测，在 C04-75 补充检测报告。"],
+   "terms": [["REACH Annex XVII", "REACH 附件 XVII", "List of restrictions on the manufacture, placing on the market and use of certain substances (e.g. phthalates, PAHs, nickel, azo dyes).", "对特定物质（如邻苯二甲酸酯、PAH、镍、偶氮染料）生产、投放市场和使用的限制清单。"],
+             ["SVHC", "SVHC（高度关注物质）", "Substances of very high concern on the ECHA Candidate List; above 0.1 % w/w in an article triggers information duties (REACH Art 33).", "ECHA 候选清单上的高度关注物质；物品中含量超过 0.1 % w/w 时触发信息传递义务（REACH Art 33）。"]],
+   "logic": [["Art 5(4) PPWR: the heavy-metal limit applies 'without prejudice to' REACH Annex XVII — both must be met.", "PPWR Art 5(4)：重金属限值的适用“不影响”REACH 附件 XVII——两者均须满足。"],
+             ["The EU DoC lists other Union legislation the packaging complies with (Annex VIII point 5); a REACH declaration documents it in the TD.", "欧盟 DoC 列明包装符合的其他欧盟法规（Annex VIII 第 5 点）；REACH 声明在技术文档中记录这一点。"]],
+   "info": [["Declaration number, issuer, date, components covered, SVHC statement (Candidate List version), restrictions checked.", "声明编号、出具方、日期、覆盖组件、SVHC 说明（候选清单版本）、核查的限制条目。"]],
+   "minimum": [["REACH declaration uploaded", "已上传 REACH 声明", "file:DCL,CRT"],
+               ["Number and issuer entered", "已填写编号与出具方", "fields:declno,issuer"],
+               ["SVHC statement selected", "已选择 SVHC 说明", "field:svhc"]],
+   "recommended": [["Declaration ≤ 12 months old and referencing the current Candidate List", "声明不超过 12 个月，并引用现行候选清单"],
+                   ["Test report under C04-75 for restrictions relevant to the material (e.g. phthalates in PVC, PAHs in rubber / black plastics)", "针对材料相关限制在 C04-75 提供检测报告（如 PVC 中邻苯二甲酸酯、橡胶 / 黑色塑料中 PAH）"]],
+   "steps": [["Ask each supplier of a component for a REACH declaration (Annex XVII + SVHC).", "向每个组件供应商索取 REACH 声明（附件 XVII + SVHC）。"],
+             ["Upload it as DCL; enter number, issuer, date and the SVHC statement.", "以 DCL 类型上传；填写编号、出具方、日期及 SVHC 说明。"],
+             ["Where a restriction must be verified by testing, add the report under C04-75.", "如某项限制需检测验证，在 C04-75 补充报告。"]],
+   "good": [["REACH-DCL-2026-003 V1 · board supplier · 2026-09-01 · no SVHC > 0.1 % (Candidate List Jun 2026) · card, ink, adhesive.", "REACH-DCL-2026-003 V1 · 纸板供应商 · 2026-09-01 · 无 SVHC > 0.1 %（候选清单 2026 年 6 月版）· 纸卡、油墨、胶黏剂。"]],
+   "bad": [["'REACH compliant' on an invoice, no declaration.", "仅在发票上写“符合 REACH”，没有声明。"], ["SVHC statement against a Candidate List several years old.", "SVHC 说明引用的是数年前的候选清单。"]],
+   "fields": {"date": {"ph": "2026-09-01", "help": ["Date of issue.", "签发日期。"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "msg": ["Use YYYY-MM-DD.", "请使用 YYYY-MM-DD 格式。"]}},
+   "kb": ["REG-A5-4", "REG-ANNEX8"]
+  },
+  "C04-75": {
+   "summary": ["Where a REACH restriction has to be verified by testing, upload the laboratory report and register its number, laboratory, date, substances tested and result.",
+               "如某项 REACH 限制需检测验证，上传实验室报告并登记编号、实验室、日期、检测物质及结果。"],
+   "terms": [],
+   "logic": [["Annex VII 2(f) lists test reports as TD content; this item is their landing place for REACH.", "Annex VII 2(f) 将测试报告列为技术文档内容；本项是 REACH 报告的落点。"],
+             ["Not needed when the REACH declaration (C04-74) is adequately supported by supplier information.", "如 REACH 声明（C04-74）已有供应商信息充分支持，则无需本项。"]],
+   "info": [["Report number, laboratory, date, substances / restrictions tested, components covered, result.", "报告编号、实验室、日期、检测物质 / 限制条目、覆盖组件、结果。"]],
+   "minimum": [["Test report uploaded", "已上传检测报告", "file:TST"],
+               ["Report number and laboratory entered", "已填写报告编号与实验室", "fields:rno,lab"],
+               ["Substances tested and conclusion stated", "已注明检测物质及结论", "fields:scope,concl"]],
+   "recommended": [["Report ≤ 24 months old from an ISO/IEC 17025 accredited lab", "报告不超过 24 个月，来自 ISO/IEC 17025 认可实验室"]],
+   "steps": [["Upload the PDF report.", "上传 PDF 报告。"], ["Copy number, lab, date, substances tested and conclusion.", "抄录编号、实验室、日期、检测物质及结论。"]],
+   "good": [["RE-2026-221 · accredited lab · 2026-08-20 · 18 phthalates + 8 PAHs in PP strap · all below Annex XVII limits.", "RE-2026-221 · 认可实验室 · 2026-08-20 · PP 打包带中 18 种邻苯二甲酸酯 + 8 种 PAH · 均低于附件 XVII 限值。"]],
+   "bad": [["Screening report without the restriction entries it was checked against.", "筛查报告未注明对照的限制条目。"]],
+   "fields": {"rdate": {"ph": "2026-08-20", "help": ["Report issue date.", "报告签发日期。"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "msg": ["Use YYYY-MM-DD.", "请使用 YYYY-MM-DD 格式。"]}},
+   "kb": ["REG-ANNEX7", "GP-LAB"]
+  },
+  "C04-76": {
+   "summary": ["Food-contact packaging: upload the migration test report(s) behind the food-contact declaration of compliance (C04-72) — overall and specific migration, simulants, time and temperature.",
+               "食品接触包装：上传食品接触符合性声明（C04-72）背后的迁移检测报告——总迁移与特定迁移、模拟物、时间与温度。"],
+   "terms": [["Overall / specific migration (OM / SML)", "总迁移 / 特定迁移（OM / SML）", "Limits for the total and for individual substances transferring from the material into food simulants.", "材料迁移至食品模拟物的总量及单个物质的限值。"]],
+   "logic": [["The declaration of compliance (C04-72) is the minimum document; the migration reports are its supporting documentation, kept available for the authorities (e.g. Reg. (EU) 10/2011 Art 16 for plastics).", "符合性声明（C04-72）为最低文件；迁移报告是其支持文件，须备查以供主管机关查阅（如塑料适用 (EU) 10/2011 Art 16）。"]],
+   "info": [["Report number, laboratory, date, simulants / time / temperature, OM and SML results, conclusion.", "报告编号、实验室、日期、模拟物 / 时间 / 温度、OM 与 SML 结果、结论。"]],
+   "minimum": [["Migration test report uploaded", "已上传迁移检测报告", "file:TST"],
+               ["Report number and laboratory entered", "已填写报告编号与实验室", "fields:rno,lab"],
+               ["Test conditions and result stated", "已注明测试条件与结果", "fields:cond,concl"]],
+   "recommended": [["Test conditions match the declared conditions of use in C04-72", "测试条件与 C04-72 声明的使用条件一致"]],
+   "steps": [["Upload the PDF migration report(s).", "上传 PDF 迁移报告。"], ["Copy number, lab, simulants / time / temperature and the results.", "抄录编号、实验室、模拟物 / 时间 / 温度及结果。"]],
+   "good": [["FCM-MIG-2026-041 · accredited lab · simulants A, B, D2 · 10 days at 40 °C · OM < 10 mg/dm² · SMLs met.", "FCM-MIG-2026-041 · 认可实验室 · 模拟物 A、B、D2 · 40 °C 10 天 · OM < 10 mg/dm² · 满足 SML。"]],
+   "bad": [["Migration test at 10 days 20 °C for a hot-fill application.", "热灌装用途却只做了 20 °C 10 天迁移测试。"]],
+   "fields": {"rdate": {"ph": "2026-08-20", "help": ["Report issue date.", "报告签发日期。"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "msg": ["Use YYYY-MM-DD.", "请使用 YYYY-MM-DD 格式。"]}},
+   "kb": ["REG-ANNEX7", "GP-LAB"]
+  }
+ }
+}

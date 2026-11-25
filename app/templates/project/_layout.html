@@ -11,19 +11,19 @@
                 <span class="chip-id">{{ project.code }}</span>
                 <span>{{ project.client.name }}</span><span>·</span>
                 <span>{{ project.ps_code }}</span><span>·</span>
-                <span title="{{ 'Each unit has its own TD + DoC, compiled into a document package' if project.scenario == 'A' else 'One consolidated TD + DoC for all units' }}">Scenario {{ project.scenario }} · {{ 'per-unit TD package' if project.scenario == 'A' else 'consolidated TD' }}</span>
+                <span title="{{ tt('Each unit has its own TD + DoC, compiled into a document package', '每个单元各有 TD + DoC，汇编为文件包') if project.scenario == 'A' else tt('One consolidated TD + DoC for all units', '所有单元合并为一份 TD + DoC') }}">{{ t('Scenario', '场景') }} {{ project.scenario }} · {{ t('per-unit TD package', '每单元 TD 文件包') if project.scenario == 'A' else t('consolidated TD', '合并 TD') }}</span>
                 {% if project.food_contact %}<span class="badge badge-warn">{{ t('Food contact', '食品接触') }}</span>{% endif %}
-                {% if project.reusable %}<span class="badge badge-info">Reusable</span>{% endif %}
+                {% if project.reusable %}<span class="badge badge-info">{{ t('Reusable', '可重复使用') }}</span>{% endif %}
             </div>
             <h1>{{ project.title }}</h1>
             <div class="proj-meta">{{ stage_badge(stage) }}
-                {% if project.target_date %}<span>Target {{ project.target_date | day }}{% set left = project.target_date | days_until %}{% if left is not none %} · {{ left }} days{% endif %}</span>{% endif %}
+                {% if project.target_date %}<span title="{{ tt('Target completion date — planned issue of the TD and EU DoC', '目标完成日期——计划签发 TD 与欧盟 DoC 的日期') }}">{{ t('Target completion', '目标完成') }} {{ project.target_date | day }}{% set left = project.target_date | days_until %}{% if left is not none %} · {{ left }} {{ t('days', '天') }}{% endif %}</span>{% endif %}
             </div>
         </div>
-        <div class="proj-ring" title="{{ prog.done }} of {{ prog.total }} items approved or not applicable">
+        <div class="proj-ring" title="{{ tt(prog.done ~ ' of ' ~ prog.total ~ ' items approved or not applicable', prog.done ~ ' / ' ~ prog.total ~ ' 项已批准或不适用') }}">
             <div class="ring" style="--p: {{ prog.pct }}" data-label="{{ prog.pct }}%"></div>
             <div class="small"><b>{{ prog.done }}</b> / {{ prog.total }} {{ t('items closed', '项已关闭') }}<br>
-                <span class="muted xs">{{ prog.awaiting_ai + prog.awaiting_expert }} in review · {{ prog.rejected }} rework · {{ prog.pending }} to collect</span></div>
+                <span class="muted xs">{{ prog.awaiting_ai + prog.awaiting_expert }} {{ t('in review', '审核中') }} · {{ prog.rejected }} {{ t('rework', '返工') }} · {{ prog.pending }} {{ t('to collect', '待收集') }}</span></div>
         </div>
     </div>
     <nav class="subtabs" aria-label="Project">

@@ -256,6 +256,9 @@ class Submission(Base):
     submitted_by = Column(String, default="")
     submitted_at = Column(DateTime, nullable=True)
     reopened_reason = Column(Text, default="")
+    # Optional (not legally required now) content may be left out of the final TD at the
+    # manufacturer's choice; legally required items are always included.
+    td_include = Column(Boolean, default=True, nullable=True)
     updated_at = Column(DateTime, default=now, onupdate=now)
 
     project = relationship("Project", back_populates="submissions")
@@ -268,6 +271,11 @@ class Submission(Base):
     @property
     def is_done(self) -> bool:
         return self.status in ("approved", "na")
+
+    @property
+    def in_td(self) -> bool:
+        """False when the manufacturer chose to leave this optional item out of the final TD."""
+        return self.td_include is not False
 
 
 class Evidence(Base):
@@ -507,6 +515,28 @@ class ImportFeedback(Base):
 
 def init_db() -> None:
     Base.metadata.create_all(engine)
+    _add_missing_columns()
+
+
+def _add_missing_columns() -> None:
+    """Light migration: columns added to a model after the database was created are added
+    in place (SQLite ALTER TABLE ADD COLUMN), so existing pilot data survives an upgrade."""
+    from sqlalchemy import inspect, text
+    insp = inspect(engine)
+    with engine.begin() as conn:
+        for table in Base.metadata.sorted_tables:
+            if not insp.has_table(table.name):
+                continue
+            have = {c["name"] for c in insp.get_columns(table.name)}
+            for col in table.columns:
+                if col.name in have:
+                    continue
+                ddl = col.type.compile(dialect=engine.dialect)
+                default = ""
+                if col.default is not None and getattr(col.default, "is_scalar", False):
+                    v = col.default.arg
+                    default = f" DEFAULT {int(v) if isinstance(v, bool) else repr(v)}"
+                conn.execute(text(f'ALTER TABLE "{table.name}" ADD COLUMN "{col.name}" {ddl}{default}'))
 
 
 def get_session():

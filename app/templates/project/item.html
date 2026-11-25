@@ -1,8 +1,12 @@
 {% extends "project/_layout.html" %}
-{% from "_macros.html" import status, verdict, octagon, level_badge, check_mark with context %}
+{% from "_macros.html" import status, verdict, octagon, level_badge, ifapp_badge, check_mark with context %}
 {% set g = ev.g %}{% set ob = ev.ob %}
-{% block crumb %}<span class="breadcrumb-sep">›</span><a href="/projects/{{ project.id }}/collect?unit={{ s.unit_id or 'project' }}">{{ s.unit.code if s.unit else t('Project-level', '项目级') }}</a><span class="breadcrumb-sep">›</span><strong>{{ s.item_id }}</strong>{% endblock %}
+{% block crumb %}<span class="breadcrumb-sep">›</span><a href="/projects/{{ project.id }}/collect?unit={{ s.unit_id or 'project' }}#row-{{ s.id }}">{{ s.unit.code if s.unit else t('Project-level', '项目级') }}</a><span class="breadcrumb-sep">›</span><strong>{{ s.item_id }}</strong>{% endblock %}
 {% block content %}
+<div style="margin:-4px 0 10px">
+    <a class="btn btn-sm" href="/projects/{{ project.id }}/collect?unit={{ s.unit_id or 'project' }}#row-{{ s.id }}"
+       data-back-to-list="/projects/{{ project.id }}/">← {{ t('Back to the list', '返回列表') }}</a>
+</div>
 <div class="layout-2col">
 <div class="layout-main">
     <section class="card">
@@ -12,7 +16,8 @@
                 <h1><span class="chip-id" style="font-size:13px;vertical-align:3px">{{ s.item_id }}</span> {{ tf(it, 'name') }}</h1>
                 <div class="muted small">{{ tf(it, 'requirement') }}</div>
             </div>
-            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">{{ level_badge(ob.code, ob.applies_from) }} {{ status(s.status) }} {{ verdict(s.ai_verdict) if s.status == 'ai_reviewed' }}</div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">{% if if_app %}{{ ifapp_badge(if_app) }}{% else %}{{ level_badge(ob.code, ob.applies_from) }}{% endif %} {{ status(s.status) }} {{ verdict(s.ai_verdict) if s.status == 'ai_reviewed' }}
+                {% if not s.in_td %}<span class="badge badge-muted">{{ t('Not in TD', '不纳入 TD') }}</span>{% endif %}</div>
         </div>
 
         <div style="margin-top:12px">
@@ -62,8 +67,17 @@
                     {% if ob.overdue %}<span class="badge badge-high">{{ t('overdue', '已逾期') }}</span>{% elif ob.days_left is not none %}<span class="xs muted">· {{ ob.days_left }} {{ t('days', '天') }}</span>{% endif %}
                     {% if ob.code == 'mandatory_now' %}<span class="xs muted">({{ t('project target date', '项目目标日期') }})</span>{% endif %}
                 {% elif ob.code == 'mandatory_now' %}<br><b>{{ t('Due', '截止') }}:</b> {{ t('before the packaging is placed on the market', '包装投放市场前') }}{% endif %}
+                {% if if_app %}<br><b>{{ t('If it applied', '如适用') }}:</b> {{ t(LEVEL[if_app.code][0], LEVEL[if_app.code][1]) }}{% if if_app.applies_from %} — {{ t('application date', '适用日期') }} {{ if_app.applies_from | day }}{% endif %}{% endif %}
             </div>
         </div>
+        {% if ob.code in ('mandatory_from', 'supporting', 'practice') and not s.is_done and not it.system %}
+        <form method="post" action="/projects/{{ project.id }}/items/{{ s.id }}/td-include" class="banner {{ 'banner-info' if s.in_td else 'banner-warn' }} small" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <span>{% if s.in_td %}{{ t('Optional content — not legally required today. It is included in the final TD; you may leave it out.', '可选内容——目前非法定必需。当前纳入最终技术文档；您可以选择不纳入。') }}
+                {% else %}{{ t('Left out of the final TD at your choice — listed in TD §19 as not included.', '已按您的选择不纳入最终技术文档——在技术文档 §19 中列为未纳入。') }}{% endif %}</span>
+            <input type="hidden" name="include" value="{{ '0' if s.in_td else '1' }}">
+            <button class="btn btn-sm">{{ t('Leave out of the TD', '不纳入技术文档') if s.in_td else t('Include in the TD', '纳入技术文档') }}</button>
+        </form>
+        {% endif %}
         {% if ob.code != 'not_required' %}
         <div class="req-grid">
             <div>

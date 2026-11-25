@@ -925,6 +925,175 @@
    "sample_html": "<p><b>Example · 示例：Art 5 statement of conformity (good practice 建议做法)</b></p>\n<table class=\"ex-tbl\"><tr><th>Field 项目</th><th>Example 填写示例</th></tr>\n<tr><td>Statement 声明</td><td>SOC-PPWR-2026-001 V1.0</td></tr>\n<tr><td>Basis 依据</td><td>Art 5(4): HM-2026-014 (sum &lt; 50 mg/kg); Art 5(5): not food-contact → N/A</td></tr>\n<tr><td>Conclusion 结论</td><td>Meets the applicable Art 5 requirements 满足适用的 Art 5 要求</td></tr></table>"
   },
   {
+   "id": "C04-74",
+   "cat": 4,
+   "name": "REACH Compliance Declaration (Annex XVII / SVHC)",
+   "name_zh": "REACH 符合性声明（附件 XVII / SVHC）",
+   "requirement": "Declaration that the packaging and its components comply with the REACH Annex XVII restrictions and state SVHC (Candidate List) content > 0.1 % w/w",
+   "requirement_zh": "声明包装及其组件符合 REACH 附件 XVII 限制，并说明 SVHC（候选清单）含量是否 > 0.1 % w/w",
+   "form_zh": "REACH 符合性声明（制造商 / 供应商，PDF）",
+   "legal": "Art 5(4): 'without prejudice to the restrictions on chemicals set out in Annex XVII to Regulation (EC) No 1907/2006'; REACH Art 33 (SVHC information); Annex VIII point 5 (other Union harmonisation legislation)",
+   "logic": "The PPWR heavy-metal limit applies without prejudice to REACH: packaging must also meet the REACH Annex XVII restrictions. A written declaration (manufacturer or supplier) is the minimum evidence; test reports are added under C04-75 where a restriction needs to be verified analytically.",
+   "logic_zh": "PPWR 重金属限值的适用不影响 REACH：包装还须符合 REACH 附件 XVII 限制。书面声明（制造商或供应商）为最低证据；如某项限制需检测验证，在 C04-75 补充检测报告。",
+   "td": "TD §6, §17 / T05, T16",
+   "fields": [
+    {
+     "k": "declno",
+     "label": "Declaration number / version",
+     "label_zh": "声明编号 / 版本",
+     "type": "text"
+    },
+    {
+     "k": "issuer",
+     "label": "Issued by (manufacturer / supplier)",
+     "label_zh": "出具方（制造商 / 供应商）",
+     "type": "text"
+    },
+    {
+     "k": "date",
+     "label": "Date of issue (YYYY-MM-DD)",
+     "label_zh": "签发日期（YYYY-MM-DD）",
+     "type": "text"
+    },
+    {
+     "k": "svhc",
+     "label": "SVHC > 0.1 % w/w (Candidate List version)",
+     "label_zh": "SVHC 含量是否 > 0.1 % w/w（候选清单版本）",
+     "type": "sel",
+     "options": [
+      "No SVHC above 0.1 % w/w",
+      "SVHC above 0.1 % w/w — listed in remarks",
+      "To be confirmed"
+     ],
+     "options_zh": [
+      "无 SVHC 超过 0.1 % w/w",
+      "有 SVHC 超过 0.1 % w/w——见备注",
+      "待确认"
+     ]
+    },
+    {
+     "k": "scope",
+     "label": "Components / materials covered",
+     "label_zh": "覆盖的组件 / 材料",
+     "type": "text"
+    },
+    {
+     "k": "note",
+     "label": "Remarks (restrictions checked, SVHC listed)",
+     "label_zh": "备注（核查的限制条目、所列 SVHC）",
+     "type": "ta"
+    }
+   ],
+   "table": null,
+   "article": "a5",
+   "evidence_code": "DCL",
+   "system": null,
+   "scope": "unit",
+   "example": "REACH-DCL-2026-003 V1 · issued by the board supplier · 2026-09-01 · no SVHC > 0.1 % (Candidate List Jun 2026) · card, ink, adhesive"
+  },
+  {
+   "id": "C04-75",
+   "cat": 4,
+   "name": "REACH Test Report (evidence, where needed)",
+   "name_zh": "REACH 检测报告（证明文件，如需）",
+   "requirement": "Laboratory test report verifying REACH Annex XVII restrictions / SVHC screening for the packaging or its components",
+   "requirement_zh": "验证包装或组件 REACH 附件 XVII 限制 / SVHC 筛查的实验室检测报告",
+   "form_zh": "第三方检测报告（PDF）",
+   "legal": "Regulation (EC) No 1907/2006 Annex XVII and Art 33; Annex VII 2(f) test reports",
+   "logic": "Supports the REACH declaration (C04-74) where a restriction is verified by testing (e.g. phthalates in plastics, PAHs, nickel, azo dyes in inks). Not required when the declaration is adequately supported by supplier information.",
+   "logic_zh": "在需要通过检测验证某项限制时（如塑料中的邻苯二甲酸酯、PAH、镍、油墨中的偶氮染料），为 REACH 声明（C04-74）提供支撑。如声明已由供应商信息充分支持，则无需检测。",
+   "td": "TD §6, §17 / T05, T16",
+   "fields": [
+    {
+     "k": "rno",
+     "label": "Report number",
+     "label_zh": "报告编号",
+     "type": "text"
+    },
+    {
+     "k": "lab",
+     "label": "Laboratory",
+     "label_zh": "检测机构",
+     "type": "text"
+    },
+    {
+     "k": "rdate",
+     "label": "Report date (YYYY-MM-DD)",
+     "label_zh": "报告日期（YYYY-MM-DD）",
+     "type": "text"
+    },
+    {
+     "k": "scope",
+     "label": "Substances / restrictions tested and components covered",
+     "label_zh": "检测的物质 / 限制条目及覆盖组件",
+     "type": "text"
+    },
+    {
+     "k": "concl",
+     "label": "Result / conclusion",
+     "label_zh": "结果 / 结论",
+     "type": "text"
+    }
+   ],
+   "table": null,
+   "article": "a5",
+   "evidence_code": "TST",
+   "system": null,
+   "scope": "unit",
+   "example": "RE-2026-221 · accredited lab · 2026-08-20 · 18 phthalates + 8 PAHs in PP strap · all below Annex XVII limits"
+  },
+  {
+   "id": "C04-76",
+   "cat": 4,
+   "name": "Food-contact Migration Test Report (evidence, if applicable)",
+   "name_zh": "食品接触迁移检测报告（证明文件，如适用）",
+   "requirement": "Overall / specific migration test report supporting the food-contact declaration of compliance",
+   "requirement_zh": "支撑食品接触符合性声明的总迁移 / 特定迁移检测报告",
+   "form_zh": "迁移检测报告（PDF）",
+   "legal": "Regulation (EC) No 1935/2004 Art 3 and 16; specific measures (e.g. (EU) No 10/2011 Art 15–18 for plastics); Annex VII 2(f) test reports",
+   "logic": "The food-contact declaration of compliance (C04-72) is the minimum document; migration test reports are the supporting documentation behind it and are kept available for the authorities.",
+   "logic_zh": "食品接触符合性声明（C04-72）为最低文件；迁移检测报告是其背后的支持文件，须备查以供主管机关查阅。",
+   "td": "TD §6, §17 / T05, T16",
+   "fields": [
+    {
+     "k": "rno",
+     "label": "Report number",
+     "label_zh": "报告编号",
+     "type": "text"
+    },
+    {
+     "k": "lab",
+     "label": "Laboratory",
+     "label_zh": "检测机构",
+     "type": "text"
+    },
+    {
+     "k": "rdate",
+     "label": "Report date (YYYY-MM-DD)",
+     "label_zh": "报告日期（YYYY-MM-DD）",
+     "type": "text"
+    },
+    {
+     "k": "cond",
+     "label": "Simulants / time / temperature tested",
+     "label_zh": "模拟物 / 时间 / 温度",
+     "type": "text"
+    },
+    {
+     "k": "concl",
+     "label": "Result (OM / SML) and conclusion",
+     "label_zh": "结果（总迁移 / 特定迁移）与结论",
+     "type": "text"
+    }
+   ],
+   "table": null,
+   "article": "a5pfas",
+   "evidence_code": "TST",
+   "system": null,
+   "scope": "unit",
+   "example": "FCM-MIG-2026-041 · accredited lab · simulants A, B, D2 · 10 days at 40 °C · OM < 10 mg/dm² · SMLs met"
+  },
+  {
    "id": "C05-19",
    "cat": 5,
    "name": "Recyclability Assessment",
@@ -953,27 +1122,6 @@
    "sample_html": "<p><b>示例：可回收性评估结论（过渡期方法 EN 13430）</b></p>\n<pre>材料识别：单材质纸基（PAP 20），主要组件为色卡纸板（质量占比 &gt;95%）。\n收集分选：进入欧盟纸 / 纸板回收流（paper & board stream）。\n工艺兼容性：水性油墨可脱墨；无覆膜、无塑料封口；胶黏剂为回收相容类型。\n结论：按设计可回收（recyclable by design）——过渡期评估，待实施法案分级后复核。</pre>"
   },
   {
-   "id": "C05-20",
-   "cat": 5,
-   "name": "Component Compatibility Data",
-   "name_zh": "组件相容性资料",
-   "requirement": "Closures, labels, inks, adhesives, coatings",
-   "requirement_zh": "封口、标签、油墨、胶黏剂、涂层等",
-   "form_zh": "测试/评估/供应商资料",
-   "legal": "Art 6(9) integrated / separate components",
-   "logic": "Ancillary components must be shown compatible (de-inkable, separable) with the recycling route, or assessed as integrated components per Art 6(3).",
-   "logic_zh": "胶订/贴标/覆膜/特殊油墨都可能影响纸基回收。需证明各辅助件与回收工艺相容（如可脱墨、可分离），或按集成组件规则评估。",
-   "td": "TD §7 / T06",
-   "fields": [],
-   "table": null,
-   "article": "a6",
-   "evidence_code": "TST",
-   "system": null,
-   "scope": "unit",
-   "example": "",
-   "sample_html": "<p><b>示例：组件相容性声明（油墨 / 胶黏剂 / 标签）</b></p>\n<pre>油墨：水性油墨，符合脱墨性要求（INGEDE 方法 11 类试验通过）。\n胶黏剂：淀粉基 / 可再制浆胶，不影响纸基回收。\n标签 / 涂层：无覆膜；若采用不干胶标签须可分离或可再制浆。\n结论：各辅助件与纸基回收工艺相容（Art 6(3) 组件规则）。</pre>"
-  },
-  {
    "id": "C05-21",
    "cat": 5,
    "name": "Applicable Method / Standards Basis",
@@ -1000,6 +1148,27 @@
    "scope": "unit",
    "example": "",
    "sample_html": ""
+  },
+  {
+   "id": "C05-20",
+   "cat": 5,
+   "name": "Component Compatibility Data",
+   "name_zh": "组件相容性资料",
+   "requirement": "Closures, labels, inks, adhesives, coatings",
+   "requirement_zh": "封口、标签、油墨、胶黏剂、涂层等",
+   "form_zh": "测试/评估/供应商资料",
+   "legal": "Art 6(9) integrated / separate components",
+   "logic": "Ancillary components must be shown compatible (de-inkable, separable) with the recycling route, or assessed as integrated components per Art 6(3).",
+   "logic_zh": "胶订/贴标/覆膜/特殊油墨都可能影响纸基回收。需证明各辅助件与回收工艺相容（如可脱墨、可分离），或按集成组件规则评估。",
+   "td": "TD §7 / T06",
+   "fields": [],
+   "table": null,
+   "article": "a6",
+   "evidence_code": "TST",
+   "system": null,
+   "scope": "unit",
+   "example": "",
+   "sample_html": "<p><b>示例：组件相容性声明（油墨 / 胶黏剂 / 标签）</b></p>\n<pre>油墨：水性油墨，符合脱墨性要求（INGEDE 方法 11 类试验通过）。\n胶黏剂：淀粉基 / 可再制浆胶，不影响纸基回收。\n标签 / 涂层：无覆膜；若采用不干胶标签须可分离或可再制浆。\n结论：各辅助件与纸基回收工艺相容（Art 6(3) 组件规则）。</pre>"
   },
   {
    "id": "C06-22",
@@ -1487,20 +1656,48 @@
   {
    "id": "C11-40",
    "cat": 11,
-   "name": "Manufacturer / EO Information on Artwork",
-   "name_zh": "制造商 / 经济运营者信息 Artwork",
-   "requirement": "Information and its location on-pack",
-   "requirement_zh": "信息及其在包装上的位置",
+   "name": "Manufacturer / Importer Information on Pack",
+   "name_zh": "制造商 / 进口商信息（包装标示）",
+   "requirement": "Manufacturer and (if imported) importer name, trade name / trademark, postal address — and where they appear on the pack",
+   "requirement_zh": "制造商及（如为进口）进口商的名称、商号 / 商标、邮寄地址——及其在包装上的位置",
    "form_zh": "最终Artwork/标签证明",
-   "legal": "Art 15(6) manufacturer name / trade name / trademark and postal address",
-   "logic": "Collect the final artwork and verify the manufacturer/economic-operator information and its position — input for §13.",
-   "logic_zh": "收集最终 Artwork，核对制造商/经济运营者信息及在包装上的具体位置，为 §13 表格输入。",
+   "legal": "Art 15(6) manufacturer name / registered trade name or trademark and postal address; Art 18(3) importer name / registered trade name or trademark and postal address (on the packaging, or where not possible in an accompanying document)",
+   "logic": "Collect the final artwork and verify both economic operators that must be identified on the packaging: the manufacturer (Art 15(6)) and, for packaging imported from outside the EU, the importer (Art 18(3)) — name, registered trade name / trademark, postal address and their position — input for §13.",
+   "logic_zh": "收集最终 Artwork，核对须在包装上标示的两类经济运营者：制造商（Art 15(6)）以及——如包装自欧盟以外进口——进口商（Art 18(3)）的名称、注册商号 / 商标、邮寄地址及其位置，为 §13 表格输入。",
    "td": "TD §13 / T12",
    "fields": [
     {
+     "k": "mfr",
+     "label": "Manufacturer — name / trade name and postal address as printed",
+     "label_zh": "制造商——包装上印刷的名称 / 商号及邮寄地址",
+     "type": "ta"
+    },
+    {
+     "k": "imported",
+     "label": "Is the packaging (or packaged product) imported into the EU?",
+     "label_zh": "包装（或包装产品）是否进口至欧盟？",
+     "type": "sel",
+     "options": [
+      "No — manufacturer established in the EU",
+      "Yes — imported from outside the EU",
+      "To be confirmed"
+     ],
+     "options_zh": [
+      "否——制造商在欧盟境内设立",
+      "是——自欧盟以外进口",
+      "待确认"
+     ]
+    },
+    {
+     "k": "importer",
+     "label": "Importer — name / trade name and postal address as printed (required if imported)",
+     "label_zh": "进口商——包装上印刷的名称 / 商号及邮寄地址（进口时必填）",
+     "type": "ta"
+    },
+    {
      "k": "loc",
-     "label": "Position of the information on the artwork",
-     "label_zh": "信息位置（包装面/组件）",
+     "label": "Position of the information on the artwork (manufacturer / importer)",
+     "label_zh": "信息位置（制造商 / 进口商，包装面/组件）",
      "type": "text"
     }
    ],
@@ -1509,7 +1706,7 @@
    "evidence_code": "PHO",
    "system": null,
    "scope": "unit",
-   "example": "",
+   "example": "Back panel, bottom left: manufacturer 'Lumen Colour Cards GmbH, Hafenstr. 12, 20457 Hamburg, DE'; importer: not applicable (EU manufacturer).",
    "sample_html": ""
   },
   {
@@ -1790,10 +1987,10 @@
    "cat": 14,
    "name": "Applicable Standards / Specifications List",
    "name_zh": "适用标准 / 技术规范清单",
-   "requirement": "Standard, version/date, clause, requirement, evidence",
-   "requirement_zh": "标准、版本/日期、条款、对应要求、证据",
+   "requirement": "Annex VII 2(d) list: harmonised standards, common specifications, other technical specifications — edition, applied in full or in part (parts applied), requirement covered, evidence; or the solutions adopted where none is applied",
+   "requirement_zh": "Annex VII 2(d) 清单：协调标准、共同规范、其他技术规范——版本、全部或部分采用（采用的部分）、对应要求、证据；未采用任何标准时说明所采用的解决方案",
    "form_zh": "标准清单",
-   "legal": "Annex VII 2(d); Art 36–37 harmonised standards and common specifications",
+   "legal": "Annex VII 2(d)(i)–(v); Art 36–37 harmonised standards and common specifications; Annex VIII point 6",
    "logic": "Register of all standards used (EN 13427–13432, ISO 16620-5, test methods) with versions and clauses — feeds TD §16.",
    "logic_zh": "登记所有评估所用的标准/规范（EN 13427–13432、ISO 16620-5、检测方法等）及版本条款，供 TD §16 引用。",
    "td": "TD §16 / T15",
@@ -1803,7 +2000,9 @@
     "Edition",
     "Clause",
     "Requirement covered",
-    "Evidence"
+    "Evidence",
+    "Type — (i) harmonised standard / (ii) common specification / (iii) other technical specification / (v) own solution",
+    "Applied in full / in part (iv: parts applied)"
    ],
    "article": "core",
    "evidence_code": "REC",
@@ -2254,7 +2453,10 @@
     "C04-70",
     "C04-71",
     "C04-72",
-    "C04-73"
+    "C04-73",
+    "C04-74",
+    "C04-75",
+    "C04-76"
    ]
   },
   {
@@ -2370,7 +2572,10 @@
     "C04-70",
     "C04-71",
     "C04-72",
-    "C04-73"
+    "C04-73",
+    "C04-74",
+    "C04-75",
+    "C04-76"
    ]
   },
   {

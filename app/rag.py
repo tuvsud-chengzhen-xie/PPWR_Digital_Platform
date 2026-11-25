@@ -167,7 +167,9 @@ def pool_entry(eid: str) -> dict | None:
 def kb_url(rel: str, page: int = 0) -> str:
     if not rel:
         return ""
-    return "/kb-files/" + "/".join(quote(p) for p in rel.split("/")) + (f"#page={page}" if page else "")
+    # resolved by /kb-source: serves the file when it is deployed, otherwise an explanatory page
+    # (the knowledge-base PDFs are not in the git deployment) with official links and a way back
+    return "/kb-source/" + "/".join(quote(p) for p in rel.split("/")) + (f"?page={page}" if page else "")
 
 
 def entry_url(e: dict) -> str:

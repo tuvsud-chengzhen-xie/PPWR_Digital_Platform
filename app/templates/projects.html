@@ -1,37 +1,40 @@
 {% extends "base.html" %}
 {% from "_macros.html" import stage, stack, legend with context %}
-{% block title %}Projects{% endblock %}
+{% block title %}{{ tt('Projects', '项目') }}{% endblock %}
 {% block page %}
 <main class="page">
     <div class="page-head">
-        <h1>TD / DoC projects</h1>
-        <div class="page-actions"><a class="btn btn-primary" href="/projects/new">+ New project</a></div>
+        <h1>{{ t('TD / DoC projects', 'TD / DoC 项目') }}</h1>
+        <div class="page-actions"><a class="btn btn-primary" href="/projects/new">+ {{ t('New project', '新建项目') }}</a></div>
     </div>
-    <p class="page-purpose">One project = one packaging system (PS) of a product, taken through data collection,
-        review and the generation of its technical documentation and EU declaration of conformity.</p>
+    <p class="page-purpose">{{ t('One project = one packaging system (PS) of a product, taken through data collection, review and the generation of its technical documentation and EU declaration of conformity.',
+        '一个项目 = 一个产品的一个包装系统（PS），经过资料收集、审核，最终生成其技术文档和欧盟符合性声明。') }}</p>
     <section class="card">
         <div class="table-wrap">
         <table class="data scan">
-            <colgroup><col style="width:120px"><col><col style="width:200px"><col style="width:110px"><col style="width:220px"><col style="width:150px"><col style="width:110px"></colgroup>
-            <thead><tr><th>Project</th><th>Packaging system</th><th>Client</th><th>Scenario</th><th>Progress</th><th>Stage</th><th class="num">Target</th></tr></thead>
+            <colgroup><col style="width:120px"><col><col style="width:200px"><col style="width:110px"><col style="width:220px"><col style="width:150px"><col style="width:130px"></colgroup>
+            <thead><tr><th>{{ t('Project', '项目') }}</th><th>{{ t('Packaging system', '包装系统') }}</th><th>{{ t('Client', '客户') }}</th><th>{{ t('Scenario', '场景') }}</th><th>{{ t('Progress', '进度') }}</th><th>{{ t('Stage', '阶段') }}</th>
+                <th class="num" title="{{ tt('Target completion date set for the project: the planned date to issue the TD and EU DoC. Legally required items are due by this date; overdue warnings refer to it.', '项目设定的目标完成日期：计划签发 TD 与欧盟 DoC 的日期。法定必需项须在此日期前完成；逾期提醒以此为准。') }}">{{ t('Target completion', '目标完成日期') }} ⓘ</th></tr></thead>
             <tbody>
             {% for r in rows %}
             <tr data-href="/projects/{{ r.p.id }}" class="row-link">
                 <td><span class="chip-id">{{ r.p.code }}</span></td>
-                <td><b>{{ r.p.title }}</b><br><span class="xs muted">{{ r.p.ps_code }} · {{ r.p.units | map(attribute='code') | join(', ') or 'no units yet' }}{{ ' · food contact' if r.p.food_contact }}</span></td>
+                <td><b>{{ r.p.title }}</b><br><span class="xs muted">{{ r.p.ps_code }} · {{ r.p.units | map(attribute='code') | join(', ') or tt('no units yet', '尚无单元') }}{% if r.p.food_contact %} · {{ t('food contact', '食品接触') }}{% endif %}</span></td>
                 <td>{{ r.p.client.name }}</td>
-                <td>{{ 'A · per unit' if r.p.scenario == 'A' else 'B · consolidated' }}</td>
-                <td>{{ stack(r.prog) }}<span class="xs muted tabnum">{{ r.prog.pct }}% · {{ r.prog.done }}/{{ r.prog.total }} closed</span></td>
+                <td>{{ t('A · per unit', 'A · 每单元') if r.p.scenario == 'A' else t('B · consolidated', 'B · 合并') }}</td>
+                <td>{{ stack(r.prog) }}<span class="xs muted tabnum">{{ r.prog.pct }}% · {{ r.prog.done }}/{{ r.prog.total }} {{ t('closed', '已关闭') }}</span></td>
                 <td>{{ stage(r.stage) }}</td>
                 <td class="num">{{ r.p.target_date | day }}</td>
             </tr>
             {% else %}
-            <tr><td colspan="7"><div class="empty-state"><b>No projects yet.</b><a href="/projects/new">Start the first TD / DoC project →</a></div></td></tr>
+            <tr><td colspan="7"><div class="empty-state"><b>{{ t('No projects yet.', '尚无项目。') }}</b><a href="/projects/new">{{ t('Start the first TD / DoC project', '创建第一个 TD / DoC 项目') }} →</a></div></td></tr>
             {% endfor %}
             </tbody>
         </table>
         </div>
         {{ legend() }}
+        <p class="xs muted" style="margin:8px 0 0">{{ t('Target completion: the date by which the project plans to issue the technical documentation and the EU declaration of conformity. It is set when the project is created and can be changed in the project profile.',
+            '目标完成日期：项目计划签发技术文档和欧盟符合性声明的日期。创建项目时设定，可在项目概况中修改。') }}</p>
     </section>
 </main>
 {% endblock %}

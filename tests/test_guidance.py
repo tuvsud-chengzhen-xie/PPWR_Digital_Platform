@@ -19,7 +19,7 @@ def _sub(p, item_id, unit_code=None):
 # ---------------------------------------------------------------------------
 
 def test_every_item_has_a_cited_legal_level_and_guidance():
-    assert len(catalogue.items()) == 73
+    assert len(catalogue.items()) == 76
     for it in catalogue.items():
         level, why, why_zh = guidance.level_of(it["id"])
         assert level in ("required", "supporting", "practice")

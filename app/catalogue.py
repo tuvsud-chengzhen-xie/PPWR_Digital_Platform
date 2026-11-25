@@ -1,4 +1,4 @@
-"""The data-item catalogue: 16 categories · 73 items (69 + 4 Art 5 evidence items of V4.2) · TD V1.5 section map.
+"""The data-item catalogue: 16 categories · 76 items (69 + 4 Art 5 evidence items of V4.2 + 3 REACH / food-contact evidence items) · TD V1.5 section map.
 
 Source: the V3.1 bilingual prototype and Checklist V1.5 (built by tools/build_catalogue.py).
 Read-only at runtime — the catalogue is the service definition, not client data.

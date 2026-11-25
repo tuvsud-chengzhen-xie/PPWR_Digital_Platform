@@ -146,7 +146,11 @@ class Scope:
         self.project, self.unit = project, unit
         self.units = [unit] if unit else list(project.units)
         ids = {u.id for u in self.units}
-        self.subs = [s for s in project.submissions if s.unit_id in ids or s.unit_id is None]
+        mine = [s for s in project.submissions if s.unit_id in ids or s.unit_id is None]
+        # optional content the manufacturer chose to leave out of the final TD (Annex VII point 2:
+        # 'wherever applicable, at least …') — listed in §19, not stated in the body
+        self.subs = [s for s in mine if s.in_td]
+        self.left_out = [s for s in mine if not s.in_td]
         self.evidence = [e for e in project.evidence if e.unit_id in ids or e.unit_id is None]
         self.components = [c for u in self.units for c in u.components]
         self.matrix = applicability.matrix(project)
@@ -289,7 +293,8 @@ def build_td(scope: Scope, number: str, version: int, status: str) -> Docx:
            [[r.article, r.status, r.applies_from, r.basis, r.evidence] for r in scope.matrix])
 
     art_sections = [
-        ("6 Article 5 — Substances of concern", ["C04-16", "C04-17", "C04-18", "C04-70", "C04-71", "C04-72", "C04-73"]),
+        ("6 Article 5 — Substances of concern", ["C04-16", "C04-17", "C04-18", "C04-70", "C04-71", "C04-72", "C04-73",
+                                                 "C04-74", "C04-75", "C04-76"]),
         ("7 Article 6 — Recyclability / design for recycling", ["C05-19", "C05-20", "C05-21"]),
         ("8 Article 7 — Recycled content", ["C06-22", "C06-23"]),
         ("9 Article 8 — Biobased feedstock", ["C07-24", "C07-25"]),
@@ -336,9 +341,14 @@ def build_td(scope: Scope, number: str, version: int, status: str) -> Docx:
 
     doc.add_heading("16 Standards and technical specifications", 1)
     std = next((s for s in scope.sub("C14-54")), None)
-    rows = [r for r in (std.table if std else []) if r and str(r[0]).strip()]
-    _table(doc, ["Standard / specification", "Edition", "Clause", "Requirement covered", "Evidence"],
-           rows or [["OPEN — no standards listed", "", "", "", ""]])
+    cols = (catalogue.item("C14-54") or {}).get("table") or ["Standard / specification", "Edition", "Clause",
+                                                               "Requirement covered", "Evidence"]
+    rows = [(list(r) + [""] * len(cols))[:len(cols)] for r in (std.table if std else []) if r and str(r[0]).strip()]
+    _para(doc, "Annex VII 2(d): (i) harmonised standards (Art 36) and (ii) common specifications (Art 37) applied in "
+               "full or in part, (iii) other technical specifications used for measurement or calculation, (iv) the "
+               "parts applied where partly applied, (v) where none is applied, the solutions adopted.",
+          italic=True, color=GREY)
+    _table(doc, cols, rows or [["OPEN — no standards listed"] + [""] * (len(cols) - 1)])
 
     doc.add_heading("17 Evidence register", 1)
     _table(doc, ["Evidence ID", "Title", "Type", "Document no.", "Issuer", "Issued", "Conformity"],
@@ -372,6 +382,15 @@ def build_td(scope: Scope, number: str, version: int, status: str) -> Docx:
         _table(doc, ["Item", "Requirement", "Unit", "Status"],
                [[s.item_id, catalogue.item(s.item_id)["name"], _unit_label(s, scope),
                  catalogue.STATUS_LABEL[s.status]] for s in open_subs[:60]])
+
+    if scope.left_out:
+        doc.add_heading("Optional content not included in this TD", 2)
+        _para(doc, "The manufacturer chose not to include the following content, which is not legally required for "
+                   "this packaging at the date of this TD (recommended evidence, good practice, or requirements that "
+                   "apply from a later date). Legally required content is always included.", italic=True, color=GREY)
+        _table(doc, ["Item", "Content", "Unit", "Status"],
+               [[s.item_id, catalogue.item(s.item_id)["name"], _unit_label(s, scope),
+                 "Left out at the manufacturer's choice"] for s in scope.left_out[:80]])
 
     doc.add_heading("20 EU declaration of conformity — cross-reference", 1)
     _kv(doc, [("EU DoC number", doc_number(p, scope.unit if p.scenario == "A" else None)),

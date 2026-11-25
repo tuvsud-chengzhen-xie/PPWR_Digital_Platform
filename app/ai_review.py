@@ -141,6 +141,9 @@ def _a5_evidence_text(ctx) -> str:
 def _limit_check(ctx, v: float | None, short: bool = False) -> list[dict]:
     """Art 5(4) limit — unless an active knowledge-base derogation covers this packaging."""
     if v is None:
+        from .guidance import below_lod
+        if below_lod(ctx.data.get("res")):
+            return [check(A5_LIMIT, True, "All four metals below the limit of detection (as reported)", KB["a5"])]
         return [check(A5_LIMIT, None, "No numeric result" if short else "No numeric result — expert to read the report",
                       KB["a5"])]
     if v <= 100:
@@ -267,8 +270,16 @@ def _r_reuse(ctx):
 
 
 def _r_label_loc(ctx):
-    return [check("Position of manufacturer / identification information on the artwork", _filled(ctx, "loc"),
-                  ctx.data.get("loc") or "Not stated", KB["a12"])]
+    imported = str(ctx.data.get("imported", ""))
+    out = [check("Manufacturer name and postal address on the packaging (Art 15(6))", _filled(ctx, "mfr"),
+                 (ctx.data.get("mfr") or "Not stated")[:120], KB["a12"]),
+           check("Import status stated", bool(imported), imported or "Not selected", KB["a12"])]
+    if imported.startswith("Yes"):
+        out.append(check("Importer name and postal address on the packaging (Art 18(3))", _filled(ctx, "importer"),
+                         (ctx.data.get("importer") or "Missing")[:120], KB["a12"]))
+    out.append(check("Position of manufacturer / importer information on the artwork", _filled(ctx, "loc"),
+                     ctx.data.get("loc") or "Not stated", KB["a12"]))
+    return out
 
 
 def _r_standards(ctx):
@@ -504,6 +515,10 @@ DESC_ZH = {
     "N/A consistent with the applicability matrix": "N/A 与适用性矩阵一致",
     "Report / CoC file attached (Annex VII 2(f) test reports)": "已附报告 / CoC 文件（Annex VII 2(f) 测试报告）",
     "Report number and laboratory registered": "已登记报告编号与实验室",
+    "Manufacturer name and postal address on the packaging (Art 15(6))": "包装上标示制造商名称与邮寄地址（Art 15(6)）",
+    "Import status stated": "已说明是否进口",
+    "Importer name and postal address on the packaging (Art 18(3))": "包装上标示进口商名称与邮寄地址（Art 18(3)）",
+    "Position of manufacturer / importer information on the artwork": "制造商 / 进口商信息在 Artwork 上的位置",
     "Scope covers all components incl. inks and adhesives": "覆盖范围含全部组件（含油墨、胶黏剂）",
     "Result agrees with C04-16": "结果与 C04-16 一致", "Applicability selected": "已选择适用性",
     "Report / declaration attached": "已附报告 / 声明", "Number and issuer registered": "已登记编号与签发方",
@@ -528,6 +543,7 @@ DESC_ZH_RE = [
 MSG_ZH = [
     ("No file — acceptable only if the entry itself is the evidence", "无文件——仅当填写内容本身即为证据时可接受"),
     ("No file — confirm with the supplier", "无文件——请与供应商确认"), ("No file uploaded", "未上传文件"),
+    ("All four metals below the limit of detection (as reported)", "四项金属均低于检出限（按报告）"),
     ("No numeric result — expert to read the report", "无数值结果——由专家阅读报告"),
     ("No numeric result", "无数值结果"), ("Add the reason for N/A", "请补充 N/A 理由"),
     ("Record why Art 24 does not apply to this level", "请记录 Art 24 为何不适用于该层级"),

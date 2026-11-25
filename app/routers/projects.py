@@ -204,7 +204,7 @@ def component_save(pid: int, unit_id: int = Form(...), comp_id: Optional[int] = 
     workflow.sync(session, p)
     log(session, "BOM line saved", user.display_name, p.id, u.id, comment=f"{c.code} {c.material}")
     session.commit()
-    return redirect(f"/projects/{pid}/packaging?unit={u.id}", f"{c.code} saved")
+    return redirect(f"/projects/{pid}/packaging?unit={u.id}#bom", f"{c.code} saved")
 
 
 @router.post("/projects/{pid}/components/{cid}/delete")
@@ -222,7 +222,7 @@ def component_delete(pid: int, cid: int, session: Session = Depends(get_session)
         session.refresh(p)
         workflow.sync(session, p)
         session.commit()
-        return redirect(f"/projects/{pid}/packaging?unit={uid}", "Component removed", "info")
+        return redirect(f"/projects/{pid}/packaging?unit={uid}#bom", "Component removed", "info")
     return redirect(f"/projects/{pid}/packaging")
 
 

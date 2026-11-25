@@ -42,14 +42,18 @@
 {%- endmacro %}
 
 {% macro cert_state(state, days) -%}
-{% if state == 'expired' %}<span class="cert-cell expired">● expired</span>
-{% elif state == 'expiring' %}<span class="cert-cell expiring">● {{ days }} d left</span>
-{% else %}<span class="cert-cell valid">● valid</span>{% endif %}
+{% if state == 'expired' %}<span class="cert-cell expired">● {{ t('expired', '已过期') }}</span>
+{% elif state == 'expiring' %}<span class="cert-cell expiring">● {{ days }} {{ t('d left', '天后到期') }}</span>
+{% else %}<span class="cert-cell valid">● {{ t('valid', '有效') }}</span>{% endif %}
 {%- endmacro %}
 
 
 {% macro level_badge(code, date=None) -%}
 <span class="badge {{ LEVEL[code][2] }} level-badge" title="{{ tt('Legal status of this evidence for this packaging', '该证据对本包装的法律地位') }}">{{ t(LEVEL[code][0], LEVEL[code][1]) }}{% if code == 'mandatory_from' and date %} {{ date | day }}{% endif %}</span>
+{%- endmacro %}
+
+{% macro ifapp_badge(ob) -%}
+{% if ob %}<span class="badge badge-ifapp level-badge" title="{{ tt('Not applicable to this packaging — legal status if the article applied', '本包装不适用——如条款适用时的法律地位') }}">{{ t('If applicable', '如适用') }}: {{ t(LEVEL[ob.code][0], LEVEL[ob.code][1]) }}{% if ob.applies_from and ob.code == 'mandatory_from' %} {{ ob.applies_from | day }}{% elif ob.applies_from and ob.code == 'mandatory_now' %} · {{ t('since', '自') }} {{ ob.applies_from | day }}{% endif %}</span>{% endif %}
 {%- endmacro %}
 
 {% macro check_mark(ok) -%}

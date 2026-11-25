@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PPWR Digital Platform | 中英文用户操作手册 v4.0</title>
+<style>
+@page{size:A4;margin:0}
+:root{--ink:#172a2c;--muted:#425763;--accent:#08655b;--line:#cbd8d7;--paper:#fff;--wash:#edf5f2}
+*{box-sizing:border-box}
+body{margin:0;background:#e6eeed;color:var(--ink);font:10.5pt/1.53 "Microsoft YaHei","Noto Sans CJK SC","SimSun",sans-serif;counter-reset:sheet}
+.page{position:relative;width:min(210mm,100%);min-height:297mm;margin:8mm auto;padding:15mm 17mm 24mm;background:var(--paper);counter-increment:sheet;break-after:page}
+.page:last-child{break-after:auto}
+.running,.foot{display:flex;justify-content:space-between;gap:4mm;color:var(--muted);font-size:8.5pt}
+.running{padding-bottom:3mm;border-bottom:1px solid var(--line);margin-bottom:8mm}
+.foot{position:absolute;bottom:10mm;left:17mm;right:17mm;padding-top:2mm;border-top:1px solid var(--line)}
+.foot::after{content:counter(sheet,decimal-leading-zero)}
+h1,h2,h3{line-height:1.28;margin:0;color:var(--ink)}
+h1{font-size:35pt;margin:5mm 0 2mm}h2{font-size:23pt;margin-bottom:5mm}h3{font-size:13pt;margin:5mm 0 2mm}
+.en{display:block;color:var(--muted);font-size:.94em;margin-top:1mm}
+h2 .en{font-size:.67em;margin-top:2mm}.cover{padding-top:20mm}.cover .running{margin-bottom:35mm}
+.kicker,.path{color:var(--accent);font-weight:700}.path{margin:0 0 5mm}.subtitle{font-size:18pt;color:var(--muted);margin:0 0 12mm}
+p{margin:0 0 3mm}ol,ul{margin:0 0 4mm;padding-left:6mm}li{margin-bottom:3mm}li::marker{color:var(--accent);font-weight:700}
+.note{margin:5mm 0;padding:4mm 5mm;border-left:3px solid var(--accent);background:var(--wash);break-inside:avoid}.note p:last-child{margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin:3mm 0 5mm}th,td{text-align:left;vertical-align:top;padding:2mm 3mm;border-bottom:1px solid var(--line)}th{background:var(--wash);color:var(--accent)}
+.toc td:last-child,.toc th:last-child{text-align:right;white-space:nowrap}a{color:var(--accent);text-underline-offset:2px}code{font-family:Consolas,monospace;overflow-wrap:anywhere}
+@media screen and (max-width:640px){.page{margin:0 auto 4mm;padding:8mm 6mm 20mm}.foot{left:6mm;right:6mm}.cover .running{margin-bottom:18mm}h1{font-size:27pt}h2{font-size:19pt}}
+@media print{body{background:#fff;print-color-adjust:exact;-webkit-print-color-adjust:exact}.page{width:210mm;min-height:296.8mm;margin:0}a{text-decoration:none}}
+</style>
+</head>
+<body>
+<section class="page cover" id="cover">
+  <div class="running"><span>PPWR Digital Platform</span><span>用户操作 / USER OPERATIONS</span></div>
+  <p class="kicker">VERSION 4.0 · 2026-11-25</p>
+  <h1>中英文用户操作手册</h1>
+  <p class="subtitle" lang="en">Bilingual User Manual</p>
+  <p>从包装建档、证据采集与专家审核，到技术文档、欧盟符合性声明签发及后续法规复核。<span class="en" lang="en">From packaging setup, evidence collection and expert review to issuing technical documentation and EU declarations of conformity, and reassessing them when rules change.</span></p>
+  <div class="note"><p><strong>本版重点 / In this edition</strong></p><p>Annex VII 最低内容索引、可选 TD 范围、REACH 与食品接触支持证据、进口商标识、清单计数及知识来源回退。<span class="en" lang="en">Annex VII minimum-content map, optional TD scope, REACH and food-contact supporting evidence, importer marking, list counts and fallback for missing knowledge sources.</span></p></div>
+  <p>适用于项目填报人、证据协调人及专家审核员。平台提示与 AI 结果不替代正式法规、适用性判断或签发责任。<span class="en" lang="en">For project contributors, evidence coordinators and expert reviewers. Platform guidance and AI results do not replace official sources, applicability decisions or responsibility for issuing documents.</span></p>
+  <p><a href="#contents">前往目录 / Go to contents</a></p>
+  <footer class="foot"><span>PPWR Digital Platform · v4.0</span></footer>
+</section>
+
+<section class="page" id="contents">
+  <div class="running"><span>PPWR Digital Platform</span><span>目录 / CONTENTS</span></div>
+  <h2>目录<span class="en" lang="en">Contents</span></h2>
+  <table class="toc"><thead><tr><th>操作章节 / Workflow</th><th>页 / Page</th></tr></thead><tbody>
+    <tr><td><a href="#access">01 登录与创建项目 / Sign in and create a project</a></td><td>03</td></tr>
+    <tr><td><a href="#packaging">02 包装、BOM 与供应商 / Packaging, BOM and suppliers</a></td><td>04</td></tr>
+    <tr><td><a href="#guide">03 合规指引与适用日期 / Compliance guide and application dates</a></td><td>05</td></tr>
+    <tr><td><a href="#scope">04 Annex VII 与 TD 范围 / Annex VII and TD scope</a></td><td>06</td></tr>
+    <tr><td><a href="#collect">05 条目填写、导入与证据 / Items, import and evidence</a></td><td>07</td></tr>
+    <tr><td><a href="#examples">06 证据填写实例 / Evidence examples</a></td><td>08</td></tr>
+    <tr><td><a href="#review">07 AI 初审与专家审核 / AI pre-review and expert review</a></td><td>09</td></tr>
+    <tr><td><a href="#documents">08 生成、签发与资料包 / Generate, issue and export</a></td><td>10</td></tr>
+    <tr><td><a href="#knowledge">09 知识库与法规更新 / Knowledge and regulatory updates</a></td><td>11</td></tr>
+    <tr><td><a href="#maintenance">10 专家维护及影响追踪 / Expert maintenance and impact</a></td><td>12</td></tr>
+    <tr><td><a href="#handover">11 追溯、排查与交付 / Traceability, troubleshooting and handover</a></td><td>13</td></tr>
+  </tbody></table>
+  <div class="note"><p>推荐顺序：建项 → 包装/BOM → 合规指引 → 采集与 TD 范围 → 审核 → 签发 → 变更复核。<span class="en" lang="en">Suggested order: project setup → packaging/BOM → compliance guide → collection and TD scope → review → issue → reassessment after changes.</span></p></div>
+  <footer class="foot"><span>双语用户操作手册 / Bilingual User Manual</span></footer>
+</section>
+
+<section class="page" id="access">
+  <div class="running"><span>PPWR Digital Platform</span><span>01 · PROJECT SETUP</span></div>
+  <h2>登录与创建项目<span class="en" lang="en">Sign in and Create a Project</span></h2>
+  <p class="path">仪表板 / Dashboard → 新建 TD / DoC 项目 / New TD / DoC project</p>
+  <ol>
+    <li>打开管理员提供的网址，使用分配的账号登录；用页面语言切换控件选择中文或英文。项目填报人与专家看到的审核或维护入口可能不同。<span class="en" lang="en">Open the URL provided by your administrator, sign in with your assigned account and choose Chinese or English using the language control. Review and maintenance actions depend on your role.</span></li>
+    <li>填写项目、产品系列和制造商信息，选择文件场景，按表单填写目标完成日期及相关联系人。创建后在项目列表或概览核对名称、编号及目标完成日期。<span class="en" lang="en">Enter the project, product-series and manufacturer information, select a document scenario, and provide the target completion date and contacts as requested by the form. Confirm the name, ID and target date in the project list or overview.</span></li>
+    <li>场景 A 按包装单元建立文件范围；场景 B 使用合并范围。生成前核对所选范围与实际签发对象一致。<span class="en" lang="en">Scenario A uses a scope per packaging unit; scenario B uses a consolidated scope. Before generating documents, confirm the scope matches the intended subject of the declaration.</span></li>
+    <li>在项目概览查看进度，使用“我的行动”或审核队列接续任务；保留项目编号用于交接与追溯。<span class="en" lang="en">Check progress in the project overview and continue via My Actions or the review queue. Retain the project ID for handover and traceability.</span></li>
+  </ol>
+  <div class="note"><p>目标完成日期是项目计划日期，不等同于条目显示的法规生效或适用日期。<span class="en" lang="en">The target completion date is a project planning date, not the regulatory entry-into-force or application date shown for a requirement.</span></p></div>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="packaging">
+  <div class="running"><span>PPWR Digital Platform</span><span>02 · PACKAGING &amp; BOM</span></div>
+  <h2>包装、BOM 与供应商<span class="en" lang="en">Packaging, BOM and Suppliers</span></h2>
+  <p class="path">项目 / Project → Packaging &amp; BOM</p>
+  <ol>
+    <li>在包装登记表添加单元，按实际情况填报包装层级、用途、材料及相关适用性参数。保存后核对单元代码，尤其是多单元项目。<span class="en" lang="en">Add a unit in the packaging register and enter its actual packaging level, use, material and other applicability criteria. Verify unit codes after saving, especially in multi-unit projects.</span></li>
+    <li>在正确单元的 BOM 中逐一添加部件，记录材料、质量及供应来源。若使用 BOM 模板 V1.1，每个组件一行；读取工作簿后核对组件与单元的对应关系。<span class="en" lang="en">Add components to the correct unit BOM and record their material, mass and supply source. In the BOM V1.1 template, use one row per component and check the unit-to-component mapping after reading the workbook.</span></li>
+    <li>在供应商库建立或选择供应商与材料，登记可追溯代码、证书编号、签发方及有效期，并把对应供应来源关联到组件。关键资料变更时，检查受影响项目和条目。<span class="en" lang="en">Use the supplier library to maintain suppliers and materials, trace codes, certificate IDs, issuers and expiry dates. Link the correct source to each component. When key records change, check affected projects and items.</span></li>
+    <li>保存包装范围变化后，重看合规指引、适用性矩阵和相关证据。删除单元或组件前，确认其证据和已签发文件的影响。<span class="en" lang="en">After saving a scope change, revisit the guide, applicability matrix and evidence. Before removing a unit or component, assess the impact on evidence and previously issued documents.</span></li>
+  </ol>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="guide">
+  <div class="running"><span>PPWR Digital Platform</span><span>03 · COMPLIANCE GUIDE</span></div>
+  <h2>合规指引与适用日期<span class="en" lang="en">Compliance Guide and Application Dates</span></h2>
+  <p class="path">项目 / Project → 合规指引 / Compliance guide</p>
+  <p>先选定包装范围，查看实施时间表，再按法律优先级查看待完成证据与缺项。<span class="en" lang="en">Select the packaging scope, check the implementation timeline, then review open evidence and gaps by legal priority.</span></p>
+  <table><thead><tr><th>类别 / Level</th><th>填报操作 / Action</th></tr></thead><tbody>
+    <tr><td>当前强制<br>Mandatory now</td><td>优先补齐所列最低证据并提交。<span class="en" lang="en">Collect and submit the listed minimum evidence first.</span></td></tr>
+    <tr><td>自指定日期强制<br>Mandatory from</td><td>按列出的适用日期安排，并在到期时复查。<span class="en" lang="en">Plan against the listed application date and reassess when it arrives.</span></td></tr>
+    <tr><td>支持性证据 / 良好实践<br>Supporting / Good practice</td><td>按包装风险、项目范围及其他法规义务决定是否纳入。<span class="en" lang="en">Assess inclusion against packaging risk, project scope and obligations under other legislation.</span></td></tr>
+  </tbody></table>
+  <p>不适用条目可能显示“如适用”的实施日期，供参考。这不是把该条目改为适用；如判定所依据的包装参数有误，请先更正包装资料。<span class="en" lang="en">An N/A item may display an “if applicable” date for reference. This does not make the item applicable. Correct the packaging profile first if the applicability decision used incorrect inputs.</span></p>
+  <div class="note"><p>指引清单统计待完成的客户采集项，排除 N/A、平台生成项及已移出 TD 的可选项。项目页眉另外包含平台项，并区分“审核中”和“待收集”，所以数字可不同。<span class="en" lang="en">The guide counts open customer-collected items and excludes N/A, platform-generated items and optional items left out of the TD. The project header also includes platform items and splits open work into “in review” and “to collect,” so the totals can differ.</span></p></div>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="scope">
+  <div class="running"><span>PPWR Digital Platform</span><span>04 · TECHNICAL DOCUMENTATION SCOPE</span></div>
+  <h2>Annex VII 与技术文档范围<span class="en" lang="en">Annex VII and Technical Documentation Scope</span></h2>
+  <p class="path">项目 / Project → 资料采集 / Data collection</p>
+  <ol>
+    <li>按包装单元或项目级范围查看条目。展开“Annex VII 第 2 点”，用表格定位技术文档最低要素的采集位置。适用的法定最低内容不是可选内容。<span class="en" lang="en">Choose the packaging unit or project-wide scope. Expand “Annex VII point 2” to find where the minimum technical documentation elements are collected. Applicable statutory minimum content is not optional.</span></li>
+    <li>展开“可选内容——选择纳入最终技术文档的内容”。取消勾选可暂不纳入的条目，再点“保存技术文档内容”。需要恢复时重新勾选并保存。<span class="en" lang="en">Expand “Optional content — choose what goes into the final TD.” Untick items you intend to leave out and select “Save TD content.” To restore an item, tick it again and save.</span></li>
+    <li>也可在具备此操作的条目详情中点“不纳入技术文档”或“纳入技术文档”。使用“返回列表”回到采集清单。<span class="en" lang="en">Where offered, use “Leave out of the TD” or “Include in the TD” on the item page. Use “Back to the list” to return to the collection view.</span></li>
+    <li>移出的可选项不再计入待办，在重新生成的 TD §19 记录为制造商选择未纳入；不会因这一操作变成 N/A。达到法规适用日期后，变成当前法定必需的条目会重新纳入。<span class="en" lang="en">Excluded optional items no longer count as open work and are recorded in §19 of a newly generated TD as left out at the manufacturer’s choice. They are not marked N/A. Items that become legally required on their application date return to scope.</span></li>
+  </ol>
+  <div class="note"><p>保存范围后，回到采集页核对计数；如需其反映在文件中，请生成新版本。平台允许移出 PPWR 支持项，不代表取消其他法规义务。<span class="en" lang="en">After saving, verify the collection totals and generate a new document version to reflect the change. Excluding a PPWR supporting item does not remove obligations under other legislation.</span></p></div>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="collect">
+  <div class="running"><span>PPWR Digital Platform</span><span>05 · COLLECTION &amp; EVIDENCE</span></div>
+  <h2>条目填写、导入与证据<span class="en" lang="en">Items, Import and Evidence</span></h2>
+  <ol>
+    <li>在“资料采集”选择正确的单元和条目。先读条目指引、最低证据与法规引用，再填写数据或下载适用的模板。设计条目按字段记录包装的功能、设计说明及依据。<span class="en" lang="en">Choose the correct unit and item in Data collection. Read item guidance, minimum evidence and legal references before entering data or downloading an available template. For design items, record functionality, design details and supporting rationale in the relevant fields.</span></li>
+    <li>批量录入时进入“智能导入”，上传文件并核对识别或映射结果，确认后再写入。检查是否映射到了正确单元、条目和字段；识别结果不能替代原始证据。<span class="en" lang="en">For bulk entry, open Smart import, upload the file, check detected or mapped values and confirm before applying them. Verify the unit, item and field mapping; extracted data does not replace source evidence.</span></li>
+    <li>优先在条目内上传有关报告或声明；填入可用的文件类型、编号、签发方及日期。综合声明可先上传至项目证据库，再确认它是否已关联到需要该证据的条目。<span class="en" lang="en">Upload reports or declarations from the relevant item where possible. Record document type, ID, issuer and date where available. A shared declaration can be uploaded to the project evidence vault; confirm it is linked to each item where it is needed.</span></li>
+    <li>保存草稿，运行可用的填写预检，按提示补齐字段或附件。确认数据和证据与该包装及组件一致后再提交；预检通过不等于批准。<span class="en" lang="en">Save a draft, run the available pre-check, and resolve missing fields or files. Submit once the data and evidence match the packaging and components. Passing pre-check does not constitute approval.</span></li>
+  </ol>
+  <div class="note"><p>若确实不适用，请使用条目的 N/A 路径并填写理由；不要用空数据、TD 排除或无关附件替代。矩阵自动判为 N/A 时，先核对包装参数。<span class="en" lang="en">If an item genuinely does not apply, use its N/A workflow and provide a rationale. Do not substitute blank fields, TD exclusion or unrelated files. For matrix-driven N/A, check the packaging criteria first.</span></p></div>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="examples">
+  <div class="running"><span>PPWR Digital Platform</span><span>06 · EVIDENCE EXAMPLES</span></div>
+  <h2>证据填写实例<span class="en" lang="en">Evidence Examples</span></h2>
+  <table><thead><tr><th>条目 / Item</th><th>填写与上传 / Enter and upload</th></tr></thead><tbody>
+    <tr><td>C04-74<br>REACH 声明 / Declaration</td><td>至少上传适用范围明确的声明，说明 REACH 附件 XVII 限制符合情况及候选清单 SVHC 是否超过 0.1% w/w。<span class="en" lang="en">Upload at least a declaration with a clear scope, addressing REACH Annex XVII restrictions and whether Candidate List SVHCs exceed 0.1% w/w.</span></td></tr>
+    <tr><td>C04-75<br>REACH 检测 / Testing</td><td>如相关限制需检测验证，补充检测报告并对应到材料或组件。<span class="en" lang="en">Where testing is needed to verify a restriction, attach the report and identify the material or component it covers.</span></td></tr>
+    <tr><td>C04-76<br>食品接触支持文件 / Food-contact support</td><td>适用时提供 C04-72 食品接触符合性声明的支持文件，如迁移测试报告。<span class="en" lang="en">Where applicable, attach supporting records behind the C04-72 food-contact declaration, such as migration test reports.</span></td></tr>
+    <tr><td>C11-40<br>制造商与进口商标识 / Identification</td><td>填写制造商标识与位置。选择从欧盟以外进口时，同时填写进口商资料。<span class="en" lang="en">Record manufacturer identification and its location. If imported from outside the EU, also complete importer details.</span></td></tr>
+    <tr><td>C14-54<br>标准清单 / List of standards</td><td>按 Annex VII 2(d) 记录标准或规范、版本、条款、覆盖要求、证据及适用范围。<span class="en" lang="en">For Annex VII 2(d), record the standard or specification, edition, clause, requirement covered, evidence and extent of application.</span></td></tr>
+  </tbody></table>
+  <div class="note"><p>若实验室报告写“未检出”或“&lt; LOD”，按原报告记录，不要改成零。部分上限预检可识别这类结果；仍需核查检出限是否足以判定适用阈值，并留存原报告。<span class="en" lang="en">If the lab reports “not detected” or “&lt; LOD,” record it as reported rather than entering zero. Some upper-limit checks recognize this notation; still verify that the detection limit supports the applicable threshold and keep the original report.</span></p></div>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="review">
+  <div class="running"><span>PPWR Digital Platform</span><span>07 · REVIEW</span></div>
+  <h2>AI 初审与专家审核<span class="en" lang="en">AI Pre-review and Expert Review</span></h2>
+  <h3>填报人 / Contributor</h3>
+  <ol>
+    <li>提交后查看条目状态、AI 检查结果及引用。将提示与原始报告、包装范围及适用日期比对。<span class="en" lang="en">After submission, review the item status, AI findings and citations against the source report, packaging scope and application dates.</span></li>
+    <li>若退回，先读专家意见，再补齐缺项或更正附件，保存并重新提交。检查需重新提交的是哪个单元及条目。<span class="en" lang="en">If returned, read the expert comments, resolve gaps or replace the incorrect attachment, save and resubmit. Verify the exact item and unit requiring resubmission.</span></li>
+  </ol>
+  <h3>专家 / Expert reviewer</h3>
+  <ol>
+    <li>在审核队列打开待审核条目，检查字段、原件、包装范围、适用性及 AI 理由；对申报 N/A 的条目单独核对其依据。<span class="en" lang="en">Open the pending item in the review queue and verify fields, originals, scope, applicability and AI rationale. Review an N/A request on its own merits.</span></li>
+    <li>依审核结果批准、退回补正或处理 N/A 申请，需要补正时写明缺项、对象和所需证据。审核完成后在条目历史或项目进度核对状态。<span class="en" lang="en">Approve, return for correction or resolve the N/A request as appropriate. When requesting correction, identify the gap, the affected item and the required evidence. Verify the resulting state in item history or project progress.</span></li>
+  </ol>
+  <div class="note"><p>AI 初审不会代替专家批准。法规或包装数据变化时，已有批准记录或已签发版本不应被当作新范围的批准。<span class="en" lang="en">AI pre-review is not expert approval. When regulations or packaging data change, do not treat an existing approval or issued version as approval for the new scope.</span></p></div>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="documents">
+  <div class="running"><span>PPWR Digital Platform</span><span>08 · DOCUMENTS &amp; EXPORT</span></div>
+  <h2>生成、签发与资料包<span class="en" lang="en">Generate, Issue and Export</span></h2>
+  <p class="path">项目 / Project → TD &amp; DoC → 基于实时数据生成 / Generate from live data</p>
+  <ol>
+    <li>核对当前选定的单元或合并范围。在“TD 完成度”定位阻塞项；对于拟排除的可选内容，先在采集页保存范围。<span class="en" lang="en">Verify the selected unit or consolidated scope. Use TD readiness to locate blockers and save any optional exclusions in Data collection first.</span></li>
+    <li>生成草稿，从文件列表下载 Word 版 TD 和 EU DoC，核对制造商、包装范围、标准清单、证据、声明内容及必要的签署信息。查看 TD §19，确认可选排除和 N/A 的记录没有混淆。<span class="en" lang="en">Generate a draft and download the Word TD and EU DoC from the document list. Verify the manufacturer, packaging scope, list of standards, evidence, declaration and required signature information. Review §19 and distinguish optional exclusions from N/A records.</span></li>
+    <li>当输出范围内应关闭的条目均获批准或为 N/A，并确认有签发授权后，使用“签发”。以文件列表的编号、状态和版本核实输出。<span class="en" lang="en">Once all in-scope items that must close are approved or N/A, and issuance is authorized, select “Issue.” Check the document number, status and version in the list.</span></li>
+    <li>按页面提供的入口下载面向主管机关的 ZIP 资料包。对外交付前打开检查文件版本、附件可读性及披露权限。更新后重新走审查及签发流程，不用旧文件覆盖新版本。<span class="en" lang="en">Use the available export to download the authority dossier ZIP. Inspect document versions, attachment readability and disclosure permissions before sending it. After changes, review and issue a new version instead of overwriting records.</span></li>
+  </ol>
+  <div class="note"><p>TD：技术文档；EU DoC：欧盟符合性声明；BOM：物料清单。<span class="en" lang="en">TD: technical documentation; EU DoC: EU declaration of conformity; BOM: bill of materials.</span></p></div>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="knowledge">
+  <div class="running"><span>PPWR Digital Platform</span><span>09 · KNOWLEDGE &amp; REGULATORY UPDATES</span></div>
+  <h2>知识库与法规更新<span class="en" lang="en">Knowledge and Regulatory Updates</span></h2>
+  <h3>知识问答 / Knowledge Q&amp;A</h3>
+  <ol>
+    <li>从“知识与 AI”或条目指引发起问题，说明材料、包装用途、条目代码及日期背景，以便定位相关资料。<span class="en" lang="en">Ask from Knowledge &amp; AI or item guidance. Include material, packaging use, item ID and relevant dates so sources can be identified.</span></li>
+    <li>打开引用核对原文、条款、版本和适用前提。如果本地来源文件缺失，使用提示页的 EUR-Lex 链接查找官方文本，或返回上一页；缺失页不是法规依据。<span class="en" lang="en">Open citations to verify the text, provision, version and conditions. When a local source file is missing, use the fallback page’s EUR-Lex link to find the official text, or go back. The missing-source page is not a legal reference.</span></li>
+  </ol>
+  <h3>法规动态 / Regulatory updates</h3>
+  <ol>
+    <li>在法规动态列表筛选未读或类别，打开详情核对法规来源、日期、适用包装及受影响条目。必要时在项目“合规指引”核查与该项目相关的动态。<span class="en" lang="en">Filter Regulatory updates by unread status or category. Open a notice to verify the source, dates, packaging applicability and affected items. Check the project’s Compliance guide for relevant updates.</span></li>
+    <li>逐项确认对现有证据和已签发文件的影响；需要重新评估时，记录原因、适用日期、责任人和后续动作。<span class="en" lang="en">Assess the impact on each existing evidence record and issued document. For reassessment, record the reason, application date, owner and next action.</span></li>
+  </ol>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="maintenance">
+  <div class="running"><span>PPWR Digital Platform</span><span>10 · EXPERT KNOWLEDGE MAINTENANCE</span></div>
+  <h2>专家维护及影响追踪<span class="en" lang="en">Expert Maintenance and Impact Tracking</span></h2>
+  <p class="path">知识与 AI / Knowledge &amp; AI → 人工更新 / Manual update</p>
+  <ol>
+    <li>上传官方 PDF 或 HTML，核对双语更新草稿、正式引用、适用日期和映射条目。若草稿包含可执行的限值豁免规则，发布前核对范围、条件和依据。<span class="en" lang="en">Upload an official PDF or HTML source. Verify the bilingual draft, official citation, application date and mapped items. If the draft includes a limit-derogation rule, verify its scope, conditions and basis before publishing.</span></li>
+    <li>由具备权限的专家发布至知识库；在法规动态详情查看新知识对 AI 判断的影响，比较命中范围及前后差异。无变化不等于已批准，可能表示包装不在规则范围内。<span class="en" lang="en">An authorized expert publishes to the knowledge pool. In the update detail, compare before-and-after AI findings and rule scope. No change does not mean approval; the packaging may be outside the rule’s scope.</span></li>
+    <li>自动重评仅针对匹配映射且处于已提交或已 AI 审核状态的条目，跳过 N/A 申请。已批准条目不会自动重开；需要时由专家启动法规复评。<span class="en" lang="en">Automatic re-evaluation applies to mapped items in submitted or AI-reviewed states and skips N/A requests. Approved items are not reopened automatically; an expert initiates regulatory reassessment where needed.</span></li>
+    <li>如需撤回或重新启用发布内容，在相应更新记录操作，随后核对知识可用性和受影响项目状态。<span class="en" lang="en">Withdraw or reactivate content from the corresponding update record, then verify source availability and the status of affected projects.</span></li>
+  </ol>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+
+<section class="page" id="handover">
+  <div class="running"><span>PPWR Digital Platform</span><span>11 · HANDOVER</span></div>
+  <h2>追溯、排查与交付<span class="en" lang="en">Traceability, Troubleshooting and Handover</span></h2>
+  <p>通过项目追溯页、条目历史、证据登记册及文件版本查找记录。交接至少注明项目编号、包装单元、证据编号、文件版本和未结事项。<span class="en" lang="en">Use project traceability, item history, the evidence register and document versions to locate records. Hand over the project ID, units, evidence IDs, document versions and outstanding actions.</span></p>
+  <table><thead><tr><th>情况 / Symptom</th><th>检查 / What to check</th></tr></thead><tbody>
+    <tr><td>清单数量不同<br>Counts differ</td><td>确认选中范围、筛选、平台项、审核中条目与可选排除项。<span class="en" lang="en">Compare scope, filters, platform items, in-review items and optional exclusions.</span></td></tr>
+    <tr><td>无法签发<br>Issue unavailable</td><td>核对 TD 完成度、应关闭的条目及账号权限。<span class="en" lang="en">Check readiness, items that still need to close and your account permissions.</span></td></tr>
+    <tr><td>已修改但下载文件未变化<br>Download still shows old data</td><td>核对下载版本，并在保存数据后重新生成所需范围的文件。<span class="en" lang="en">Check the downloaded version and regenerate the intended scope after saving changes.</span></td></tr>
+    <tr><td>知识引用打不开<br>Citation unavailable</td><td>从提示页跳转到官方来源；记录缺失引用供管理员核查。<span class="en" lang="en">Use the official-source fallback and record the missing citation for the administrator.</span></td></tr>
+  </tbody></table>
+  <div class="note"><p><strong>交付前检查 / Before handover</strong></p><p>确认包装与 BOM、证据覆盖及有效期、专家审核结论、N/A 与可选排除理由、签发版本和资料包内容；按授权分享，避免泄露机密。<span class="en" lang="en">Verify packaging and BOM, evidence coverage and validity, expert decisions, N/A and optional exclusions, issued versions and dossier contents. Share only with authorized recipients.</span></p></div>
+  <footer class="foot"><span><a href="#contents">目录 / Contents</a></span></footer>
+</section>
+</body>
+</html>

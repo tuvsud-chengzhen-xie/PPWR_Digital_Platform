@@ -1,47 +1,50 @@
 {% extends "project/_layout.html" %}
 {% from "_macros.html" import cert_state with context %}
 {% block content %}
+{% set CERT_SHORT_ZH = {'hm': '重金属', 'pf': 'PFAS', 'rc': '可回收性', 'doc': '供应商 DoC', 'td': 'TDS', 'comp': '成分', 'pcr': 'PCR', 'iso': 'ISO', 'fsc': 'FSC/PEFC', 'oth': '其他'} %}
+{% set CERT_TYPES_ZH = {'hm': '重金属检测报告（Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg）', 'pf': 'PFAS 声明 / 检测（食品接触）', 'rc': '可回收性声明 / 评估', 'doc': '供应商符合性声明', 'td': '技术数据表（TDS）', 'comp': '材料成分声明', 'pcr': '再生料含量证书（ISCC PLUS / RCS）', 'iso': 'ISO 9001 / 14001 证书', 'fsc': 'FSC / PEFC 产销监管链', 'oth': '其他证书 / 报告'} %}
+{% set CHANGE_STATUS_ZH = {'open': '待处理', 'applied': '已处理', 'dismissed': '已忽略'} %}
 <section class="card">
     <div class="card-head">
-        <h2 class="card-title">Full-chain traceability <span class="hint">packaging unit → component → material → supplier → trace code → certificates</span></h2>
+        <h2 class="card-title">{{ t('Full-chain traceability', '全链追溯') }} <span class="hint">{{ t('packaging unit → component → material → supplier → trace code → certificates', '包装单元 → 组件 → 材料 → 供应商 → 追溯码 → 证书') }}</span></h2>
     </div>
     <div class="table-wrap">
     <table class="data scan" style="min-width: 1240px">
         <colgroup><col style="width:150px"><col style="width:120px"><col><col style="width:190px"><col style="width:140px">{% for k in cert_cols %}<col style="width:112px">{% endfor %}</colgroup>
-        <thead><tr><th>Unit</th><th>Component</th><th>Material</th><th>Supplier</th><th>Trace code</th>
-            {% for k in cert_cols %}<th title="{{ CERT_TYPES[k] }}">{{ CERT_SHORT[k] }}</th>{% endfor %}</tr></thead>
+        <thead><tr><th>{{ t('Unit', '单元') }}</th><th>{{ t('Component', '组件') }}</th><th>{{ t('Material', '材料') }}</th><th>{{ t('Supplier', '供应商') }}</th><th>{{ t('Trace code', '追溯码') }}</th>
+            {% for k in cert_cols %}<th title="{{ tt(CERT_TYPES[k], CERT_TYPES_ZH.get(k)) }}">{{ t(CERT_SHORT[k], CERT_SHORT_ZH.get(k)) }}</th>{% endfor %}</tr></thead>
         <tbody>
         {% for r in rows %}
         <tr>
             <td><span class="chip-id">{{ r.u.code }}</span> <span class="xs">{{ r.u.name }}</span></td>
             <td><span class="chip-id">{{ r.c.code }}</span></td>
             <td>{{ r.c.material or '—' }} <span class="xs muted">{{ r.c.mass_g | num }} g</span></td>
-            <td class="xs">{% if r.m %}<a href="/suppliers/{{ r.m.supplier_id }}">{{ r.m.supplier.name }}</a>{% else %}<span class="muted">{{ r.c.remarks or 'not in library' }}</span>{% endif %}</td>
+            <td class="xs">{% if r.m %}<a href="/suppliers/{{ r.m.supplier_id }}">{{ r.m.supplier.name }}</a>{% else %}<span class="muted">{{ r.c.remarks or t('not in library', '不在供应商库中') }}</span>{% endif %}</td>
             <td class="mono xs">{{ r.m.trace_code if r.m else '—' }}</td>
             {% for k in cert_cols %}
-            <td>{% set x = r.certs.get(k) %}{% if x %}<span title="{{ x.cert.number }} · {{ x.cert.value }} · until {{ x.cert.expires | day }}">{{ cert_state(x.state, x.days) }}</span>{% else %}<span class="cert-cell none">—</span>{% endif %}</td>
+            <td>{% set x = r.certs.get(k) %}{% if x %}<span title="{{ x.cert.number }} · {{ x.cert.value }} · {{ tt('until', '有效期至') }} {{ x.cert.expires | day }}">{{ cert_state(x.state, x.days) }}</span>{% else %}<span class="cert-cell none">—</span>{% endif %}</td>
             {% endfor %}
         </tr>
         {% else %}
-        <tr><td colspan="11"><div class="empty-state"><b>No components.</b>Build the BOM first.</div></td></tr>
+        <tr><td colspan="11"><div class="empty-state"><b>{{ t('No components.', '暂无组件。') }}</b>{{ tb('Build the BOM first.', '请先建立 BOM。') }}</div></td></tr>
         {% endfor %}
         </tbody>
     </table>
     </div>
     <p class="xs muted" style="margin:8px 0 0">A certificate expiring, a new report or a material change on any supplier row is traced down this chain to the
-        items and documents it supports — see <a href="/changes">Change impact</a>.</p>
+        items and documents it supports — see <a href="/changes">Change impact</a>.{{ tb('', '任一供应商行上的证书到期、新报告或材料变更，都会沿此链条追溯到其支持的条目和文件——参见「变更影响」。') }}</p>
 </section>
 
 <section class="card">
-    <h2 class="card-title">Changes that touched this project</h2>
+    <h2 class="card-title">{{ t('Changes that touched this project', '涉及本项目的变更') }}</h2>
     {% if related %}
     <table class="data">
-        <thead><tr><th>Change</th><th>What</th><th>Status</th><th class="num">Raised</th></tr></thead>
+        <thead><tr><th>{{ t('Change', '变更') }}</th><th>{{ t('What', '内容') }}</th><th>{{ t('Status', '状态') }}</th><th class="num">{{ t('Raised', '提出时间') }}</th></tr></thead>
         <tbody>{% for ev in related %}
         <tr data-href="/changes/{{ ev.id }}" class="row-link"><td><span class="chip-id">{{ ev.code }}</span></td><td>{{ ev.title }}</td>
-            <td><span class="badge {{ {'open': 'badge-warn', 'applied': 'badge-ok', 'dismissed': 'badge-muted'}[ev.status] }}">{{ ev.status }}</span></td>
+            <td><span class="badge {{ {'open': 'badge-warn', 'applied': 'badge-ok', 'dismissed': 'badge-muted'}[ev.status] }}">{{ t(ev.status, CHANGE_STATUS_ZH.get(ev.status)) }}</span></td>
             <td class="num xs">{{ ev.created_at | date }}</td></tr>{% endfor %}</tbody>
     </table>
-    {% else %}<div class="empty-state"><b>None so far.</b></div>{% endif %}
+    {% else %}<div class="empty-state"><b>{{ t('None so far.', '暂无。') }}</b></div>{% endif %}
 </section>
 {% endblock %}

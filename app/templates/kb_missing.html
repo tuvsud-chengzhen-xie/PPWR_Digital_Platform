@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ tt('Source document', '原始文件') }}{% endblock %}
+{% block page %}
+<main class="page is-narrow">
+    <section class="card">
+        <h1 class="card-title">{{ t('Source document not available on this server', '本服务器上暂无该原始文件') }}</h1>
+        <p><b>{{ doc_name }}</b>{% if page %} · p.{{ page }}{% endif %}</p>
+        <p class="small">{{ tb('The document is part of the PPWR knowledge base, but the file itself is not deployed on this server. The quoted text and its reference shown on the item page are taken from it; you can read the official version online:',
+            '该文件属于 PPWR 知识库，但文件本身未部署在本服务器上。条目页面显示的引文及出处均来自该文件；您可以在线查阅官方版本：') }}</p>
+        <ul class="small">
+            {% for en, zh, url in official %}<li><a href="{{ url }}" target="_blank" rel="noopener">{{ t(en, zh) }}</a></li>{% endfor %}
+        </ul>
+        <div class="form-actions">
+            <a class="btn btn-primary" href="/" data-go-back>← {{ t('Back to where I was', '返回上一页') }}</a>
+            <a class="btn btn-ghost" href="/knowledge">{{ t('Knowledge & AI', '知识与 AI') }}</a>
+        </div>
+        <p class="xs muted" style="margin:10px 0 0">{{ t('If this page opened in a new tab, you can also simply close the tab — your entry on the item page stays as it was.', '如本页在新标签页中打开，也可直接关闭该标签页——条目页面上的填写内容保持不变。') }}</p>
+    </section>
+</main>
+{% endblock %}

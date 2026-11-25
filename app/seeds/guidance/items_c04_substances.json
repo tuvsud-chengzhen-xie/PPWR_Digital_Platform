@@ -16,12 +16,12 @@
    "recommended": [["Upload the original report under C04-70", "在 C04-70 上传报告原件"],
                    ["Report ≤ 24 months old from an ISO/IEC 17025 accredited lab", "报告不超过 24 个月，来自 ISO/IEC 17025 认可实验室"]],
    "steps": [["Collect the heavy-metal reports or supplier declarations for every BOM component (incl. inks and adhesives).", "收集 BOM 每个组件（含油墨、胶黏剂）的重金属报告或供应商声明。"],
-             ["Take the highest sum of Pb+Cd+Hg+Cr(VI); enter it as a number, e.g. '< 50' or '41'.", "取四项之和的最高值；以数字填写，如“< 50”或“41”。"],
+             ["Take the highest sum of Pb+Cd+Hg+Cr(VI) and enter the actual measured value from the report, e.g. '41'. If all four metals are below the limit of detection, enter '< LOD' and give the detection limits in the method field.", "取四项之和的最高值，按报告填写实际检测值，如“41”。如四项金属均低于检出限，填写“< LOD”（低于检出限），并在方法栏注明各检出限。"],
              ["Enter the method as written in the report.", "按报告原文填写方法。"],
              ["Upload the report(s) here or under C04-70, then run 'Check my entry'.", "在此或 C04-70 上传报告，然后点击“检查我的填写”。"]],
-   "good": [["Result '< 50'; method 'EN 13657 + ICP-OES'; report HM-2026-014 covers card, ink and adhesive.", "结果“< 50”；方法“EN 13657 + ICP-OES”；报告 HM-2026-014 覆盖纸卡、油墨与胶黏剂。"]],
+   "good": [["Result '41'; method 'EN 13657 + ICP-OES'; report HM-2026-014 covers card, ink and adhesive.", "结果“41”；方法“EN 13657 + ICP-OES”；报告 HM-2026-014 覆盖纸卡、油墨与胶黏剂。"], ["Result '< LOD'; method 'EN 13657 + ICP-MS, LOD Pb 2 / Cd 0.5 / Hg 0.5 / Cr(VI) 1 mg/kg'.", "结果“< LOD”；方法“EN 13657 + ICP-MS，检出限 Pb 2 / Cd 0.5 / Hg 0.5 / Cr(VI) 1 mg/kg”。"]],
    "bad": [["'Complies' without a number.", "只写“符合”，没有数值。"], ["A report for the board only, inks not covered.", "报告只覆盖纸板，未覆盖油墨。"]],
-   "fields": {"res": {"ph": "< 50", "help": ["Sum in mg/kg. '< 50' is fine if below the detection limits.", "总和，单位 mg/kg。低于检出限时可写“< 50”。"], "pattern": "\\d", "msg": ["Enter a number in mg/kg.", "请以 mg/kg 填写数字。"]},
+   "fields": {"res": {"ph": "e.g. 41  (or < LOD)", "help": ["Enter the actual measured sum from the report, in mg/kg. If all four metals are below the limit of detection, enter '< LOD' (below detection limit).", "按报告填写实际检测值（四项之和，mg/kg）。如均低于检出限，填写“< LOD”（低于检出限）。"], "pattern": "\\d|LOD|ND|检出限|未检出", "msg": ["Enter the measured value in mg/kg, or '< LOD'.", "请填写实测值（mg/kg），或“< LOD”。"]},
               "method": {"ph": "EN 13657 + ICP-OES", "help": ["Digestion and instrument as stated in the report.", "按报告填写消解方法与仪器。"], "pattern": "", "msg": ["", ""]}},
    "kb": ["REG-A5-4", "REG-A5-6", "GP-LAB", "IMP-2001-171"]
   },
@@ -77,7 +77,7 @@
    "good": [["HM-2026-014 · accredited lab · 2026-08-30 · card + ink + adhesive · sum < 50 mg/kg.", "HM-2026-014 · 认可实验室 · 2026-08-30 · 纸卡 + 油墨 + 胶黏剂 · 总和 < 50 mg/kg。"]],
    "bad": [["Report dated 2021 for a different board supplier.", "2021 年、针对其他纸板供应商的报告。"]],
    "fields": {"rdate": {"ph": "2026-08-30", "help": ["Report issue date.", "报告签发日期。"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "msg": ["Use YYYY-MM-DD.", "请使用 YYYY-MM-DD 格式。"]},
-              "res": {"ph": "< 50", "help": ["Sum Pb+Cd+Hg+Cr(VI) in mg/kg.", "四项之和，mg/kg。"], "pattern": "\\d", "msg": ["Enter a number.", "请填写数字。"]}},
+              "res": {"ph": "e.g. 41  (or < LOD)", "help": ["Sum Pb+Cd+Hg+Cr(VI) in mg/kg as reported — the actual measured value, or '< LOD' if all four are below the detection limit.", "四项之和（mg/kg），按报告填写实测值；均低于检出限时填写“< LOD”。"], "pattern": "\\d|LOD|ND|检出限|未检出", "msg": ["Enter the measured value, or '< LOD'.", "请填写实测值，或“< LOD”。"]}},
    "kb": ["REG-A5-4", "REG-ANNEX7", "GP-LAB"]
   },
   "C04-71": {

@@ -1,20 +1,21 @@
 {% extends "project/_layout.html" %}
 {% from "_macros.html" import status, level_badge, bar with context %}
 {% block content %}
+<span data-remember hidden></span>
 <p class="page-purpose">{{ t('What this packaging must prove under Regulation (EU) 2025/40, from when, and which evidence is still missing. Legally required items come first; recommendations are shown separately and are never presented as legal requirements.',
     '本包装依据 (EU) 2025/40 法规须证明的内容、起始日期及仍缺少的证据。法定必需项优先列出；建议项单独显示，绝不作为法定要求呈现。') }}</p>
 
 <div class="kpi-strip">
-    <a class="kpi-tile is-headline" href="?level=mandatory_now"><span class="kpi-label">{{ t('Legally required now — open', '现行法定必需——未完成') }}</span>
+    <a class="kpi-tile is-headline" href="?level=mandatory_now#open-evidence"><span class="kpi-label">{{ t('Legally required now — open', '现行法定必需——未完成') }}</span>
         <span class="kpi-value {{ 'is-alert' if report.counts.mandatory_now }}" data-tick="{{ report.counts.mandatory_now }}">{{ report.counts.mandatory_now }}</span>
         <span class="kpi-sub">{{ report.overdue }} {{ t('past the project target date', '已过项目目标日期') }}</span></a>
-    <a class="kpi-tile" href="?level=mandatory_from"><span class="kpi-label">{{ t('Required from a later date', '将于日后法定必需') }}</span>
+    <a class="kpi-tile" href="?level=mandatory_from#open-evidence"><span class="kpi-label">{{ t('Required from a later date', '将于日后法定必需') }}</span>
         <span class="kpi-value" data-tick="{{ report.counts.mandatory_from }}">{{ report.counts.mandatory_from }}</span>
         <span class="kpi-sub">{{ t('collect now to avoid rework', '建议现在收集，避免返工') }}</span></a>
-    <a class="kpi-tile" href="?level=supporting"><span class="kpi-label">{{ t('Recommended evidence — open', '建议证据——未完成') }}</span>
+    <a class="kpi-tile" href="?level=supporting#open-evidence"><span class="kpi-label">{{ t('Recommended evidence — open', '建议证据——未完成') }}</span>
         <span class="kpi-value" data-tick="{{ report.counts.supporting }}">{{ report.counts.supporting }}</span>
         <span class="kpi-sub">{{ t('accepted ways to prove a legal requirement', '证明法定要求的常用方式') }}</span></a>
-    <a class="kpi-tile" href="?level=practice"><span class="kpi-label">{{ t('Good practice — open', '良好实践——未完成') }}</span>
+    <a class="kpi-tile" href="?level=practice#open-evidence"><span class="kpi-label">{{ t('Good practice — open', '良好实践——未完成') }}</span>
         <span class="kpi-value" data-tick="{{ report.counts.practice }}">{{ report.counts.practice }}</span>
         <span class="kpi-sub">{{ t('optional', '可选') }}</span></a>
 </div>
@@ -37,13 +38,13 @@
     </section>
 </div>
 
-<section class="card">
+<section class="card" id="open-evidence">
     <div class="card-head">
-        <h2 class="card-title">{{ t('Open evidence, by legal priority', '待完成证据（按法律优先级）') }} <span class="hint">{{ rows | length }}</span></h2>
+        <h2 class="card-title">{{ t('Open evidence, by legal priority', '待完成证据（按法律优先级）') }} <span class="hint">{{ rows | length }} {{ t('shown', '项显示') }}</span></h2>
         <div class="filterbar">
-            <a class="pill {{ 'is-active' if not level }}" href="?">{{ t('All', '全部') }}</a>
+            <a class="pill {{ 'is-active' if not level }}" href="?#open-evidence">{{ t('All', '全部') }} <span class="pill-n">{{ report.counts.mandatory_now + report.counts.mandatory_from + report.counts.supporting + report.counts.practice }}</span></a>
             {% for code in ['mandatory_now', 'mandatory_from', 'supporting', 'practice'] %}
-            <a class="pill {{ 'is-active' if level == code }}" href="?level={{ code }}">{{ t(LEVEL[code][0], LEVEL[code][1]) }} <span class="pill-n">{{ report.counts[code] }}</span></a>{% endfor %}
+            <a class="pill {{ 'is-active' if level == code }}" href="?level={{ code }}#open-evidence">{{ t(LEVEL[code][0], LEVEL[code][1]) }} <span class="pill-n">{{ report.counts[code] }}</span></a>{% endfor %}
         </div>
     </div>
     <div class="table-wrap"><table class="data guide-table">
@@ -63,6 +64,8 @@
         {% else %}<tr><td colspan="7"><div class="empty-state"><b>{{ t('Nothing open at this level.', '该级别无待办。') }}</b></div></td></tr>{% endfor %}
         </tbody>
     </table></div>
+    <p class="xs muted">{{ t('Counted here: open items the client has to collect, per packaging unit. Not counted: items not required for this packaging (N/A), items assembled by the platform (BOM, evidence register, cross-references, N/A rationale)',
+        '此处统计：客户需收集的未完成条目（按包装单元）。不计入：本包装不适用（N/A）的条目、由平台自动生成的条目（BOM、证据登记表、交叉引用、N/A 理由）') }}{% if report.excluded %}{{ t(', and ' ~ report.excluded ~ ' optional item(s) left out of the final TD', '，以及 ' ~ report.excluded ~ ' 项未纳入最终技术文档的可选条目') }}{% endif %}. {{ t('The project header splits all open items into “in review” and “to collect” and also counts the platform items, so its figures can differ by those items.', '项目页眉将全部未完成条目分为“审核中”和“待收集”，并包含平台条目，因此数字可能相差这些条目。') }}</p>
     <p class="xs muted">{{ t('Legal status combines the item’s legal level (seeds/guidance) with the applicability matrix and the article’s application date for this project. “Recommended” and “good practice” items help prove compliance but are not legal requirements.',
         '法律地位由条目的法律级别、适用性矩阵及该条款对本项目的适用日期共同决定。“建议”和“良好实践”有助于证明符合，但并非法定要求。') }}</p>
 </section>

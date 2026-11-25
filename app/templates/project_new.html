@@ -1,66 +1,67 @@
 {% extends "base.html" %}
-{% block title %}New project{% endblock %}
+{% block title %}{{ tt('New project', '新建项目') }}{% endblock %}
 {% block page %}
 <main class="page is-narrow">
-    <nav class="breadcrumb"><a href="/projects">Projects</a><span class="breadcrumb-sep">›</span><strong>New</strong></nav>
-    <div class="page-head"><h1>New TD / DoC project</h1></div>
+    <nav class="breadcrumb"><a href="/projects">{{ t('Projects', '项目') }}</a><span class="breadcrumb-sep">›</span><strong>{{ t('New', '新建') }}</strong></nav>
+    <div class="page-head"><h1>{{ t('New TD / DoC project', '新建 TD / DoC 项目') }}</h1></div>
     <form method="post" action="/projects/new">
         <section class="card">
-            <h2 class="card-title">1 · Product and packaging system</h2>
+            <h2 class="card-title">1 · {{ t('Product and packaging system', '产品与包装系统') }}</h2>
             <div class="form-row">
-                <label class="field" style="grid-column: span 2"><span class="field-label">Packaged product / project title</span>
-                    <input name="title" required placeholder="e.g. Stand-up pouch 200 ml — tomato sauce"></label>
-                <label class="field"><span class="field-label">Packaging system ID</span>
-                    <input name="ps_code" value="PS-001"><span class="field-help">One SKU family = one packaging system</span></label>
+                <label class="field" style="grid-column: span 2"><span class="field-label">{{ t('Packaged product / project title', '包装产品 / 项目名称') }}</span>
+                    <input name="title" required placeholder="{{ tt('e.g. Stand-up pouch 200 ml — tomato sauce', '例：200 ml 自立袋——番茄酱') }}"></label>
+                <label class="field"><span class="field-label">{{ t('Packaging system ID', '包装系统编号') }}</span>
+                    <input name="ps_code" value="PS-001"><span class="field-help">{{ t('One SKU family = one packaging system', '一个 SKU 系列 = 一个包装系统') }}</span></label>
             </div>
             <div class="form-row">
                 {% if is_expert %}
-                <label class="field"><span class="field-label">Client (manufacturer)</span>
+                <label class="field"><span class="field-label">{{ t('Client (manufacturer)', '客户（制造商）') }}</span>
                     <select name="client_id">{% for c in clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></label>
                 {% else %}
                 <input type="hidden" name="client_id" value="{{ user.client_id }}">
                 {% endif %}
-                <label class="field"><span class="field-label">Target date</span><input type="date" name="target_date"></label>
+                <label class="field"><span class="field-label">{{ t('Target completion date (TD & DoC issue)', '目标完成日期（签发 TD 与 DoC）') }}</span><input type="date" name="target_date">
+                    <span class="field-help">{{ t('When you plan to issue the TD and EU DoC. Legally required items are due by this date and overdue warnings refer to it. Optional.', '计划签发 TD 与欧盟 DoC 的日期。法定必需项须在此日期前完成，逾期提醒以此为准。可不填。') }}</span></label>
             </div>
-            <label class="field"><span class="field-label">Description and intended use (TD §2)</span>
-                <textarea name="product_description" placeholder="What is packed, how it is sold and shipped, single-use or reusable…"></textarea></label>
+            <label class="field"><span class="field-label">{{ t('Description and intended use (TD §2)', '描述与预期用途（TD §2）') }}</span>
+                <textarea name="product_description" placeholder="{{ tt('What is packed, how it is sold and shipped, single-use or reusable…', '包装的内容物、销售与运输方式、一次性或可重复使用…') }}"></textarea></label>
         </section>
 
         <section class="card">
-            <h2 class="card-title">2 · Technical-file scenario <span class="hint">decides TD numbering and what is generated</span></h2>
+            <h2 class="card-title">2 · {{ t('Technical-file scenario', '技术文件场景') }} <span class="hint">{{ t('decides TD numbering and what is generated', '决定 TD 编号及生成内容') }}</span></h2>
             <div class="choice-grid">
                 <label class="choice"><input type="radio" name="scenario" value="A">
-                    <b>A · Per-unit technical file (document package)</b>
-                    <span>Each packaging unit (card, carton, pouch…) gets its own TD and DoC; the set is compiled into a
-                        document package for the final packaging user.</span></label>
+                    <b>{{ t('A · Per-unit technical file (document package)', 'A · 每单元技术文件（文件包）') }}</b>
+                    <span>{{ tb('Each packaging unit (card, carton, pouch…) gets its own TD and DoC; the set is compiled into a document package for the final packaging user.',
+                        '每个包装单元（卡片、纸盒、袋…）各有一份 TD 与 DoC，汇编为文件包交给最终包装使用者。') }}</span></label>
                 <label class="choice"><input type="radio" name="scenario" value="B" checked>
-                    <b>B · Consolidated technical file</b>
-                    <span>The product manufacturer is also the packaging manufacturer: all packaging units of the product
-                        in one TD (§2 lists every unit) and one DoC.</span></label>
+                    <b>{{ t('B · Consolidated technical file', 'B · 合并技术文件') }}</b>
+                    <span>{{ tb('The product manufacturer is also the packaging manufacturer: all packaging units of the product in one TD (§2 lists every unit) and one DoC.',
+                        '产品制造商同时也是包装制造商：产品的全部包装单元合并为一份 TD（§2 列出每个单元）和一份 DoC。') }}</span></label>
             </div>
         </section>
 
         <section class="card">
-            <h2 class="card-title">3 · Profile <span class="hint">drives the applicability matrix — N/A items are closed automatically</span></h2>
+            <h2 class="card-title">3 · {{ t('Profile', '项目概况') }} <span class="hint">{{ t('drives the applicability matrix — N/A items are closed automatically', '决定适用性矩阵——不适用条目自动关闭') }}</span></h2>
             <div class="choice-grid">
-                <label class="check"><input type="checkbox" name="food_contact"><div><b>Food-contact packaging</b><span>Art 5(5) PFAS limits apply</span></div></label>
-                <label class="check"><input type="checkbox" name="reusable"><div><b>Reusable packaging</b><span>Art 11 · 10-year retention</span></div></label>
-                <label class="check"><input type="checkbox" name="compostable_type"><div><b>Art 9 packaging type</b><span>Tea / coffee units, fruit stickers, very lightweight bags</span></div></label>
-                <label class="check"><input type="checkbox" name="biobased_claim"><div><b>Biobased feedstock claim</b><span>Art 8</span></div></label>
+                <label class="check"><input type="checkbox" name="food_contact"><div><b>{{ t('Food-contact packaging', '食品接触包装') }}</b><span>{{ t('Art 5(5) PFAS limits apply', '适用 Art 5(5) PFAS 限值') }}</span></div></label>
+                <label class="check"><input type="checkbox" name="reusable"><div><b>{{ t('Reusable packaging', '可重复使用包装') }}</b><span>{{ t('Art 11 · 10-year retention', 'Art 11 · 保存 10 年') }}</span></div></label>
+                <label class="check"><input type="checkbox" name="compostable_type"><div><b>{{ t('Art 9 packaging type', 'Art 9 包装类型') }}</b><span>{{ t('Tea / coffee units, fruit stickers, very lightweight bags', '茶 / 咖啡包、水果贴标、超轻质塑料袋') }}</span></div></label>
+                <label class="check"><input type="checkbox" name="biobased_claim"><div><b>{{ t('Biobased feedstock claim', '生物基原料声明') }}</b><span>Art 8</span></div></label>
             </div>
         </section>
 
         <section class="card">
-            <h2 class="card-title">4 · First packaging unit <span class="hint">optional — you can also import a BOM workbook next</span></h2>
+            <h2 class="card-title">4 · {{ t('First packaging unit', '第一个包装单元') }} <span class="hint">{{ t('optional — you can also import a BOM workbook next', '可选——也可在下一步导入 BOM 工作簿') }}</span></h2>
             <div class="form-row">
-                <label class="field" style="grid-column: span 2"><span class="field-label">Name</span>
-                    <input name="first_unit" placeholder="e.g. Printed folding carton"></label>
-                <label class="field"><span class="field-label">Level (Art 3)</span>
-                    <select name="first_level">{% for l in UNIT_LEVELS %}<option>{{ l }}</option>{% endfor %}</select></label>
+                <label class="field" style="grid-column: span 2"><span class="field-label">{{ t('Name', '名称') }}</span>
+                    <input name="first_unit" placeholder="{{ tt('e.g. Printed folding carton', '例：印刷折叠纸盒') }}"></label>
+                <label class="field"><span class="field-label">{{ t('Level (Art 3)', '包装层级（Art 3）') }}</span>
+                    <select name="first_level">{% for l in UNIT_LEVELS %}<option value="{{ l }}">{{ tt(l, {'Sales': '销售包装', 'Grouped': '组合包装', 'Transport': '运输包装', 'E-commerce': '电商包装'}.get(l, '')) }}</option>{% endfor %}</select></label>
             </div>
             <div class="form-actions">
-                <button class="btn btn-primary" type="submit">Create project</button>
-                <a class="btn btn-ghost" href="/projects">Cancel</a>
+                <button class="btn btn-primary" type="submit">{{ t('Create project', '创建项目') }}</button>
+                <a class="btn btn-ghost" href="/projects">{{ t('Cancel', '取消') }}</a>
             </div>
         </section>
     </form>

@@ -2,8 +2,11 @@
 {% from "_macros.html" import cert_state with context %}
 {% block title %}{{ s.name }}{% endblock %}
 {% block page %}
+{% set CERT_SHORT_ZH = {'hm': '重金属', 'pf': 'PFAS', 'rc': '可回收性', 'doc': '供应商 DoC', 'td': 'TDS', 'comp': '成分', 'pcr': 'PCR', 'iso': 'ISO', 'fsc': 'FSC/PEFC', 'oth': '其他'} %}
+{% set CERT_TYPES_ZH = {'hm': '重金属检测报告（Pb+Cd+Hg+Cr(VI) ≤ 100 mg/kg）', 'pf': 'PFAS 声明 / 检测（食品接触）', 'rc': '可回收性声明 / 评估', 'doc': '供应商符合性声明', 'td': '技术数据表（TDS）', 'comp': '材料成分声明', 'pcr': '再生料含量证书（ISCC PLUS / RCS）', 'iso': 'ISO 9001 / 14001 证书', 'fsc': 'FSC / PEFC 产销监管链', 'oth': '其他证书 / 报告'} %}
+{% set CHANGE_STATUS_ZH = {'open': '待处理', 'applied': '已处理', 'dismissed': '已忽略'} %}
 <main class="page is-2col">
-    <nav class="breadcrumb"><a href="/suppliers">Suppliers</a><span class="breadcrumb-sep">›</span><strong>{{ s.code }}</strong></nav>
+    <nav class="breadcrumb"><a href="/suppliers">{{ t('Suppliers', '供应商') }}</a><span class="breadcrumb-sep">›</span><strong>{{ s.code }}</strong></nav>
     <div class="page-head">
         <div><span class="eyebrow">{{ s.code }} · {{ s.client.name }}</span><h1>{{ s.name }}</h1>
             <span class="small muted">{{ s.address }}{{ ', ' if s.address and s.country }}{{ s.country }}{{ ' · ' ~ s.contact if s.contact }}</span></div>
@@ -15,72 +18,72 @@
             <section class="card" id="m{{ m.id }}">
                 <div class="card-head">
                     <h2 class="card-title"><span class="chip-id">{{ m.code }}</span> {{ m.name }}
-                        <span class="hint">trace code <span class="mono">{{ m.trace_code or '—' }}</span> · {{ m.material }} · {{ m.material_group }}</span></h2>
+                        <span class="hint">{{ t('trace code', '追溯码') }} <span class="mono">{{ m.trace_code or '—' }}</span> · {{ m.material }} · {{ m.material_group }}</span></h2>
                 </div>
                 <table class="data">
-                    <thead><tr><th>Certificate</th><th>Number</th><th>Result</th><th>Issued by</th><th class="num">Valid until</th><th>State</th></tr></thead>
+                    <thead><tr><th>{{ t('Certificate', '证书') }}</th><th>{{ t('Number', '编号') }}</th><th>{{ t('Result', '结果') }}</th><th>{{ t('Issued by', '签发方') }}</th><th class="num">{{ t('Valid until', '有效期至') }}</th><th>{{ t('State', '状态') }}</th></tr></thead>
                     <tbody>
                     {% for x in row.certs %}
                     <tr class="{{ 'is-muted' if x.c.status == 'superseded' }}">
-                        <td>{{ CERT_SHORT[x.c.doc_type] }}{% if x.c.status == 'superseded' %} <span class="badge badge-muted">superseded</span>{% endif %}</td>
+                        <td>{{ t(CERT_SHORT[x.c.doc_type], CERT_SHORT_ZH.get(x.c.doc_type)) }}{% if x.c.status == 'superseded' %} <span class="badge badge-muted">{{ t('superseded', '已被取代') }}</span>{% endif %}</td>
                         <td class="mono xs">{% if x.c.stored_path %}<a href="/certificates/{{ x.c.id }}/download">{{ x.c.number }}</a>{% else %}{{ x.c.number }}{% endif %}</td>
                         <td class="xs">{{ x.c.value or '—' }}</td><td class="xs">{{ x.c.issuer }}</td>
                         <td class="num xs">{{ x.c.expires | day }}</td>
                         <td>{% if x.c.status == 'valid' %}{{ cert_state(x.state, x.c.expires | days_until) }}{% endif %}</td>
                     </tr>
-                    {% else %}<tr><td colspan="6" class="muted">No certificates on file.</td></tr>{% endfor %}
+                    {% else %}<tr><td colspan="6" class="muted">{{ t('No certificates on file.', '暂无证书记录。') }}</td></tr>{% endfor %}
                     </tbody>
                 </table>
-                <p class="xs muted" style="margin:8px 0">Used by {{ row.uses | length }} component{{ 's' if row.uses | length != 1 }}:
-                    {% for u in row.uses %}<a href="/projects/{{ u.p.id }}/packaging?unit={{ u.u.id }}"><span class="chip-id">{{ u.p.code }} · {{ u.c.code }}</span></a> {% else %}not linked to any BOM yet{% endfor %}</p>
+                <p class="xs muted" style="margin:8px 0">{{ t('Used by ' ~ (row.uses | length) ~ ' component' ~ ('s' if row.uses | length != 1 else ''), '被 ' ~ (row.uses | length) ~ ' 个组件使用') }}:
+                    {% for u in row.uses %}<a href="/projects/{{ u.p.id }}/packaging?unit={{ u.u.id }}"><span class="chip-id">{{ u.p.code }} · {{ u.c.code }}</span></a> {% else %}{{ t('not linked to any BOM yet', '尚未关联任何 BOM') }}{% endfor %}</p>
                 <div class="grid-2" style="gap:12px">
-                    <details class="fold"><summary>Add / renew a certificate</summary>
+                    <details class="fold"><summary>{{ t('Add / renew a certificate', '添加 / 更新证书') }}</summary>
                         <form method="post" action="/suppliers/{{ s.id }}/materials/{{ m.id }}/certificates" enctype="multipart/form-data" class="fold-body">
                             <div class="form-row" style="grid-template-columns:1fr 1fr">
-                                <label class="field"><span class="field-label">Type</span><select name="doc_type">{% for k, v in CERT_TYPES.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></label>
-                                <label class="field"><span class="field-label">Number</span><input name="number" required></label>
-                                <label class="field"><span class="field-label">Issued by</span><input name="issuer"></label>
-                                <label class="field"><span class="field-label">Result / value</span><input name="value" placeholder="e.g. 38 mg/kg"></label>
-                                <label class="field"><span class="field-label">Issue date</span><input type="date" name="issued"></label>
-                                <label class="field"><span class="field-label">Valid until</span><input type="date" name="expires"></label>
+                                <label class="field"><span class="field-label">{{ t('Type', '类型') }}</span><select name="doc_type">{% for k, v in CERT_TYPES.items() %}<option value="{{ k }}">{{ tt(v, CERT_TYPES_ZH.get(k)) }}</option>{% endfor %}</select></label>
+                                <label class="field"><span class="field-label">{{ t('Number', '编号') }}</span><input name="number" required></label>
+                                <label class="field"><span class="field-label">{{ t('Issued by', '签发方') }}</span><input name="issuer"></label>
+                                <label class="field"><span class="field-label">{{ t('Result / value', '结果 / 数值') }}</span><input name="value" placeholder="{{ tt('e.g. 38 mg/kg', '例如：38 mg/kg') }}"></label>
+                                <label class="field"><span class="field-label">{{ t('Issue date', '签发日期') }}</span><input type="date" name="issued"></label>
+                                <label class="field"><span class="field-label">{{ t('Valid until', '有效期至') }}</span><input type="date" name="expires"></label>
                             </div>
                             <label class="upload" style="display:block;cursor:pointer;margin-bottom:8px"><input type="file" name="file" hidden>
-                                <span class="small"><b data-file-label>Attach the report (optional)</b></span></label>
-                            <button class="btn btn-primary btn-sm">Save certificate</button>
-                            {% if row.uses %}<span class="xs muted">The current certificate of this type is superseded and a change is raised for the {{ row.uses | length }} component(s) using it.</span>{% endif %}
+                                <span class="small"><b data-file-label>{{ t('Attach the report (optional)', '附上报告（可选）') }}</b></span></label>
+                            <button class="btn btn-primary btn-sm">{{ t('Save certificate', '保存证书') }}</button>
+                            {% if row.uses %}<span class="xs muted">{{ t('The current certificate of this type is superseded and a change is raised for the ' ~ (row.uses | length) ~ ' component(s) using it.', '该类型的现有证书将被取代，并为使用它的 ' ~ (row.uses | length) ~ ' 个组件发起变更。') }}</span>{% endif %}
                         </form>
                     </details>
-                    <details class="fold"><summary>Report a material / supplier change</summary>
+                    <details class="fold"><summary>{{ t('Report a material / supplier change', '报告材料 / 供应商变更') }}</summary>
                         <form method="post" action="/suppliers/{{ s.id }}/materials/{{ m.id }}/change" class="fold-body">
-                            <label class="field" style="margin-bottom:8px"><span class="field-label">What changed</span><input name="title" required placeholder="e.g. Resin grade swap on the sealant layer"></label>
-                            <label class="field" style="margin-bottom:8px"><span class="field-label">Kind</span><select name="kind"><option value="material_change">Material / formulation change</option><option value="supplier_change">Production site / supplier change</option></select></label>
-                            <label class="field" style="margin-bottom:8px"><span class="field-label">Details</span><textarea name="description" placeholder="Supplier notice, effective date, what is affected"></textarea></label>
-                            <button class="btn btn-sm">Trace the impact</button>
+                            <label class="field" style="margin-bottom:8px"><span class="field-label">{{ t('What changed', '变更内容') }}</span><input name="title" required placeholder="{{ tt('e.g. Resin grade swap on the sealant layer', '例如：密封层树脂牌号更换') }}"></label>
+                            <label class="field" style="margin-bottom:8px"><span class="field-label">{{ t('Kind', '类型') }}</span><select name="kind"><option value="material_change">{{ tt('Material / formulation change', '材料 / 配方变更') }}</option><option value="supplier_change">{{ tt('Production site / supplier change', '生产地点 / 供应商变更') }}</option></select></label>
+                            <label class="field" style="margin-bottom:8px"><span class="field-label">{{ t('Details', '详情') }}</span><textarea name="description" placeholder="{{ tt('Supplier notice, effective date, what is affected', '供应商通知、生效日期、受影响的内容') }}"></textarea></label>
+                            <button class="btn btn-sm">{{ t('Trace the impact', '追溯影响') }}</button>
                         </form>
                     </details>
                 </div>
             </section>
             {% else %}
-            <section class="card empty-state"><b>No materials yet.</b>Add what this supplier delivers on the right.</section>
+            <section class="card empty-state"><b>{{ t('No materials yet.', '暂无物料。') }}</b>{{ tb('Add what this supplier delivers on the right.', '请在右侧添加该供应商供应的物料。') }}</section>
             {% endfor %}
         </div>
         <aside class="layout-rail">
             <div class="rail-card">
-                <header class="rail-card-head"><span class="rail-card-eyebrow">Add a material ({{ next_spt }})</span></header>
+                <header class="rail-card-head"><span class="rail-card-eyebrow">{{ t('Add a material', '添加物料') }} ({{ next_spt }})</span></header>
                 <form method="post" action="/suppliers/{{ s.id }}/materials">
-                    <label class="field" style="margin-bottom:8px"><span class="field-label">Name</span><input name="name" required placeholder="e.g. Kraft liner 140 g/m²"></label>
-                    <label class="field" style="margin-bottom:8px"><span class="field-label">Trace code (supplier's own)</span><input name="trace_code" placeholder="e.g. PAP20-300GSM-2024A"></label>
-                    <label class="field" style="margin-bottom:8px"><span class="field-label">Material</span><input name="material"></label>
-                    <label class="field" style="margin-bottom:8px"><span class="field-label">Group</span><select name="material_group"><option value="">auto-detect</option>{% for g in MATERIAL_GROUPS %}<option>{{ g }}</option>{% endfor %}</select></label>
-                    <button class="btn btn-primary btn-sm">Add material</button>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">{{ t('Name', '名称') }}</span><input name="name" required placeholder="{{ tt('e.g. Kraft liner 140 g/m²', '例如：牛皮挂面纸 140 g/m²') }}"></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">{{ t("Trace code (supplier's own)", '追溯码（供应商自有）') }}</span><input name="trace_code" placeholder="{{ tt('e.g. PAP20-300GSM-2024A', '例如：PAP20-300GSM-2024A') }}"></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">{{ t('Material', '材料') }}</span><input name="material"></label>
+                    <label class="field" style="margin-bottom:8px"><span class="field-label">{{ t('Group', '材料组') }}</span><select name="material_group"><option value="">{{ tt('auto-detect', '自动识别') }}</option>{% for g in MATERIAL_GROUPS %}<option>{{ g }}</option>{% endfor %}</select></label>
+                    <button class="btn btn-primary btn-sm">{{ t('Add material', '添加物料') }}</button>
                 </form>
             </div>
             <div class="rail-card">
-                <header class="rail-card-head"><span class="rail-card-eyebrow">Changes from this supplier</span></header>
+                <header class="rail-card-head"><span class="rail-card-eyebrow">{{ t('Changes from this supplier', '来自该供应商的变更') }}</span></header>
                 {% for ev in events %}
                 <a href="/changes/{{ ev.id }}" class="small" style="display:block;margin-bottom:8px;color:inherit;text-decoration:none"><span class="chip-id">{{ ev.code }}</span> {{ ev.title }}<br>
-                    <span class="badge {{ {'open': 'badge-warn', 'applied': 'badge-ok', 'dismissed': 'badge-muted'}[ev.status] }}">{{ ev.status }}</span> <span class="xs muted">{{ ev.created_at | ago }}</span></a>
-                {% else %}<p class="small muted" style="margin:0">None.</p>{% endfor %}
+                    <span class="badge {{ {'open': 'badge-warn', 'applied': 'badge-ok', 'dismissed': 'badge-muted'}[ev.status] }}">{{ t(ev.status, CHANGE_STATUS_ZH.get(ev.status)) }}</span> <span class="xs muted">{{ ev.created_at | ago }}</span></a>
+                {% else %}<p class="small muted" style="margin:0">{{ t('None.', '暂无。') }}</p>{% endfor %}
             </div>
         </aside>
     </div>
